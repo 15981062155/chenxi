@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CSS 变量（自定义属性）练习 - 陈曦">
+    <title>12-1 · CSS 变量展示 - 陈曦</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 颜色变量 */
+            --chenxi-primary: #4f6ef7;
+            --chenxi-primary-dark: #3450c9;
+            --chenxi-accent: #ff8a3d;
+            --chenxi-bg: #f2f5ff;
+            --chenxi-card-bg: #ffffff;
+            --chenxi-text: #23305a;
+            --chenxi-text-soft: #6b7699;
+
+            /* 间距变量 */
+            --chenxi-gap: 20px;
+            --chenxi-radius: 18px;
+
+            /* 字体变量 */
+            --chenxi-font: "Microsoft YaHei", "PingFang SC", sans-serif;
+            --chenxi-title-size: clamp(26px, 4vw, 40px);
+        }
+
+        [data-theme="dark"] {
+            --chenxi-primary: #8fa2ff;
+            --chenxi-primary-dark: #b9c4ff;
+            --chenxi-accent: #ffb066;
+            --chenxi-bg: #101528;
+            --chenxi-card-bg: #1a2140;
+            --chenxi-text: #e9edff;
+            --chenxi-text-soft: #9aa4c8;
+        }
+
+        html {
+            color-scheme: light;
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 36px 18px;
+            font-family: var(--chenxi-font);
+            color: var(--chenxi-text);
+            background:
+                radial-gradient(circle at 15% 10%, rgba(79, 110, 247, 0.16), transparent 45%),
+                radial-gradient(circle at 85% 90%, rgba(255, 138, 61, 0.14), transparent 45%),
+                var(--chenxi-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .chenxi_page {
+            width: min(960px, 100%);
+            margin: 0 auto;
+        }
+
+        .chenxi_header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--chenxi-gap);
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--chenxi-gap);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: var(--chenxi-title-size);
+        }
+
+        h1 span {
+            color: var(--chenxi-primary);
+        }
+
+        .chenxi_theme-btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 999px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--chenxi-primary), var(--chenxi-accent));
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(79, 110, 247, 0.35);
+            transition: transform 0.2s;
+        }
+
+        .chenxi_theme-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .chenxi_intro {
+            margin: 0 0 calc(var(--chenxi-gap) * 1.4);
+            line-height: 1.8;
+            color: var(--chenxi-text-soft);
+        }
+
+        .chenxi_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: var(--chenxi-gap);
+        }
+
+        .chenxi_card {
+            padding: 24px;
+            border: 1px solid rgba(120, 140, 220, 0.18);
+            border-radius: var(--chenxi-radius);
+            background: var(--chenxi-card-bg);
+            box-shadow: 0 14px 40px rgba(30, 45, 110, 0.12);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .chenxi_card:hover {
+            transform: translateY(-4px);
+        }
+
+        .chenxi_card h2 {
+            margin: 0 0 12px;
+            font-size: 19px;
+            color: var(--chenxi-primary-dark);
+        }
+
+        .chenxi_card p {
+            margin: 0;
+            line-height: 1.75;
+            font-size: 15px;
+            color: var(--chenxi-text-soft);
+        }
+
+        .chenxi_card code {
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--chenxi-primary);
+            background: rgba(79, 110, 247, 0.12);
+        }
+
+        .chenxi_swatches {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .chenxi_swatches span {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .chenxi_demo-btn {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 10px 26px;
+            border: none;
+            border-radius: calc(var(--chenxi-radius) / 2);
+            font-family: inherit;
+            font-size: 15px;
+            color: #fff;
+            background: var(--chenxi-primary);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .chenxi_demo-btn:hover {
+            background: var(--chenxi-accent);
+        }
+
+        .chenxi_fallback {
+            font-size: 15px;
+            color: var(--chenxi-not-defined, #e05555);
+        }
+
+        .chenxi_footer {
+            margin-top: calc(var(--chenxi-gap) * 1.6);
+            text-align: center;
+            font-size: 14px;
+            color: var(--chenxi-text-soft);
+        }
+    </style>
+</head>
+<body>
+    <div class="chenxi_page">
+        <header class="chenxi_header">
+            <h1>CSS 变量展示 · <span>陈曦</span></h1>
+            <button class="chenxi_theme-btn" id="themeBtn">切换深色主题</button>
+        </header>
+
+        <p class="chenxi_intro">
+            本页面演示 CSS 自定义属性（变量）：在 <code>:root</code> 中统一定义颜色、间距、圆角与字体，
+            通过 <code>var()</code> 引用，并借助变量一键切换主题。作者：陈曦。
+        </p>
+
+        <div class="chenxi_grid">
+            <section class="chenxi_card">
+                <h2>1. 颜色变量</h2>
+                <p>所有颜色集中定义，改一处即可全局生效，引用时写作 <code>var(--chenxi-primary)</code>。</p>
+                <div class="chenxi_swatches">
+                    <span style="background: var(--chenxi-primary)"></span>
+                    <span style="background: var(--chenxi-primary-dark)"></span>
+                    <span style="background: var(--chenxi-accent)"></span>
+                    <span style="background: var(--chenxi-card-bg)"></span>
+                </div>
+            </section>
+
+            <section class="chenxi_card">
+                <h2>2. 间距与圆角变量</h2>
+                <p><code>--chenxi-gap</code> 与 <code>--chenxi-radius</code> 控制卡片间距和圆角，保持页面风格统一。</p>
+                <button class="chenxi_demo-btn">按钮也用变量</button>
+            </section>
+
+            <section class="chenxi_card">
+                <h2>3. 主题切换</h2>
+                <p>给 <code>&lt;html&gt;</code> 加上 <code>data-theme="dark"</code> 后重写同名变量，整页配色随之改变。</p>
+                <button class="chenxi_demo-btn" id="themeBtn2">切换深色主题</button>
+            </section>
+
+            <section class="chenxi_card">
+                <h2>4. 变量回退值</h2>
+                <p>变量未定义时使用第二个参数作为回退：<code>var(--chenxi-not-defined, #e05555)</code></p>
+                <p class="chenxi_fallback">这段文字使用了回退颜色。</p>
+            </section>
+
+            <section class="chenxi_card">
+                <h2>5. 响应式字号</h2>
+                <p>标题字号 <code>--chenxi-title-size</code> 使用 <code>clamp()</code>，随窗口缩放而不失协调。</p>
+            </section>
+
+            <section class="chenxi_card">
+                <h2>6. 局部覆盖</h2>
+                <p>变量可在任意元素上重新赋值，子元素自动使用新值，无需覆盖整套样式。</p>
+            </section>
+        </div>
+
+        <footer class="chenxi_footer">12-1 · CSS 变量练习页面 · 陈曦</footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const root = document.documentElement;
+            const dark = root.getAttribute("data-theme") === "dark";
+            if (dark) {
+                root.removeAttribute("data-theme");
+            } else {
+                root.setAttribute("data-theme", "dark");
+            }
+            const label = dark ? "切换深色主题" : "切换浅色主题";
+            document.querySelectorAll("#themeBtn, #themeBtn2").forEach(function (btn) {
+                btn.textContent = label;
+            });
+        }
+
+        document.getElementById("themeBtn").addEventListener("click", toggleTheme);
+        document.getElementById("themeBtn2").addEventListener("click", toggleTheme);
+    </script>
+</body>
+</html>
