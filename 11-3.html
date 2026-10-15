@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS3 3D 动画 · 爱心跳动</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 40px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, #eef6ff, #fff7fb);
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .chenxi_demo {
+            width: min(900px, 94vw);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #d7e3ff;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(46, 87, 168, 0.12);
+            padding: 32px 30px;
+        }
+
+        .chenxi_home {
+            display: inline-block;
+            margin-bottom: 14px;
+            color: #2563eb;
+            font-size: 14px;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .chenxi_home:hover {
+            border-bottom-color: #2563eb;
+        }
+
+        .chenxi_demo h2 {
+            margin: 0 0 14px;
+            text-align: center;
+            font-size: 32px;
+            color: #1f2d3d;
+            letter-spacing: 2px;
+        }
+
+        .chenxi_intro {
+            margin: 0;
+            line-height: 1.8;
+            color: #475569;
+            font-size: 17px;
+        }
+
+        .chenxi_scene {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 420px;
+            margin-top: 26px;
+            overflow: hidden;
+            border-radius: 14px;
+            background: radial-gradient(ellipse at 50% 35%, #3b1520, #1a0a10 75%);
+            perspective: 1100px;
+        }
+
+        /* 心跳光晕：filter 会破坏 preserve-3d，发光用背景脉动模拟 */
+        .chenxi_scene::before {
+            position: absolute;
+            left: 50%;
+            top: 48%;
+            width: 340px;
+            height: 340px;
+            content: "";
+            background: radial-gradient(circle, rgba(255, 80, 110, 0.4), transparent 65%);
+            transform: translate(-50%, -50%);
+            animation: chenxi_glow 1.4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes chenxi_glow {
+            0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(0.92); }
+            12%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.12); }
+            30%      { opacity: 0.6;  transform: translate(-50%, -50%) scale(0.98); }
+            42%      { opacity: 0.9;  transform: translate(-50%, -50%) scale(1.06); }
+        }
+
+        /* 外层：左右摆动，负责展示厚度 */
+        .chenxi_sway {
+            position: relative;
+            z-index: 1;
+            width: 100px;
+            height: 100px;
+            transform-style: preserve-3d;
+            animation: chenxi_sway 7s ease-in-out infinite alternate;
+        }
+
+        @keyframes chenxi_sway {
+            from { transform: rotateX(-10deg) rotateY(-28deg) scale(2.1); }
+            to   { transform: rotateX(-10deg) rotateY(28deg) scale(2.1); }
+        }
+
+        /* 内层：双拍式心跳 */
+        .chenxi_beat {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: chenxi_beat 1.4s ease-in-out infinite;
+        }
+
+        @keyframes chenxi_beat {
+            0%   { transform: scale(1); }
+            8%   { transform: scale(1.16); }
+            16%  { transform: scale(1.02); }
+            24%  { transform: scale(1.12); }
+            36%, 100% { transform: scale(1); }
+        }
+
+        /* 13 片心形沿 Z 轴每 2px 一层，堆出 24px 的厚度 */
+        .chenxi_slice {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, #ff5e7a, #d81e40);
+            clip-path: path("M10 30 A20 20 0 0 1 50 30 A20 20 0 0 1 90 30 Q90 60 50 95 Q10 60 10 30 Z");
+        }
+
+        .chenxi_slice:nth-child(even) {
+            background: linear-gradient(160deg, #ef4565, #b91c3c);
+        }
+
+        .chenxi_slice:nth-child(1)  { transform: translateZ(-12px); }
+        .chenxi_slice:nth-child(2)  { transform: translateZ(-10px); }
+        .chenxi_slice:nth-child(3)  { transform: translateZ(-8px); }
+        .chenxi_slice:nth-child(4)  { transform: translateZ(-6px); }
+        .chenxi_slice:nth-child(5)  { transform: translateZ(-4px); }
+        .chenxi_slice:nth-child(6)  { transform: translateZ(-2px); }
+        .chenxi_slice:nth-child(7)  { transform: translateZ(0); }
+        .chenxi_slice:nth-child(8)  { transform: translateZ(2px); }
+        .chenxi_slice:nth-child(9)  { transform: translateZ(4px); }
+        .chenxi_slice:nth-child(10) { transform: translateZ(6px); }
+        .chenxi_slice:nth-child(11) { transform: translateZ(8px); }
+        .chenxi_slice:nth-child(12) { transform: translateZ(10px); }
+        .chenxi_slice:nth-child(13) {
+            transform: translateZ(12px);
+            background: linear-gradient(160deg, #ff7a90, #e22a4e);
+            box-shadow: inset 0 10px 18px rgba(255, 255, 255, 0.35), inset 0 -12px 16px rgba(120, 10, 30, 0.35);
+        }
+
+        /* 背景漂浮的小爱心 */
+        .chenxi_mini {
+            position: absolute;
+            background: rgba(255, 120, 140, 0.45);
+            clip-path: path("M10 30 A20 20 0 0 1 50 30 A20 20 0 0 1 90 30 Q90 60 50 95 Q10 60 10 30 Z");
+            pointer-events: none;
+        }
+
+        .chenxi_mini-a {
+            top: 14%;
+            left: 14%;
+            width: 22px;
+            height: 22px;
+            animation: chenxi_float-a 4s ease-in-out infinite alternate;
+        }
+
+        .chenxi_mini-b {
+            top: 22%;
+            right: 12%;
+            width: 14px;
+            height: 14px;
+            animation: chenxi_float-b 5s ease-in-out infinite alternate;
+        }
+
+        .chenxi_mini-c {
+            bottom: 18%;
+            left: 24%;
+            width: 18px;
+            height: 18px;
+            animation: chenxi_float-a 4.6s ease-in-out 0.8s infinite alternate;
+        }
+
+        @keyframes chenxi_float-a {
+            from { transform: translateY(8px) rotate(-8deg); opacity: 0.35; }
+            to   { transform: translateY(-10px) rotate(8deg); opacity: 0.8; }
+        }
+
+        @keyframes chenxi_float-b {
+            from { transform: translateY(-6px) rotate(6deg); opacity: 0.5; }
+            to   { transform: translateY(10px) rotate(-6deg); opacity: 0.3; }
+        }
+
+        .chenxi_caption {
+            margin: 12px 0 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .chenxi_tips {
+            margin: 24px 0 0;
+            padding-left: 22px;
+            color: #334155;
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .chenxi_tips strong {
+            color: #1d4ed8;
+        }
+
+        .chenxi_sign {
+            margin: 22px 0 0;
+            text-align: right;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chenxi_demo">
+        <a class="chenxi_home" href="1.html">← 返回首页</a>
+        <h2>CSS3 3D 动画 · 爱心跳动</h2>
+        <p class="chenxi_intro">一颗有厚度的立体爱心：13 片同样的心形沿 Z 轴每 2px 叠一层，堆出 24px 的 3D 厚度；内层做"一大一小"的双拍心跳，外层左右摆动把侧面厚度展示出来，背景光晕随心跳同步明暗。</p>
+
+        <div class="chenxi_scene">
+            <div class="chenxi_mini chenxi_mini-a"></div>
+            <div class="chenxi_mini chenxi_mini-b"></div>
+            <div class="chenxi_mini chenxi_mini-c"></div>
+            <div class="chenxi_sway">
+                <div class="chenxi_beat">
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                    <div class="chenxi_slice"></div>
+                </div>
+            </div>
+        </div>
+        <p class="chenxi_caption">心跳周期 1.4 秒 · 左右摆动 7 秒一轮，纯 CSS，无 JavaScript</p>
+
+        <ul class="chenxi_tips">
+            <li><strong>心形轮廓：</strong>clip-path: path() 用两段圆弧画出上方两个心房，两段贝塞尔曲线收到底部尖角</li>
+            <li><strong>立体厚度：</strong>每片心形 translateZ(2px × 层号 - 12px) 排开，父元素 transform-style: preserve-3d，摆动时就能看到侧面</li>
+            <li><strong>双拍心跳：</strong>1.4 秒关键帧里先冲到 1.16 倍再回落、接着 1.12 倍再回落，模拟"咚-咚"两拍；光晕用同样节奏同步脉动</li>
+            <li><strong>避坑：</strong>filter 会把 preserve-3d 压平，所以发光不用 drop-shadow，改用背景 radial-gradient 脉动实现</li>
+        </ul>
+
+        <p class="chenxi_sign">121 陈曦 · 11-3</p>
+    </div>
+</body>
+</html>

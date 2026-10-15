@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10.4 响应式布局</title>
+  <style>
+    :root {
+      --bg-1: #fff4db;
+      --bg-2: #ffd6a5;
+      --accent: #ff7b54;
+      --text: #2a1d12;
+      --panel: rgba(255, 255, 255, 0.45);
+      --shadow: rgba(59, 33, 18, 0.18);
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100%;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem 1rem 3rem;
+    }
+
+    .wrap {
+      width: min(1100px, 92vw);
+    }
+
+    .title {
+      margin: 0 0 1.5rem;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      text-align: center;
+      letter-spacing: 0.25rem;
+      font-weight: 800;
+      color: #3b2618;
+      text-shadow: 0 0.1rem 0.3rem rgba(255,255,255,0.45);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .box {
+      position: relative;
+      min-height: 11rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border-radius: 1.25rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.62), rgba(255,255,255,0.28));
+      border: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 1rem 1.5rem var(--shadow);
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .box::before {
+      content: "";
+      position: absolute;
+      width: 6rem;
+      height: 6rem;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      right: -1.2rem;
+      top: -1.2rem;
+      filter: blur(0.4rem);
+    }
+
+    .box:hover {
+      transform: translateY(-0.3rem) scale(1.01);
+      box-shadow: 0 1.25rem 2rem rgba(88, 49, 27, 0.2);
+    }
+
+    .box:nth-child(1) { background: linear-gradient(135deg, #ffb3c1, #ffd6a5); }
+    .box:nth-child(2) { background: linear-gradient(135deg, #bde0fe, #a2d2ff); }
+    .box:nth-child(3) { background: linear-gradient(135deg, #c7f9cc, #90e0ef); }
+    .box:nth-child(4) { background: linear-gradient(135deg, #e9c46a, #f4a261); }
+    .box:nth-child(5) { background: linear-gradient(135deg, #fdd6a5, #ff9f1c); }
+    .box:nth-child(6) { background: linear-gradient(135deg, #caffbf, #bdb2ff); }
+    .box:nth-child(7) { background: linear-gradient(135deg, #ffd166, #f15bb5); }
+    .box:nth-child(8) { background: linear-gradient(135deg, #9ef01a, #38b000); }
+
+    .box span {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-weight: 700;
+      letter-spacing: 0.08rem;
+      color: rgba(42, 29, 18, 0.9);
+    }
+
+    @media (min-width: 520px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 760px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .box {
+        min-height: 12.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">陈曦</h1>
+    <div class="grid">
+      <div class="box"><span>盒子 1</span></div>
+      <div class="box"><span>盒子 2</span></div>
+      <div class="box"><span>盒子 3</span></div>
+      <div class="box"><span>盒子 4</span></div>
+      <div class="box"><span>盒子 5</span></div>
+      <div class="box"><span>盒子 6</span></div>
+      <div class="box"><span>盒子 7</span></div>
+      <div class="box"><span>盒子 8</span></div>
+    </div>
+  </div>
+</body>
+</html>

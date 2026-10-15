@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>层叠与继承</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #eef6ff, #fff7fb);
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .demo {
+            width: min(900px, 92vw);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #d7e3ff;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(46, 87, 168, 0.12);
+            padding: 30px 28px;
+        }
+
+        h2 {
+            margin: 0 0 20px;
+            text-align: center;
+            font-size: 34px;
+            color: #1f2d3d;
+            letter-spacing: 2px;
+        }
+
+        .intro {
+            margin: 0 0 20px;
+            line-height: 1.8;
+            color: #475569;
+            font-size: 18px;
+        }
+
+        .box {
+            border: 2px dashed #7aa2ff;
+            border-radius: 14px;
+            padding: 22px 20px;
+            background: #f8fbff;
+            margin-bottom: 18px;
+        }
+
+        p {
+            color: red;
+            font-size: 60px;
+            margin: 0;
+        }
+
+        .text {
+            color: blue;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        #text {
+            color: orange;
+            font-size: 36px;
+            text-shadow: 1px 1px 0 #fff3d9;
+        }
+
+        .highlight {
+            color: #0ea5e9;
+            background: #e0f2fe;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .parent {
+            margin-top: 20px;
+            color: #2563eb;
+            font-size: 24px;
+            line-height: 1.8;
+            font-family: "KaiTi", serif;
+        }
+
+        .child {
+            color: #16a34a;
+            font-size: 20px;
+        }
+
+        .rule-list {
+            margin: 18px 0 0;
+            padding-left: 22px;
+            color: #334155;
+            line-height: 2;
+            font-size: 17px;
+        }
+
+        .rule-list strong {
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>层叠与继承</h2>
+        <p class="intro">CSS 的层叠规则：当多个样式规则作用到同一个元素时，浏览器会根据 <strong>选择器优先级</strong> 进行判断；继承则是父元素样式传递给子元素。</p>
+
+        <div id="box" class="box">
+            <p id="text" class="text">121 陈曦</p>
+            <p class="text">这段文字同时命中元素选择器、类选择器和 ID 选择器。</p>
+            <p class="highlight">最终生效的是 ID 选择器的样式，因为它优先级更高。</p>
+        </div>
+
+        <div class="parent">
+            父元素设置了 <span class="highlight">color: #2563eb</span> 和 <span class="highlight">font-size: 24px</span>，
+            <div class="child">子元素继承了父元素的基础样式，但如果子元素自己写了样式，则会覆盖继承结果。</div>
+        </div>
+
+        <ul class="rule-list">
+            <li><strong>优先级规律：</strong> ID 选择器 > 类选择器 > 标签选择器</li>
+            <li><strong>层叠规律：</strong> 后写的样式会覆盖前写的样式，前提是优先级相同</li>
+            <li><strong>继承规律：</strong> 某些属性如 color、font-size、font-family 会沿着元素树往下传递</li>
+        </ul>
+    </div>
+</body>
+</html>

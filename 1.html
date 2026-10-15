@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="深潜海洋图册，认识海洋中的鱼类、鲸类与珊瑚生物。">
+    <title>海洋图册 · 深潜</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --blue: #4c91ed;
+            --ink: #333b45;
+            --muted: #9da5ae;
+            --line: #e8eaed;
+            --content-width: 932px;
+            --header-width: 1140px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-width: 320px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: #fff;
+            font-family: Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+            font-size: 14px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .site-header {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            color: #f4f4f4;
+        }
+
+        .header-inner {
+            width: min(var(--header-width), calc(100% - 40px));
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            flex: 0 0 auto;
+            gap: 7px;
+            color: #fff;
+        }
+
+        .brand-fish {
+            width: 27px;
+            height: 27px;
+        }
+
+        .brand-copy {
+            display: grid;
+            gap: 1px;
+            line-height: 1;
+        }
+
+        .brand-name {
+            font-size: 17px;
+            letter-spacing: .1em;
+        }
+
+        .brand-url {
+            font-size: 6px;
+            letter-spacing: .12em;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            min-width: 0;
+            height: 100%;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            height: 100%;
+            white-space: nowrap;
+            color: #eee;
+            font-size: 13px;
+        }
+
+        .nav-link.is-active {
+            color: var(--blue);
+            font-weight: 700;
+        }
+
+        .chevron {
+            width: 6px;
+            height: 6px;
+            border-right: 1px solid currentColor;
+            border-bottom: 1px solid currentColor;
+            transform: translateY(-2px) rotate(45deg);
+        }
+
+        .login-link {
+            position: relative;
+            flex: 0 0 auto;
+            margin-left: auto;
+            padding: 5px 8px;
+            border: 1px solid #bcbcbc;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .login-link::after {
+            position: absolute;
+            top: -4px;
+            right: -3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f28a21;
+            content: "";
+        }
+
+        .hero {
+            position: relative;
+            display: flex;
+            min-height: 494px;
+            align-items: flex-start;
+            justify-content: center;
+            overflow: hidden;
+            color: #fff;
+            background-color: #071019;
+            background-image:
+                linear-gradient(90deg, rgba(0, 8, 17, .76), rgba(0, 8, 17, .23) 48%, rgba(0, 0, 0, .72)),
+                linear-gradient(0deg, rgba(0, 0, 0, .5), transparent 45%),
+                url("https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=2000&q=88");
+            background-position: center 48%;
+            background-size: cover;
+        }
+
+        .hero-copy {
+            width: min(900px, calc(100% - 40px));
+            margin: 134px auto 0;
+            text-align: center;
+        }
+
+        .hero-title {
+            margin: 0 0 15px;
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 600;
+            letter-spacing: .06em;
+            line-height: 1.3;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, .35);
+        }
+
+        .hero-description {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.7;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, .7);
+        }
+
+        .hero-button {
+            display: inline-flex;
+            min-width: 200px;
+            min-height: 43px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 27px;
+            padding: 0 24px;
+            border-radius: 24px;
+            background: #3e9de8;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .hero-arrow {
+            position: absolute;
+            top: 46%;
+            width: 30px;
+            height: 30px;
+            border-top: 3px solid rgba(68, 119, 174, .35);
+            border-left: 3px solid rgba(68, 119, 174, .35);
+        }
+
+        .hero-arrow.previous {
+            left: 12px;
+            transform: rotate(-45deg);
+        }
+
+        .hero-arrow.next {
+            right: 12px;
+            transform: rotate(135deg);
+        }
+
+        .hero-bottom {
+            position: absolute;
+            right: 0;
+            bottom: 14px;
+            left: 0;
+            display: flex;
+            width: min(var(--header-width), calc(100% - 40px));
+            align-items: flex-end;
+            justify-content: space-between;
+            margin: 0 auto;
+        }
+
+        .destination-search {
+            width: min(430px, 100%);
+            padding: 12px 0 0;
+            background: rgba(0, 0, 0, .48);
+        }
+
+        .destination-search-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .destination-search input {
+            min-width: 0;
+            height: 40px;
+            flex: 1;
+            padding: 0 12px;
+            border: 0;
+            border-radius: 5px;
+            outline: 0;
+            color: #333;
+            font: inherit;
+        }
+
+        .destination-search input::placeholder {
+            color: #a4a4a4;
+        }
+
+        .search-submit {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 auto;
+            place-items: center;
+            border: 0;
+            background: transparent;
+            color: #fff;
+        }
+
+        .search-glass {
+            position: relative;
+            width: 23px;
+            height: 23px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+        }
+
+        .search-glass::after {
+            position: absolute;
+            right: -7px;
+            bottom: -4px;
+            width: 10px;
+            height: 2px;
+            background: currentColor;
+            content: "";
+            transform: rotate(48deg);
+        }
+
+        .popular-destinations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin: 7px 0 0;
+            color: rgba(255, 255, 255, .93);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .popular-destinations strong {
+            font-weight: 600;
+        }
+
+        .dive-tool {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 11px;
+            color: #fff;
+            font-size: 15px;
+            text-shadow: 0 1px 8px #000;
+        }
+
+        .dive-tool-icon {
+            display: grid;
+            width: 20px;
+            height: 20px;
+            place-items: center;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .page-main {
+            position: relative;
+            isolation: isolate;
+            min-height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-main::before {
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 50%;
+            width: max(100%, 1100px);
+            height: 345px;
+            background: #f7f7f7;
+            clip-path: polygon(0 39%, 12% 22%, 27% 17%, 37% 0, 45% 6%, 47% 28%, 66% 33%, 76% 18%, 84% 28%, 100% 8%, 100% 35%, 89% 48%, 96% 63%, 91% 75%, 81% 55%, 74% 60%, 69% 87%, 59% 72%, 48% 100%, 37% 86%, 28% 100%, 18% 72%, 8% 84%, 0 67%);
+            content: "";
+            opacity: .9;
+            transform: translateX(-50%);
+        }
+
+        .content {
+            width: min(var(--content-width), calc(100% - 40px));
+            margin: 0 auto;
+            padding: 33px 0 58px;
+        }
+
+        .page-title {
+            margin: 0 0 26px;
+            color: var(--blue);
+            font-size: 30px;
+            font-weight: 600;
+            letter-spacing: .04em;
+        }
+
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            align-items: end;
+            gap: 11px;
+            margin: 0 0 27px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .category {
+            display: flex;
+            min-height: 76px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            color: #707780;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .category-icon {
+            width: 47px;
+            height: 38px;
+            fill: #f8f8f8;
+            stroke: #bfc3c6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.5;
+        }
+
+        .category.is-active {
+            color: var(--blue);
+        }
+
+        .category.is-active .category-icon {
+            fill: var(--blue);
+            stroke: var(--blue);
+        }
+
+        .search-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .search-box {
+            display: flex;
+            min-width: 0;
+            height: 31px;
+            flex: 1;
+            align-items: center;
+            padding: 0 9px;
+            border: 1px solid #eceef0;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, .85);
+        }
+
+        .search-box input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            color: var(--ink);
+            background: transparent;
+            font: inherit;
+            font-size: 11px;
+        }
+
+        .search-box input::placeholder {
+            color: #b0b5bc;
+        }
+
+        .record-count {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 0 0 auto;
+            color: #545b63;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .record-count strong {
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        .calendar-icon {
+            width: 13px;
+            height: 13px;
+            border: 1.5px solid #7a828b;
+            border-radius: 2px;
+            background: repeating-linear-gradient(to bottom, transparent 0 3px, #7a828b 3px 4px);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            align-items: start;
+            gap: 16px 19px;
+        }
+
+        .creature-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-bottom: 7px solid #e5e5e5;
+            background: #fff;
+        }
+
+        .creature-image {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1.58;
+            object-fit: cover;
+            background: linear-gradient(140deg, #173d63, #73c4d1);
+        }
+
+        .illustration-library {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .card-copy {
+            min-height: 101px;
+            padding: 10px 9px 8px;
+        }
+
+        .creature-name {
+            margin: 0 0 3px;
+            color: #272d33;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .creature-english {
+            margin: 0 0 6px;
+            color: #444b52;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .creature-meta {
+            margin: 0;
+            color: #a3aab1;
+            font-size: 10px;
+            line-height: 1.65;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            margin: 70px 0 14px;
+        }
+
+        .page-number {
+            display: grid;
+            min-width: 39px;
+            height: 38px;
+            place-items: center;
+            border: 1px solid #e8eaed;
+            border-radius: 3px;
+            background: #fff;
+            color: #222;
+            font-size: 16px;
+        }
+
+        .page-number.is-current,
+        .page-number.next {
+            border-color: var(--blue);
+            background: var(--blue);
+            color: #fff;
+        }
+
+        .page-number.previous {
+            border-color: #e3e3e3;
+            background: #e3e3e3;
+            color: #fff;
+        }
+
+        .back-to-top {
+            position: fixed;
+            right: max(22px, calc((100vw - var(--content-width)) / 2 - 38px));
+            bottom: 0;
+            display: grid;
+            width: 40px;
+            height: 34px;
+            place-items: center;
+            border-radius: 14px 14px 0 0;
+            background: #292929;
+        }
+
+        .back-to-top::before {
+            width: 11px;
+            height: 11px;
+            border-top: 3px solid #999;
+            border-left: 3px solid #999;
+            content: "";
+            transform: translateY(4px) rotate(45deg);
+        }
+
+        @media (max-width: 760px) {
+            .header-inner {
+                gap: 17px;
+            }
+
+            .main-nav {
+                gap: 17px;
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+
+            .main-nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 14px;
+            }
+
+            .hero {
+                min-height: 470px;
+                background-position: 56% center;
+            }
+
+            .hero-copy {
+                margin-top: 128px;
+            }
+
+            .hero-bottom {
+                width: calc(100% - 40px);
+            }
+
+            .category-list {
+                grid-template-columns: repeat(8, minmax(60px, 1fr));
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .site-header {
+                height: 58px;
+            }
+
+            .header-inner,
+            .content {
+                width: calc(100% - 28px);
+            }
+
+            .header-inner {
+                gap: 14px;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .main-nav {
+                gap: 14px;
+            }
+
+            .nav-link {
+                font-size: 12px;
+            }
+
+            .nav-link:nth-child(2),
+            .nav-link:nth-child(3),
+            .nav-link:nth-child(5) {
+                display: none;
+            }
+
+            .login-link {
+                padding: 5px 6px;
+                font-size: 11px;
+            }
+
+            .hero {
+                min-height: 500px;
+                background-position: 58% center;
+            }
+
+            .hero-copy {
+                width: calc(100% - 42px);
+                margin-top: 127px;
+            }
+
+            .hero-title {
+                font-size: 30px;
+            }
+
+            .hero-description {
+                font-size: 13px;
+            }
+
+            .hero-button {
+                min-width: 174px;
+                min-height: 40px;
+                margin-top: 22px;
+                font-size: 15px;
+            }
+
+            .hero-arrow {
+                width: 19px;
+                height: 19px;
+            }
+
+            .hero-arrow.previous {
+                left: 8px;
+            }
+
+            .hero-arrow.next {
+                right: 8px;
+            }
+
+            .hero-bottom {
+                bottom: 13px;
+                width: calc(100% - 28px);
+            }
+
+            .destination-search {
+                width: min(320px, 100%);
+            }
+
+            .destination-search input {
+                height: 38px;
+                font-size: 12px;
+            }
+
+            .search-submit {
+                width: 32px;
+                height: 38px;
+            }
+
+            .popular-destinations {
+                gap: 6px;
+                font-size: 10px;
+            }
+
+            .dive-tool {
+                display: none;
+            }
+
+            .content {
+                padding-top: 27px;
+            }
+
+            .page-title {
+                margin-bottom: 20px;
+                font-size: 26px;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .card-copy {
+                min-height: 98px;
+                padding: 9px 8px 7px;
+            }
+
+            .creature-name {
+                font-size: 15px;
+            }
+
+            .pagination {
+                gap: 6px;
+                margin-top: 45px;
+            }
+
+            .page-number {
+                min-width: 34px;
+                height: 35px;
+                font-size: 14px;
+            }
+
+            .back-to-top {
+                right: 12px;
+                width: 34px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <svg class="illustration-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+            <linearGradient id="ocean" x2="0" y2="1"><stop stop-color="#0876a8"/><stop offset="1" stop-color="#082d52"/></linearGradient>
+            <linearGradient id="reef" x2="0" y2="1"><stop stop-color="#f5cc7a"/><stop offset="1" stop-color="#a85a46"/></linearGradient>
+            <linearGradient id="shell" x2="0" y2="1"><stop stop-color="#f8d982"/><stop offset="1" stop-color="#ca7651"/></linearGradient>
+            <linearGradient id="whale" x2="0" y2="1"><stop stop-color="#758d9d"/><stop offset=".55" stop-color="#344f68"/><stop offset=".56" stop-color="#e8e5d5"/><stop offset="1" stop-color="#b9d0d2"/></linearGradient>
+            <linearGradient id="coral" x2="0" y2="1"><stop stop-color="#ff92bd"/><stop offset="1" stop-color="#a13f88"/></linearGradient>
+            <symbol id="ocean-scene" viewBox="0 0 310 196">
+                <rect width="310" height="196" fill="url(#ocean)"/>
+                <path d="M0 160Q55 148 95 160T180 157T310 155V196H0Z" fill="url(#reef)" opacity=".62"/>
+                <path d="M0 181q18-24 28 0m-18 2q8-30 16-25m0 22q8-23 15-20m220 21q10-35 20-22m-9 23q12-28 22-20m-2 20q12-33 22-24" fill="none" stroke="#66b995" stroke-width="5" opacity=".8"/>
+                <g fill="#bceafa" opacity=".7"><circle cx="38" cy="42" r="3"/><circle cx="57" cy="65" r="2"/><circle cx="271" cy="36" r="3"/><circle cx="250" cy="59" r="2"/><circle cx="223" cy="27" r="1.8"/></g>
+            </symbol>
+        </defs>
+        <symbol id="creature-wrasse" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M44 101q26-48 119-39 40 4 77 30l35 9-31 12q-36 31-94 23-77-8-106-35Z" fill="#c3a74d" stroke="#f5dc86" stroke-width="3"/><path d="m83 75 24-28 13 35m50-19 31-22 4 31m31 42 30 22 3-32" fill="#537f72" stroke="#b5d39b" stroke-width="3"/><path d="M84 91q68-31 145 3m-152 15q70-20 143 10" fill="none" stroke="#68c7c1" stroke-width="6"/><circle cx="67" cy="96" r="5" fill="#101f30"/><circle cx="68" cy="95" r="1.6" fill="white"/></symbol>
+        <symbol id="creature-turtle" viewBox="0 0 310 196"><use href="#ocean-scene"/><ellipse cx="157" cy="104" rx="67" ry="43" fill="#438b6c" stroke="#d2bf73" stroke-width="5"/><path d="M99 91 58 68q-17-5-18 8l39 38m132-29 43-22q17-3 15 10l-43 36m-65 37-21 22q-13 6-16-4l17-34m50 4 20 28q13 4 15-6l-19-33" fill="#579d7a" stroke="#b4d5a2" stroke-width="4"/><path d="m116 80 19-12 16 12-5 18-23 2Zm41-8 19 9 6 18-20 7-13-15Zm-39 35 20-7 16 12-8 20-22-4Zm43 9 19-10 16 13-11 17-19-3Z" fill="#86b878" stroke="#d2bf73" stroke-width="3"/><path d="m224 100 28 4-18 17-19-8Z" fill="#579d7a"/><circle cx="244" cy="102" r="2.5" fill="#172b38"/></symbol>
+        <symbol id="creature-minke" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M37 113q53-53 136-35 31 6 67-4l32-18-9 25 22 20-36 2q-28 28-76 33-78 9-136-23Z" fill="url(#whale)" stroke="#b3d4dc" stroke-width="3"/><path d="m111 127 28 19-8-26m42-39 19-19 2 23m57-19-15-19 28 13" fill="#536f81" stroke="#b3d4dc" stroke-width="3"/><circle cx="75" cy="100" r="3" fill="#081a2a"/><path d="M53 110q27 17 60 21" fill="none" stroke="#d0e2dc" stroke-width="3"/></symbol>
+        <symbol id="creature-frogfish" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M75 127q-13-34 17-60 36-25 92-4 39 15 52 49-21 39-73 43-56 3-88-28Z" fill="#f0743d" stroke="#ffd080" stroke-width="4"/><path d="m111 76 10-27 8 31m26-21 13-24 4 30m-71 65-31 21 40-4m92-1 30 16-17-26" fill="#db653b" stroke="#ffd080" stroke-width="4"/><circle cx="129" cy="91" r="9" fill="#f9dc69"/><circle cx="131" cy="91" r="4" fill="#152336"/><path d="M177 93q16 9 27 0" fill="none" stroke="#874334" stroke-width="4"/><g fill="#ffdda0"><circle cx="165" cy="72" r="3"/><circle cx="194" cy="105" r="4"/><circle cx="151" cy="131" r="3"/><circle cx="102" cy="110" r="3"/></g></symbol>
+        <symbol id="creature-seal" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M41 119q24-37 80-38 43-1 89 21 20 9 50 3l15 15-34 13q-20 24-58 28-46 5-72-15-26 8-59-2l-20 8 10-20Z" fill="#a8c2c4" stroke="#e0e6d8" stroke-width="4"/><path d="m157 145 46 20 30-2-43-27m-84-45-34-18-21 3 32 27m-11 39-30 15 28 1" fill="#839da4" stroke="#d4dfd5" stroke-width="3"/><circle cx="73" cy="104" r="3" fill="#182d3a"/><path d="M54 112q16 9 28 0" fill="none" stroke="#394c58" stroke-width="3"/><path d="m61 111-10 12m17-11-5 14m12-14 1 12" stroke="#e4e6d9" stroke-width="2"/></symbol>
+        <symbol id="creature-butterflyfish" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M53 101q36-48 104-37 43 7 76 38-29 37-77 39-70 2-103-40Z" fill="#f4cf45" stroke="#fff0a0" stroke-width="4"/><path d="M53 101 24 78v47Zm108-36 23 37-25 39m45-70 20 31-19 31" fill="#e4a842" stroke="#fff0a0" stroke-width="3"/><path d="M87 70q21 33 0 65m49-69q-17 36 0 73" fill="none" stroke="#25364c" stroke-width="8"/><circle cx="71" cy="95" r="4" fill="#132237"/></symbol>
+        <symbol id="creature-pilot-whale" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M42 112q42-48 133-42 38 2 75-14l31-19-10 24 23 21-35 3q-29 35-88 42-76 9-129-15Z" fill="#263b50" stroke="#a7c4d4" stroke-width="4"/><path d="m137 130 20 18 12-20m26-56 16-21 4 22m67-51-17-8" fill="#263b50" stroke="#a7c4d4" stroke-width="3"/><circle cx="74" cy="104" r="3" fill="#eaf2ec"/><path d="M48 111q20 11 45 12" stroke="#829daf" stroke-width="3" fill="none"/></symbol>
+        <symbol id="creature-snapper" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M43 104q32-42 117-33 39 4 76 32-31 35-79 38-78 2-114-37Z" fill="#d9c047" stroke="#fff0a1" stroke-width="3"/><path d="m43 104-29-24v49Zm112-33 16-25 9 32m27 43 25 23-8-36" fill="#e88553" stroke="#ffd490" stroke-width="3"/><path d="M83 76v58m16-61v64m17-64v63m17-61v57" stroke="#e96b53" stroke-width="5"/><circle cx="65" cy="97" r="4" fill="#172436"/></symbol>
+        <symbol id="creature-bullshark" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M33 111q47-50 129-37l52 9 44-19-12 25 27 16-38 8q-29 26-75 28-70 3-127-22Z" fill="#849ca8" stroke="#d1e0df" stroke-width="3"/><path d="m105 89 30-48 22 42m52 5 37-15-13 34m-76 31 27 30 7-30m-147-13-21 23 40-13" fill="#536d7d" stroke="#bdced0" stroke-width="3"/><circle cx="71" cy="101" r="4" fill="#111e2b"/><path d="M39 109h27" stroke="#e3e8dc" stroke-width="4"/></symbol>
+        <symbol id="creature-seastar" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="m155 35 22 42 47-6-27 38 20 43-47-14-35 31-2-48-43-22 45-13Z" fill="#ec9161" stroke="#ffd39a" stroke-width="5"/><path d="M155 48 165 91l42-10-25 33 19 35-40-17-29 25 3-42-35-20 41-8Z" fill="#d96757" opacity=".75"/><g fill="#ffdfa8"><circle cx="157" cy="73" r="4"/><circle cx="185" cy="94" r="4"/><circle cx="173" cy="124" r="4"/><circle cx="140" cy="122" r="4"/><circle cx="126" cy="94" r="4"/><circle cx="155" cy="101" r="4"/></g></symbol>
+        <symbol id="creature-dancer" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M66 116q-19-35 15-66 18-16 35 3 15 17 31 3 22-21 39-2 28 31-4 69-24 31-58 37-36-4-58-44Z" fill="#e95448" stroke="#ffa45d" stroke-width="5"/><path d="M74 109q38 5 58 35 18-27 49-44m-105 25q-7 28-29 38m92-21q8 19 29 25m-36-46q-12-29-2-53" fill="none" stroke="#ffd075" stroke-width="5"/><path d="M109 59q-18-21 2-27m10 31q7-26 26-26" fill="none" stroke="#f5a55f" stroke-width="4"/><circle cx="109" cy="65" r="3" fill="#17253a"/></symbol>
+        <symbol id="creature-seadragon" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M150 163q-8-22 4-39-14-17-2-31-11-17 8-30 17-10 21-31l15 12-8 21q23 5 18 22-4 13-21 15 21 10 10 25-10 12-28 7l-5 30Z" fill="#e5a84d" stroke="#ffdd85" stroke-width="4"/><path d="m164 72-33-17-8 7 34 26m45-16 31-19 8 7-37 27m-37 40-34 14 4 9 38-10m27-17 32 11-3 9-38-10" fill="#73a875" stroke="#bdd88c" stroke-width="4"/><path d="m145 89-24-7 7-7 22 9m32 44 25 9-7 7-25-8" fill="#68a977"/><circle cx="180" cy="69" r="3" fill="#19283a"/></symbol>
+        <symbol id="creature-anemone" viewBox="0 0 310 196"><use href="#ocean-scene"/><ellipse cx="156" cy="154" rx="48" ry="18" fill="#f18caf"/><path d="M111 150q-10-30 5-52-4-27 12-42 13 17 14 43 10-38 25-53 15 20 6 55 17-31 32-31 7 25-13 54 24-25 38-16-5 27-42 49Z" fill="url(#coral)" stroke="#ffc2d4" stroke-width="4"/><g fill="#ffe0d3"><circle cx="128" cy="107" r="5"/><circle cx="154" cy="92" r="5"/><circle cx="181" cy="111" r="5"/><circle cx="145" cy="132" r="5"/><circle cx="174" cy="137" r="5"/></g></symbol>
+        <symbol id="creature-tube-anemone" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M139 174q-7-49 7-92m16 92q-1-46 19-86m-47 82q-12-44-34-64m83 66q18-42 46-58m-71 60q1-52-1-111m-42 103q-28-31-43-35m133 39q31-28 47-28" fill="none" stroke="#e8a2df" stroke-width="5" stroke-linecap="round"/><path d="m146 82-8-26m21 29 15-28m-52 37-20-24m85 22 24-19m-58-6 2-30" stroke="#d4e7ff" stroke-width="3" stroke-linecap="round"/></symbol>
+        <symbol id="creature-shrimp" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M89 123q15-37 56-36 28 0 52 22-19 26-51 29-37 1-57-15Z" fill="#f17b52" stroke="#ffd099" stroke-width="4"/><path d="m188 110 32-19-12 28 13 21-35-8m-68-37-4-24m9 24 8-33m29 31 12-34m-44 53-31 13m48-5-37 23m71-24 33 20" fill="none" stroke="#ffbd7e" stroke-width="4" stroke-linecap="round"/><path d="m105 97 13-11 15 8-3 17-18 9-12-10Zm24 11 16-11 15 7 1 17-16 9-16-9Zm25 3 14-10 16 7-4 17-17 7-11-9Z" fill="#df644b" stroke="#ffbe7b" stroke-width="3"/><circle cx="111" cy="91" r="3" fill="#14263b"/></symbol>
+        <symbol id="creature-leather-coral" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M105 167q7-37 23-51-12-34 6-68 18 28 20 55 17-42 34-46 6 35-6 60 27-26 44-13-11 30-42 45l17 18Z" fill="#df9c83" stroke="#ffd0a7" stroke-width="4"/><path d="M127 116q13 8 27 3m-15-22q13 6 24 1m16 20q14 5 27-3m-25-21q13 3 24-4m-49-17q9 5 19 3" fill="none" stroke="#f8d5b4" stroke-width="4" stroke-linecap="round"/><path d="M100 168h114" stroke="#f0c989" stroke-width="5"/></symbol>
+        <symbol id="creature-goby" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M58 119q22-40 82-38 42 1 77 27-24 37-75 37-55-1-84-26Z" fill="#9e7665" stroke="#e6c5a0" stroke-width="4"/><path d="m62 118-30-23v47Zm61-36 19-25 12 28m44 42 25 23-7-34" fill="#cf8766" stroke="#eccb9d" stroke-width="3"/><g fill="#46bcd0"><circle cx="91" cy="103" r="5"/><circle cx="121" cy="94" r="4"/><circle cx="147" cy="112" r="5"/><circle cx="174" cy="102" r="4"/><circle cx="131" cy="129" r="4"/></g><circle cx="80" cy="104" r="4" fill="#14263b"/></symbol>
+        <symbol id="creature-grouper" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M42 110q28-56 116-48 51 5 89 40-31 45-91 48-81 1-114-40Z" fill="#6e7e70" stroke="#d4cc9b" stroke-width="4"/><path d="m43 110-29-26v54Zm99-46 19-32 15 36m49 46 27 20-8-39" fill="#49645b" stroke="#c1be91" stroke-width="3"/><path d="m93 72-4-12m23 8-1-13m23 12 4-12m19 16 7-12" stroke="#d7ca90" stroke-width="5"/><g fill="#d8d4a1"><circle cx="82" cy="102" r="3"/><circle cx="119" cy="120" r="4"/><circle cx="150" cy="98" r="3"/><circle cx="181" cy="120" r="4"/><circle cx="207" cy="99" r="3"/></g><circle cx="63" cy="100" r="4" fill="#142333"/></symbol>
+        <symbol id="creature-barnacle" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M73 158q12-18 28-4 12-23 29-7 14-26 34-9 14-25 30-7 20-15 32 1l-7 28H79Z" fill="#593f38" stroke="#d7b09a" stroke-width="4"/><g fill="url(#shell)" stroke="#fff0cc" stroke-width="3"><path d="m83 139 6-37q15-13 30 1l8 39-23 7Zm41-5 6-41q16-15 31-1l7 41-23 10Zm44 0 4-35q16-17 31-2l9 37-24 9Zm42 3 7-33q17-14 30 1l4 34-21 9Z"/></g><path d="m90 105 18 35 13-35m-1-7 19 34 16-34m27 1 16 35 12-35m8 2 18 30 12-29" fill="none" stroke="#9a5a43" stroke-width="3"/></symbol>
+        <symbol id="creature-knob-coral" viewBox="0 0 310 196"><use href="#ocean-scene"/><path d="M53 145q7-41 39-43 14-42 54-39 23-37 59-14 38-8 54 30 27 29 8 65-32 29-83 28-71 20-131-27Z" fill="#554a9d" stroke="#9ea5ef" stroke-width="5"/><g fill="#ff9a39" stroke="#ffc267" stroke-width="3"><circle cx="105" cy="109" r="13"/><circle cx="147" cy="82" r="14"/><circle cx="192" cy="91" r="13"/><circle cx="225" cy="121" r="14"/><circle cx="170" cy="127" r="15"/><circle cx="119" cy="145" r="12"/><circle cx="202" cy="151" r="11"/></g><g fill="#ffcf70"><circle cx="104" cy="105" r="4"/><circle cx="146" cy="78" r="4"/><circle cx="191" cy="87" r="4"/><circle cx="224" cy="117" r="4"/><circle cx="169" cy="123" r="4"/></g></symbol>
+    </svg>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="#" aria-label="深潜首页">
+                <svg class="brand-fish" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M6 24c8-12 22-14 31-5l7-6v22l-7-6C28 38 14 36 6 24Z" fill="currentColor"/>
+                    <circle cx="16" cy="22" r="1.6" fill="#484848"/>
+                    <path d="M11 15 7 9m12 3 1-7m3 31 2 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/>
+                </svg>
+                <span class="brand-copy">
+                    <span class="brand-name">深潜</span>
+                    <span class="brand-url">HELLODIVE.COM</span>
+                </span>
+            </a>
+            <nav class="main-nav" aria-label="主导航">
+                <a class="nav-link is-active" href="#top">首页</a>
+                <a class="nav-link" href="#">世界潜点 <span class="chevron" aria-hidden="true"></span></a>
+                <a class="nav-link" href="#">全球预定</a>
+                <a class="nav-link" href="#">小蓝书</a>
+                <a class="nav-link" href="#gallery">潜水专栏 <span class="chevron" aria-hidden="true"></span></a>
+                <a class="nav-link" href="#">潜店查询 <span class="chevron" aria-hidden="true"></span></a>
+            </nav>
+            <a class="login-link" href="#">登录注册</a>
+        </div>
+    </header>
+
+    <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+            <h1 class="hero-title" id="hero-title">世界最大可潜沉船之一</h1>
+            <p class="hero-description">这艘海下豪华巨轮几乎完整无损，潜水员可以穿梭于众多舱轮和甲板之间</p>
+            <a class="hero-button" href="#gallery">潜入瓦努阿图</a>
+        </div>
+        <span class="hero-arrow previous" aria-hidden="true"></span>
+        <span class="hero-arrow next" aria-hidden="true"></span>
+        <div class="hero-bottom">
+            <form class="destination-search" action="#gallery">
+                <div class="destination-search-row">
+                    <input type="search" aria-label="搜索潜水中心或潜点" placeholder="飞鱼潜水中心图蓝本店">
+                    <button class="search-submit" type="submit" aria-label="搜索"><span class="search-glass" aria-hidden="true"></span></button>
+                </div>
+                <p class="popular-destinations"><strong>发现：</strong><span>涛岛</span><span>图巴塔哈</span><span>贝里琉岛</span><span>东帝汶</span><span>宁加洛礁</span></p>
+            </form>
+            <a class="dive-tool" href="#gallery"><span class="dive-tool-icon" aria-hidden="true">◉</span>潜点查询工具</a>
+        </div>
+    </section>
+
+    <main class="page-main" id="gallery-section">
+        <div class="content">
+            <h1 class="page-title">海洋图册</h1>
+
+            <ul class="category-list" aria-label="海洋生物分类">
+                <li>
+                    <a class="category is-active" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="M6 19c7-8 17-10 25-4l8-6v20l-8-6c-8 6-18 4-25-4Z"/><circle cx="17" cy="17" r="1" fill="#fff" stroke="none"/></svg>
+                        <span>全部</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="category" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="M5 20c3-5 9-7 17-6 5-5 15-4 18 2l4 2-2 4-7 1c-3 4-7 4-10 1-6 2-12 2-17 0l-4 2 1-6Z"/></svg>
+                        <span>小型鱼</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="category" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="m6 13 7 3 4-7 5 5 7-4 5 5 7 2-1 12-8 3-8-3-7 2-7-5-3-7Z"/><path d="m6 13 3-5m7 8-4-8m22 7 3-5"/></svg>
+                        <span>中型鱼</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="category" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="m4 18 9-3 3-9 4 8 12-1 11 6-11 6-12-1-4 8-3-10-9-4 5-2Z"/></svg>
+                        <span>大型鱼</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="category" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="M4 23c3-7 11-12 23-12 6 0 11 2 16 1l-4 5 4 4-9-1-5-3c-6 5-15 6-25 7Z"/><path d="m12 22-3 6m8-5-1 6m7-6 1 5"/></svg>
+                        <span>巨型</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="category" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="M12 11 9 7m7 5 1-6m15 5 4-4m-3 8 7-2M8 19c0-6 5-9 8-6l4-3 5 2 4-2 5 4c4-1 6 3 5 6l-4 4 1 6-5 1-2-5-4 3-4-2-4 3-4-2 1-6Z"/><path d="m14 19 4 2m16-2-4 2m-9 5 2 2 2-2"/></svg>
+                        <span>硬壳</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="category" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="M23 33c1-7-1-11-4-14-4-4-5-8-3-12m8 26c-1-8 1-13 6-16 4-2 6-6 5-10m-13 26c3-8 1-14-3-18m4 7c4-4 5-9 4-14m-6 3c-3-1-7-4-8-7m13 11c4-1 8-4 9-7"/></svg>
+                        <span>无脊椎</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="category" href="#gallery">
+                        <svg class="category-icon" viewBox="0 0 48 38" aria-hidden="true"><path d="M24 34V21m0 6-8-5m8 2 8-7m-16 5-5-7m22 5 5-8m-22 7 1-10m14 7 1-10m-14 13-7 1m19-3 8 1m-14 3-2 9m-8-13-5-3m23 1 5-3"/></svg>
+                        <span>珊瑚</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="search-row">
+                <label class="search-box">
+                    <input type="search" aria-label="搜索海洋生物" placeholder="名称、地点或类型">
+                </label>
+                <div class="record-count"><span class="calendar-icon" aria-hidden="true"></span>共 <strong>73</strong> 条报告数据</div>
+            </div>
+
+            <section class="gallery" id="gallery" aria-label="海洋生物图鉴">
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="苏眉鱼"><use href="#creature-wrasse"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">苏眉鱼</h2><p class="creature-english">(Humphead wrasse / Napoleon wrasse / Maori wrasse)</p><p class="creature-meta">位置：斐济、帕劳<br>品种：大型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="绿海龟"><use href="#creature-turtle"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">绿海龟</h2><p class="creature-english">(Green sea turtle / Green turtle)</p><p class="creature-meta">位置：帕劳<br>品种：硬壳</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="小须鲸"><use href="#creature-minke"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">小须鲸</h2><p class="creature-english">(Minke whale)</p><p class="creature-meta">位置：大堡礁、莫兰岛、加拉帕戈斯<br>品种：巨型</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="躄鱼"><use href="#creature-frogfish"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">躄鱼</h2><p class="creature-english">(Frogfishes)</p><p class="creature-meta">位置：菲律宾、仙本那、塞班岛<br>品种：小型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="海狗"><use href="#creature-seal"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">海狗</h2><p class="creature-english">(Fur seals)</p><p class="creature-meta">位置：南极、南非<br>品种：大型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="蝶鱼"><use href="#creature-butterflyfish"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">蝶鱼</h2><p class="creature-english">(Butterflyfish)</p><p class="creature-meta">位置：大堡礁、马尔代夫<br>品种：小型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="领航鲸"><use href="#creature-pilot-whale"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">领航鲸</h2><p class="creature-english">(Pilot whale)</p><p class="creature-meta">位置：夏威夷、亚速尔群岛<br>品种：巨型</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="笛鲷"><use href="#creature-snapper"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">笛鲷</h2><p class="creature-english">(Five Lined Snapper)</p><p class="creature-meta">位置：安达曼群岛、巴厘岛<br>品种：小型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="牛鲨"><use href="#creature-bullshark"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">牛鲨</h2><p class="creature-english">(Bull shark)</p><p class="creature-meta">位置：大溪地、卡鲁岛<br>品种：大型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="粒皮瘤海星"><use href="#creature-seastar"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">粒皮瘤海星</h2><p class="creature-english">(Granulated Seastar)</p><p class="creature-meta">位置：安达曼群岛、巴厘岛<br>品种：硬壳</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="西班牙舞娘"><use href="#creature-dancer"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">西班牙舞娘</h2><p class="creature-english">(Spanish Dancer)</p><p class="creature-meta">位置：菲律宾、仙本那<br>品种：无脊椎</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="叶海龙"><use href="#creature-seadragon"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">叶海龙</h2><p class="creature-english">(Leafy seadragons)</p><p class="creature-meta">位置：关岛、澳大利亚<br>品种：小型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="海葵"><use href="#creature-anemone"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">海葵</h2><p class="creature-english">(Sea anemones)</p><p class="creature-meta">位置：菲律宾、仙本那<br>品种：无脊椎</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="千手佛珊瑚"><use href="#creature-tube-anemone"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">千手佛珊瑚</h2><p class="creature-english">(Tube-dwelling anemone)</p><p class="creature-meta">位置：图蓝本、巴厘岛<br>品种：珊瑚</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="泡泡虾"><use href="#creature-shrimp"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">泡泡虾</h2><p class="creature-english">(Bubble Coral Shrimp)</p><p class="creature-meta">位置：菲律宾、仙本那<br>品种：硬壳</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="皮革珊瑚"><use href="#creature-leather-coral"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">皮革珊瑚</h2><p class="creature-english">(Toadstool Leather Coral)</p><p class="creature-meta">位置：菲律宾、仙本那<br>品种：珊瑚</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="虾虎鱼"><use href="#creature-goby"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">虾虎鱼</h2><p class="creature-english">(Prawn goby)</p><p class="creature-meta">位置：图蓝本、巴厘岛<br>品种：小型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="石斑鱼"><use href="#creature-grouper"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">石斑鱼</h2><p class="creature-english">(Grouper)</p><p class="creature-meta">位置：菲律宾、仙本那<br>品种：中型鱼</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="龟足"><use href="#creature-barnacle"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">龟足</h2><p class="creature-english">(Goose Barnacle)</p><p class="creature-meta">位置：香港、夏威夷<br>品种：硬壳</p></div>
+                </article>
+                <article class="creature-card">
+                    <svg class="creature-image" viewBox="0 0 310 196" role="img" aria-label="猫眼珊瑚"><use href="#creature-knob-coral"/></svg>
+                    <div class="card-copy"><h2 class="creature-name">猫眼珊瑚</h2><p class="creature-english">(Knob coral)</p><p class="creature-meta">位置：香港、塞班岛<br>品种：珊瑚</p></div>
+                </article>
+            </section>
+
+            <nav class="pagination" aria-label="图册分页">
+                <a class="page-number previous" href="#gallery" aria-label="上一页">上一页</a>
+                <a class="page-number is-current" href="#gallery" aria-current="page">1</a>
+                <a class="page-number" href="#gallery">2</a>
+                <a class="page-number" href="#gallery">3</a>
+                <a class="page-number" href="#gallery">4</a>
+                <a class="page-number next" href="#gallery">下一页</a>
+            </nav>
+        </div>
+    </main>
+
+    <a class="back-to-top" href="#top" aria-label="返回顶部"></a>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS3 3D 动画</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 40px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, #eef6ff, #fff7fb);
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .chenxi_demo {
+            width: min(900px, 94vw);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #d7e3ff;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(46, 87, 168, 0.12);
+            padding: 32px 30px;
+        }
+
+        .chenxi_home {
+            display: inline-block;
+            margin-bottom: 14px;
+            color: #2563eb;
+            font-size: 14px;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .chenxi_home:hover {
+            border-bottom-color: #2563eb;
+        }
+
+        .chenxi_demo h2 {
+            margin: 0 0 14px;
+            text-align: center;
+            font-size: 32px;
+            color: #1f2d3d;
+            letter-spacing: 2px;
+        }
+
+        .chenxi_intro {
+            margin: 0;
+            line-height: 1.8;
+            color: #475569;
+            font-size: 17px;
+        }
+
+        .chenxi_demo h3 {
+            margin: 30px 0 14px;
+            padding-left: 10px;
+            border-left: 4px solid #7aa2ff;
+            font-size: 20px;
+            color: #1d4ed8;
+        }
+
+        .chenxi_note {
+            margin: 12px 0 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .chenxi_rule-list {
+            margin: 30px 0 0;
+            padding-left: 22px;
+            color: #334155;
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .chenxi_rule-list strong {
+            color: #1d4ed8;
+        }
+
+        .chenxi_sign {
+            margin: 22px 0 0;
+            text-align: right;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* 一、旋转的立方体：preserve-3d + @keyframes */
+        .chenxi_scene {
+            display: flex;
+            justify-content: center;
+            padding: 26px 0;
+            border-radius: 14px;
+            background: radial-gradient(ellipse at 50% 40%, #1c3029, #14241f);
+            perspective: 900px;   /* 设置观察距离，产生近大远小 */
+        }
+
+        .chenxi_cube {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            transform-style: preserve-3d;   /* 子元素保持 3D 空间，不被压平 */
+            animation: chenxi_spin 9s linear infinite;
+        }
+
+        .chenxi_face {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-radius: 10px;
+            background: rgba(91, 141, 239, 0.72);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 4px;
+        }
+
+        /* 六个面各往后推半个边长（150 ÷ 2 = 75px） */
+        .chenxi_front  { transform: rotateY(0deg) translateZ(75px); }
+        .chenxi_back   { transform: rotateY(180deg) translateZ(75px); }
+        .chenxi_right  { transform: rotateY(90deg) translateZ(75px); }
+        .chenxi_left   { transform: rotateY(-90deg) translateZ(75px); }
+        .chenxi_top    { transform: rotateX(90deg) translateZ(75px); }
+        .chenxi_bottom { transform: rotateX(-90deg) translateZ(75px); }
+
+        @keyframes chenxi_spin {
+            from { transform: rotateX(0deg) rotateY(0deg); }
+            to   { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* 二、翻转卡片：transition + :hover，backface-visibility 隐藏背面 */
+        .chenxi_flip {
+            width: 260px;
+            height: 150px;
+            margin: 0 auto;
+            perspective: 800px;
+            cursor: pointer;
+        }
+
+        .chenxi_flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        .chenxi_flip:hover .chenxi_flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .chenxi_side {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border-radius: 14px;
+            backface-visibility: hidden;   /* 翻到背面时隐藏自己 */
+            font-size: 16px;
+        }
+
+        .chenxi_side small {
+            color: inherit;
+            opacity: 0.75;
+            font-size: 12px;
+        }
+
+        .chenxi_side-front {
+            background: linear-gradient(145deg, #5b8def, #7aa2ff);
+            color: #fff;
+        }
+
+        .chenxi_side-back {
+            background: linear-gradient(145deg, #34a89a, #55b7a0);
+            color: #fff;
+            transform: rotateY(180deg);
+        }
+
+        /* 三、三个坐标轴的旋转对比 */
+        .chenxi_axes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .chenxi_axis-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 10px;
+            border: 1px dashed #b9cdff;
+            border-radius: 12px;
+            background: #f8fbff;
+            perspective: 600px;
+        }
+
+        .chenxi_plane {
+            width: 90px;
+            height: 90px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            background: linear-gradient(145deg, #7aa2ff, #a5c4ff);
+            box-shadow: 0 10px 22px rgba(46, 87, 168, 0.22);
+            animation-duration: 3s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-timing-function: ease-in-out;
+        }
+
+        .chenxi_axis-x .chenxi_plane { animation-name: chenxi_tilt-x; }
+        .chenxi_axis-y .chenxi_plane { animation-name: chenxi_tilt-y; }
+        .chenxi_axis-z .chenxi_plane { animation-name: chenxi_tilt-z; }
+
+        .chenxi_axis-tag {
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            color: #2563eb;
+        }
+
+        @keyframes chenxi_tilt-x {
+            from { transform: rotateX(-35deg); }
+            to   { transform: rotateX(35deg); }
+        }
+
+        @keyframes chenxi_tilt-y {
+            from { transform: rotateY(-35deg); }
+            to   { transform: rotateY(35deg); }
+        }
+
+        @keyframes chenxi_tilt-z {
+            from { transform: rotateZ(-35deg); }
+            to   { transform: rotateZ(35deg); }
+        }
+
+        @media (max-width: 620px) {
+            .chenxi_axes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chenxi_demo">
+        <a class="chenxi_home" href="./index.html">← 返回首页</a>
+        <h2>CSS3 3D 动画</h2>
+        <p class="chenxi_intro">3D 动画的三个关键：<strong>perspective</strong> 提供近大远小的观察距离，<strong>transform-style: preserve-3d</strong> 让子元素处在同一个 3D 空间里，再用 <strong>rotateX / rotateY / rotateZ</strong> 改变朝向——动画本身仍由 @keyframes 或 transition 驱动。</p>
+
+        <h3>一、旋转的立方体（@keyframes）</h3>
+        <div class="chenxi_scene">
+            <div class="chenxi_cube">
+                <div class="chenxi_face chenxi_front">前面</div>
+                <div class="chenxi_face chenxi_back">后面</div>
+                <div class="chenxi_face chenxi_right">右面</div>
+                <div class="chenxi_face chenxi_left">左面</div>
+                <div class="chenxi_face chenxi_top">上面</div>
+                <div class="chenxi_face chenxi_bottom">下面</div>
+            </div>
+        </div>
+        <p class="chenxi_note">六个面用 translateZ(75px) 推到立方体表面，父元素同时绕 X 轴和 Y 轴旋转，9 秒一圈无限循环。</p>
+
+        <h3>二、翻转卡片（transition + :hover）</h3>
+        <div class="chenxi_flip">
+            <div class="chenxi_flip-inner">
+                <div class="chenxi_side chenxi_side-front">
+                    正面 · 鼠标移上来
+                    <small>transform: rotateY(0)</small>
+                </div>
+                <div class="chenxi_side chenxi_side-back">
+                    背面 · 0.6 秒翻转完成
+                    <small>transform: rotateY(180deg)</small>
+                </div>
+            </div>
+        </div>
+        <p class="chenxi_note">两面都设 backface-visibility: hidden，翻过去时背面才不会"穿透"显示；把鼠标移出可反复翻转。</p>
+
+        <h3>三、三个坐标轴对比（rotateX / rotateY / rotateZ）</h3>
+        <div class="chenxi_axes">
+            <div class="chenxi_axis-cell chenxi_axis-x">
+                <div class="chenxi_plane"></div>
+                <span class="chenxi_axis-tag">rotateX 上下翻</span>
+            </div>
+            <div class="chenxi_axis-cell chenxi_axis-y">
+                <div class="chenxi_plane"></div>
+                <span class="chenxi_axis-tag">rotateY 左右翻</span>
+            </div>
+            <div class="chenxi_axis-cell chenxi_axis-z">
+                <div class="chenxi_plane"></div>
+                <span class="chenxi_axis-tag">rotateZ 平面转</span>
+            </div>
+        </div>
+        <p class="chenxi_note">三块方板用同一套动画参数，只换旋转轴，方便观察每根轴的转动方向。</p>
+
+        <ul class="chenxi_rule-list">
+            <li><strong>perspective：</strong>写在父元素上，值越小透视越夸张；不写就没有近大远小，3D 看起来像 2D 压扁</li>
+            <li><strong>preserve-3d：</strong>放在做 3D 变换的元素上，子元素才保留空间关系，否则子元素会被"拍平"到同一平面</li>
+            <li><strong>六面体套路：</strong>rotateY / rotateX 定朝向 + translateZ(边长的一半) 推出表面</li>
+            <li><strong>backface-visibility: hidden：</strong>卡片翻转时隐藏背面，避免正反两面互相透视</li>
+            <li><strong>动画驱动：</strong>持续旋转用 @keyframes + animation，交互翻转用 transition + :hover</li>
+        </ul>
+
+        <p class="chenxi_sign">121 陈曦 · 11-2</p>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

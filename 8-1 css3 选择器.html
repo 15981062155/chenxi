@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>css3</title>
+    <style>
+        .main{
+            display: flex;
+            flex-wrap: wrap;
+            margin:10px;
+        }
+        .box{
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            display: flex;
+            /*水平垂直居中*/
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            transition:all 0.6s;
+            box-sizing: border-box;
+            /*width:包含padding和border*/
+        }
+        .box:first-child:hover
+        {
+            background-color: red;
+            color: white;
+            font-size: 140px;
+        }
+        .box:nth-child(2):hover
+        {
+            border-radius: 50%;
+            border-width: 10px;
+        }
+        .box:nth-child(3):hover
+        {
+            box-shadow: 10px  10px  10px #c95858;
+        }
+        .box:nth-of-type(4):hover
+        {
+            text-shadow: 100px 10px 10px #5c3abb;
+        }
+        .box:nth-of-type(5):hover
+        {
+           /*线性渐变*/
+           background: linear-gradient(red,blue);
+        }
+        .box:nth-of-type(5)+.box
+        {
+            /*径向渐变*/
+            background: radial-gradient(red,blue);
+        }
+        .box:nth-of-type(7):hover
+        {
+            transform:scale(0.5);
+
+        }
+        .box:nth-child(8):hover
+        {
+            transform:translateX(-150px);
+        }
+        .box:nth-child(9):hover
+        {
+            transform:rotateX(-180deg);
+        }
+        .box:nth-child(10):hover
+        {
+            transform: skewX(20deg) translateY(50px) scale(1.08);
+            background: linear-gradient(135deg, #fff7d6, #ffd86a);
+            border: 2px solid #b77d00;
+            box-shadow: 0 0 18px rgba(255, 191, 0, 0.9),
+                        0 0 30px rgba(255, 191, 0, 0.6),
+                        0 0 45px rgba(255, 153, 0, 0.4);
+        }
+        .box:nth-last-child(2):hover::before
+        {
+            content: "*";
+            color: red;
+        }
+        .box:nth-child(12):hover::after
+        {
+            content: "陈曦";
+            display: block;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+        .box:nth-child(3n):hover
+        {
+            border:3px solid red;
+        }
+        .box:nth-child(even):hover
+        {
+            background: linear-gradient(135deg, #fff, #f8f8f8);
+            border: 2px solid #222;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.9),
+                        0 0 35px rgba(255, 180, 0, 0.7),
+                        0 0 50px rgba(255, 120, 0, 0.5);
+            transform: translateY(-8px) scale(1.06);
+        }
+        .box:nth-child(10):hover
+        {
+            transform: skewX(20deg) translateY(50px) scale(1.08);
+            background: linear-gradient(135deg, #fff7d6, #ffd86a);
+            border: 2px solid #b77d00;
+            box-shadow: 0 0 18px rgba(255, 191, 0, 0.9),
+                        0 0 30px rgba(255, 191, 0, 0.6),
+                        0 0 45px rgba(255, 153, 0, 0.4);
+        }
+        .box:nth-child(8):hover
+        {
+            transform: translateX(-150px) translateY(-8px) scale(1.06);
+            box-shadow: 0 0 20px rgba(209, 248, 101, 0.9),
+                        0 0 35px rgba(0, 170, 255, 0.6),
+                        0 0 50px rgba(0, 170, 255, 0.4);
+        }
+            
+     </style>
+</head>
+<body>
+    <div class="main">
+       <div class="box">1</div>
+       <div class="box">2</div>
+       <div class="box">3</div>
+       <div class="box">4</div>
+       <div class="box">5</div>
+       <div class="box">6</div>
+       <div class="box">7</div>
+       <div class="box">8</div>
+       <div class="box">9</div>
+       <div class="box">10</div>
+       <div class="box">11</div>
+       <div class="box">12</div>
+    </div>
+    
+</body>
+</html>

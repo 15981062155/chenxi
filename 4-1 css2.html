@@ -1,0 +1,67 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h2,h3,p{
+            padding:0;
+            margin:0;
+        }
+        #box{
+            padding:8px;
+            margin: 20px;
+            border:1px solid #138a1b;
+            font-size: 12px;
+            width: 480px;
+        }
+        #box h3{
+            font-size: 16px;
+            line-height: 33px;
+            text-align: center;
+            color: rgb(87, 112, 226);
+            letter-spacing: 3px;
+        }
+        #box p{
+            color:#942626;
+            text-indent: 2em;
+            line-height: 150%;
+        
+        }
+        #box a{
+            color: rgb(109, 12, 108);
+            text-decoration: none;
+        }
+        /* ====== 扩展要求CSS ====== */
+        /* 1、学号、姓名、班级的值蓝色加粗，用1个选择器。给对应内容加class */
+        .info-val{
+            color: blue;
+            font-weight: bold;
+        }
+        /* 2、h2黑底白字，居中，行高150% */
+        h2{
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            line-height: 150%;
+        }
+        /* 3、知识点的值蓝底白字 */
+        .knowledge-val{
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>css群组选择器和后代迭代器</h2>
+    <div id="box">
+        <h3>css进阶</h3>
+        <p>学号：<span class="info-val">24001010121</span>，姓名：<span class="info-val">陈曦</span>，班级：<span class="info-val">计算机24001</span>，《高级网页设计》设计的学习难度：中等，
+            本实例的知识点：<span class="knowledge-val">css群组选择器和后代迭代器</span>。
+            <a href="https://www.baidu.com">更多</a>
+        
+        </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web 前端长度单位</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 40px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, #eef6ff, #fff7fb);
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .demo {
+            width: min(900px, 94vw);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #d7e3ff;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(46, 87, 168, 0.12);
+            padding: 32px 30px;
+        }
+
+        .chenxi_home {
+            display: inline-block;
+            margin-bottom: 14px;
+            color: #2563eb;
+            font-size: 14px;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .chenxi_home:hover {
+            border-bottom-color: #2563eb;
+        }
+
+        h2 {
+            margin: 0 0 14px;
+            text-align: center;
+            font-size: 32px;
+            color: #1f2d3d;
+            letter-spacing: 2px;
+        }
+
+        .intro {
+            margin: 0;
+            line-height: 1.8;
+            color: #475569;
+            font-size: 17px;
+        }
+
+        h3 {
+            margin: 28px 0 14px;
+            padding-left: 10px;
+            border-left: 4px solid #7aa2ff;
+            font-size: 20px;
+            color: #1d4ed8;
+        }
+
+        .unit-tag {
+            flex-shrink: 0;
+            width: 76px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            color: #2563eb;
+        }
+
+        /* px 与 vw 的横向条形对比 */
+        .unit-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .bar {
+            height: 26px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #7aa2ff, #a5c4ff);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .px-100 { width: 100px; }
+        .px-200 { width: 200px; }
+        .px-300 { width: 300px; }
+        .vw-25 { width: 25vw; }
+        .vw-50 { width: 50vw; }
+
+        /* % 相对父元素宽度 */
+        .frame {
+            padding: 14px;
+            border: 2px dashed #7aa2ff;
+            border-radius: 10px;
+            background: #f8fbff;
+        }
+
+        .pct {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-radius: 6px;
+            background: #5b8def;
+            color: #fff;
+            font-size: 13px;
+            line-height: 26px;
+        }
+
+        .pct:last-child {
+            margin-bottom: 0;
+        }
+
+        .p25 { width: 25%; }
+        .p50 { width: 50%; }
+        .p75 { width: 75%; }
+
+        /* em 相对当前元素字号，层层嵌套会放大 */
+        .chain {
+            padding: 14px;
+            border: 1px dashed #f0a500;
+            border-radius: 10px;
+            background: #fffaf0;
+            font-size: 16px;
+            color: #8a6100;
+        }
+
+        .em-lv1 {
+            font-size: 1.5em;   /* 16px × 1.5 = 24px */
+            width: 8em;         /* 24px × 8 = 192px */
+        }
+
+        .em-lv2 {
+            font-size: 1.5em;   /* 24px × 1.5 = 36px */
+            width: 8em;         /* 36px × 8 = 288px */
+        }
+
+        /* rem 相对根元素 html 的字号，不受父级影响 */
+        .rem-lv1 {
+            font-size: 1.5rem;  /* 16px × 1.5 = 24px */
+            width: 10rem;       /* 16px × 10 = 160px */
+        }
+
+        .rem-lv2 {
+            font-size: 1.5rem;  /* 仍然是 16px × 1.5 = 24px */
+            width: 10rem;       /* 仍然是 160px */
+        }
+
+        .chain-box {
+            margin-top: 10px;
+            padding: 10px 12px;
+            border: 1px solid #e3c07a;
+            border-radius: 8px;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        .chain-box .chain-box {
+            border-style: dashed;
+        }
+
+        /* vh 相对视口高度 */
+        .vh-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 20vh;
+            border: 2px solid #34a89a;
+            border-radius: 10px;
+            background: #ecfaf7;
+            color: #0f766e;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .note {
+            margin: 10px 0 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .rule-list {
+            margin: 28px 0 0;
+            padding-left: 22px;
+            color: #334155;
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .rule-list strong {
+            color: #1d4ed8;
+        }
+
+        .sign {
+            margin: 22px 0 0;
+            text-align: right;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <a class="chenxi_home" href="./index.html">← 返回首页</a>
+        <h2>Web 前端长度单位</h2>
+        <p class="intro">CSS 的长度单位分为两大类：<strong>绝对单位</strong>（px、pt、cm 等）大小固定；<strong>相对单位</strong>（%、em、rem、vw、vh 等）需要参照物，会随父元素、根字号或视口变化，是响应式布局的基础。</p>
+
+        <h3>一、px 绝对单位</h3>
+        <div class="unit-row">
+            <span class="unit-tag">100px</span>
+            <span class="bar px-100"></span>
+        </div>
+        <div class="unit-row">
+            <span class="unit-tag">200px</span>
+            <span class="bar px-200"></span>
+        </div>
+        <div class="unit-row">
+            <span class="unit-tag">300px</span>
+            <span class="bar px-300"></span>
+        </div>
+        <p class="note">1px 是屏幕上固定的小方块，不随窗口大小改变，是最常用的单位。</p>
+
+        <h3>二、% 相对父元素</h3>
+        <div class="frame">
+            <div class="pct p25">width: 25%</div>
+            <div class="pct p50">width: 50%</div>
+            <div class="pct p75">width: 75%</div>
+        </div>
+        <p class="note">百分比相对的是父元素的宽度，父元素变宽时子元素跟着变宽，常用于流式布局。</p>
+
+        <h3>三、em 相对当前字号</h3>
+        <div class="chain">
+            <div class="chain-box em-lv1">第 1 层：font-size: 1.5em → 24px；width: 8em → 192px
+                <div class="chain-box em-lv2">第 2 层：font-size: 1.5em → 36px；width: 8em → 288px</div>
+            </div>
+        </div>
+        <p class="note">em 相对<strong>当前元素自己的 font-size</strong> 计算，层层嵌套会一层层放大。</p>
+
+        <h3>四、rem 相对根字号</h3>
+        <div class="chain">
+            <div class="chain-box rem-lv1">第 1 层：font-size: 1.5rem → 24px；width: 10rem → 160px
+                <div class="chain-box rem-lv2">第 2 层：font-size: 1.5rem → 24px；width: 10rem → 160px</div>
+            </div>
+        </div>
+        <p class="note">rem 相对根元素 html 的 font-size（浏览器默认 16px），无论嵌套多少层结果都不变。</p>
+
+        <h3>五、vw / vh 相对视口</h3>
+        <div class="unit-row">
+            <span class="unit-tag">25vw</span>
+            <span class="bar vw-25"></span>
+        </div>
+        <div class="unit-row">
+            <span class="unit-tag">50vw</span>
+            <span class="bar vw-50"></span>
+        </div>
+        <div class="vh-box">width: 100%；height: 20vh（窗口越高它越高）</div>
+        <p class="note">1vw = 视口宽度的 1%，1vh = 视口高度的 1%，拖动浏览器窗口即可看到条形变化。</p>
+
+        <ul class="rule-list">
+            <li><strong>绝对单位：</strong>px、pt、cm、mm、in、pc —— 大小固定，适合打印场景和精确控件</li>
+            <li><strong>相对单位：</strong>%、em、rem、vw、vh、vmin、vmax、ch、ex —— 各有一个参照物</li>
+            <li><strong>参照物区别：</strong>% 参照父元素宽度；em 参照自身字号（会嵌套放大）；rem 只参照根字号</li>
+            <li><strong>使用习惯：</strong>写字号多用 rem（可整体缩放），写组件内部间距多用 em 或 px，满屏与响应式多用 vw / vh</li>
+        </ul>
+
+        <p class="sign">121 陈曦 · 11-1</p>
+    </div>
+</body>
+</html>
