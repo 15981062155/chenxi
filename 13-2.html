@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lucide SVG 图标实践 - 121 陈曦《高级网页设计》">
+    <title>13-2 · Lucide SVG 图标 - 121 陈曦</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #17231f;
+            --muted: #63706a;
+            --paper: #f5f1e8;
+            --paper-deep: #e9e2d3;
+            --forest: #1e4b3b;
+            --leaf: #b8cf8a;
+            --coral: #e8785f;
+            --line: rgba(23, 35, 31, .14);
+            --shadow: 0 20px 48px rgba(30, 75, 59, .12);
+            --radius: 16px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 34px 16px 60px;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 10% 8%, rgba(184, 207, 138, .30), transparent 25rem),
+                radial-gradient(circle at 90% 82%, rgba(232, 120, 95, .14), transparent 26rem),
+                var(--paper);
+            font-family: "Trebuchet MS", "Microsoft YaHei", sans-serif;
+            line-height: 1.75;
+        }
+
+        .page {
+            width: min(1080px, 100%);
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .home-link {
+            color: var(--forest);
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            color: var(--forest);
+            background: rgba(184, 207, 138, .35);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .badge svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        h1 {
+            margin: 30px 0 10px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        h1 span {
+            color: var(--coral);
+        }
+
+        .lead {
+            max-width: 850px;
+            margin: 0 0 30px;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .lead code,
+        .note code {
+            padding: 2px 6px;
+            border-radius: 5px;
+            color: var(--forest);
+            background: rgba(184, 207, 138, .35);
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 44px 0 18px;
+            padding-left: 12px;
+            border-left: 4px solid var(--forest);
+            font-size: 22px;
+        }
+
+        h2 svg.lucide {
+            width: 20px;
+            height: 20px;
+            color: var(--coral);
+        }
+
+        .card {
+            padding: 24px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, .72);
+            box-shadow: var(--shadow);
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        }
+
+        .demo {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px;
+            margin-top: 16px;
+            padding: 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .68);
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .demo.center {
+            justify-content: center;
+        }
+
+        pre {
+            margin: 0;
+            padding: 16px 18px;
+            overflow-x: auto;
+            border-radius: 12px;
+            color: #e7f0e9;
+            background: #16352a;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13.5px;
+            line-height: 1.85;
+            white-space: pre;
+        }
+
+        pre .tag {
+            color: #b8cf8a;
+        }
+
+        pre .attr {
+            color: #f3c78a;
+        }
+
+        pre .val {
+            color: #8fd3c7;
+        }
+
+        pre .cmt {
+            color: #7b8f86;
+        }
+
+        pre .fn {
+            color: #e8785f;
+        }
+
+        /* 所有由 lucide 生成的图标统一尺寸 */
+        svg.lucide {
+            width: 1.3em;
+            height: 1.3em;
+            vertical-align: -0.2em;
+        }
+
+        .demo .big {
+            color: var(--forest);
+        }
+
+        .demo .big svg {
+            width: 34px;
+            height: 34px;
+        }
+
+        .size-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .size-item svg {
+            color: var(--forest);
+        }
+
+        .stroke-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 92px;
+            padding: 16px 10px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .6);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .stroke-item svg {
+            color: var(--forest);
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .search {
+            position: relative;
+            flex: 1 1 240px;
+        }
+
+        .search svg {
+            position: absolute;
+            top: 50%;
+            left: 13px;
+            width: 17px;
+            height: 17px;
+            color: var(--muted);
+            transform: translateY(-50%);
+        }
+
+        .search input {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            background: #fff;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .search input:focus {
+            border-color: var(--forest);
+            box-shadow: 0 0 0 3px rgba(30, 75, 59, .16);
+        }
+
+        .count {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+            gap: 10px;
+        }
+
+        .icon-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 14px 6px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .58);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform .2s ease, border-color .2s ease, color .2s ease;
+        }
+
+        .icon-cell:hover {
+            color: var(--forest);
+            border-color: var(--forest);
+            transform: translateY(-3px);
+        }
+
+        .icon-cell svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .icon-cell.is-hidden {
+            display: none;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 22px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--paper);
+            background: var(--forest);
+            cursor: pointer;
+            transition: background-color .2s ease, transform .2s ease;
+        }
+
+        .btn:hover {
+            background: #2b6350;
+            transform: translateY(-2px);
+        }
+
+        .btn.ghost {
+            color: var(--forest);
+            background: rgba(184, 207, 138, .4);
+        }
+
+        .btn.ghost:hover {
+            background: rgba(184, 207, 138, .65);
+        }
+
+        .btn.danger {
+            background: var(--coral);
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .6);
+        }
+
+        .nav-bar a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 14px;
+            text-decoration: none;
+            transition: background-color .2s, color .2s;
+        }
+
+        .nav-bar a:hover {
+            color: var(--forest);
+            background: rgba(184, 207, 138, .32);
+        }
+
+        .nav-bar a.on {
+            color: var(--paper);
+            background: var(--forest);
+        }
+
+        .feature {
+            display: flex;
+            gap: 14px;
+            padding: 16px 0;
+            border-bottom: 1px dashed var(--line);
+        }
+
+        .feature:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            display: grid;
+            place-items: center;
+            flex: 0 0 44px;
+            height: 44px;
+            border-radius: 12px;
+            color: var(--forest);
+            background: rgba(184, 207, 138, .35);
+        }
+
+        .feature-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .feature h3 {
+            margin: 0 0 4px;
+            font-size: 16px;
+            color: var(--forest);
+        }
+
+        .feature p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .form-row input {
+            flex: 1;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            outline: none;
+        }
+
+        .form-row svg {
+            color: var(--muted);
+        }
+
+        .form-row button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--paper);
+            background: var(--forest);
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--forest);
+            background: rgba(184, 207, 138, .28);
+            font-weight: 700;
+        }
+
+        td {
+            color: var(--muted);
+        }
+
+        td:first-child {
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .note {
+            margin: 14px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 34px;
+            padding: 11px 22px;
+            border-radius: 999px;
+            color: var(--paper);
+            background: rgba(23, 35, 31, .93);
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, 14px);
+            transition: opacity .25s, transform .25s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        footer {
+            margin-top: 52px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        @media (max-width: 720px) {
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <div class="topbar">
+        <a class="home-link" href="./index.html">&larr; 返回首页</a>
+        <span class="badge"><i data-lucide="package"></i> 本地 CDN：cdn/lucide/</span>
+    </div>
+
+    <h1>Lucide <span>SVG 图标</span></h1>
+    <p class="lead">
+        Lucide 是一套<strong>纯 SVG</strong> 图标库：每一枚图标就是一个 <code>&lt;svg&gt;</code> 元素，
+        内部由 <code>&lt;path&gt;</code>、<code>&lt;circle&gt;</code> 等矢量图形组成，没有字体文件。
+        它可以由 JS 自动把占位标签替换成内联 SVG，也可以完全手写内联、不依赖任何脚本。
+        本页使用的 <code>lucide.min.js</code> 已下载到本地 <code>./cdn/lucide/</code>。
+    </p>
+
+    <h2><i data-lucide="git-branch"></i>一、两种使用方式</h2>
+    <div class="grid grid-2">
+        <div class="card">
+            <h3 style="margin:0 0 10px;font-size:18px;color:var(--forest)">方式 A：JS 自动替换（推荐）</h3>
+            <pre><span class="cmt">&lt;!-- 1. 引入本地图标库 --&gt;</span>
+&lt;<span class="tag">script</span> <span class="attr">src</span>=<span class="val">"./cdn/lucide/lucide.min.js"</span>&gt;&lt;/<span class="tag">script</span>&gt;
+
+<span class="cmt">&lt;!-- 2. 写占位标签 --&gt;</span>
+&lt;<span class="tag">i</span> <span class="attr">data-lucide</span>=<span class="val">"house"</span>&gt;&lt;/<span class="tag">i</span>&gt;
+
+<span class="cmt">&lt;!-- 3. 页面加载后把占位标签换成内联 SVG --&gt;</span>
+&lt;<span class="tag">script</span>&gt;
+  <span class="fn">lucide</span>.<span class="fn">createIcons</span>();
+&lt;/<span class="tag">script</span>&gt;</pre>
+            <p class="note">
+                <code>createIcons()</code> 会扫描页面上所有 <code>[data-lucide]</code> 元素，
+                用对应图标的 SVG 节点把它们<strong>整个替换掉</strong>，最终 DOM 里留下的是真正的 <code>&lt;svg&gt;</code>。
+            </p>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 10px;font-size:18px;color:var(--forest)">方式 B：手写内联 SVG（零依赖）</h3>
+            <pre>&lt;<span class="tag">svg</span> <span class="attr">xmlns</span>=<span class="val">"http://www.w3.org/2000/svg"</span>
+     <span class="attr">width</span>=<span class="val">"24"</span> <span class="attr">height</span>=<span class="val">"24"</span>
+     <span class="attr">viewBox</span>=<span class="val">"0 0 24 24"</span>
+     <span class="attr">fill</span>=<span class="val">"none"</span>
+     <span class="attr">stroke</span>=<span class="val">"currentColor"</span>
+     <span class="attr">stroke-width</span>=<span class="val">"2"</span>
+     <span class="attr">stroke-linecap</span>=<span class="val">"round"</span>
+     <span class="attr">stroke-linejoin</span>=<span class="val">"round"</span>&gt;
+  &lt;<span class="tag">path</span> <span class="attr">d</span>=<span class="val">"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0
+    16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0
+    2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"</span> /&gt;
+&lt;/<span class="tag">svg</span>&gt;</pre>
+            <p class="note">
+                复制图标站给出的代码直接粘贴进 HTML 即可，不需要 JS、不需要额外请求，
+                适合少量图标或对性能极致敏感的场景。
+            </p>
+        </div>
+    </div>
+
+    <h2><i data-lucide="zap"></i>二、方式 A 现场演示</h2>
+    <div class="card">
+        <div class="demo center big">
+            <i data-lucide="house"></i>
+            <i data-lucide="heart"></i>
+            <i data-lucide="star"></i>
+            <i data-lucide="user"></i>
+            <i data-lucide="search"></i>
+            <i data-lucide="bell"></i>
+            <i data-lucide="settings"></i>
+            <i data-lucide="camera"></i>
+        </div>
+        <p class="note">
+            上面的图标在页面刚打开时只是空的 <code>&lt;i data-lucide="…"&gt;</code>，
+            <code>lucide.createIcons()</code> 执行后才变成真正的 <code>&lt;svg&gt;</code>——
+            打开浏览器 DevTools 的 Elements 面板就能看到替换后的节点。
+        </p>
+    </div>
+
+    <h2><i data-lucide="pen-tool"></i>三、方式 B 现场演示（纯手写 SVG）</h2>
+    <div class="grid grid-3">
+        <div class="card">
+            <div class="demo center big">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                </svg>
+            </div>
+            <p class="note">单个 <code>&lt;path&gt;</code> 就能画出一枚图标。</p>
+        </div>
+        <div class="card">
+            <div class="demo center big">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                </svg>
+            </div>
+            <p class="note">多个图形组合，就是一枚复合图标。</p>
+        </div>
+        <div class="card">
+            <div class="demo center big">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                </svg>
+            </div>
+            <p class="note">同一枚图标在两种方式下渲染结果完全一致。</p>
+        </div>
+    </div>
+
+    <h2><i data-lucide="move-diagonal-2"></i>四、尺寸、线宽与颜色</h2>
+    <div class="grid grid-2">
+        <div class="card">
+            <h3 style="margin:0 0 6px;font-size:17px;color:var(--forest)">尺寸：改 width / height</h3>
+            <div class="demo">
+                <span class="size-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    16px
+                </span>
+                <span class="size-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    24px
+                </span>
+                <span class="size-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    40px
+                </span>
+                <span class="size-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    64px
+                </span>
+            </div>
+            <p class="note">
+                内部坐标永远是 24×24，靠 <code>viewBox</code> 做缩放，所以放大不会失真。
+                也可以像本页这样统一用 CSS <code>svg.lucide { width: 1.3em; }</code> 覆盖尺寸。
+            </p>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 6px;font-size:17px;color:var(--forest)">线宽：改 stroke-width</h3>
+            <div class="demo">
+                <span class="stroke-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    1
+                </span>
+                <span class="stroke-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    1.5
+                </span>
+                <span class="stroke-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    2
+                </span>
+                <span class="stroke-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    2.75
+                </span>
+            </div>
+            <p class="note">
+                这是 SVG 图标相对字体图标最大的优势：<strong>线宽可以任意调节</strong>，
+                字体图标做不到（除非买了 Pro 版）。
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+        <h3 style="margin:0 0 6px;font-size:17px;color:var(--forest)">颜色：stroke="currentColor"</h3>
+        <div class="demo">
+            <span style="color:#1e4b3b"><i data-lucide="heart" style="width:32px;height:32px"></i></span>
+            <span style="color:#e8785f"><i data-lucide="heart" style="width:32px;height:32px"></i></span>
+            <span style="color:#b8cf8a"><i data-lucide="heart" style="width:32px;height:32px"></i></span>
+            <span style="color:#5b7d6f"><i data-lucide="heart" style="width:32px;height:32px"></i></span>
+            <span style="color:#17231f"><i data-lucide="heart" style="width:32px;height:32px"></i></span>
+        </div>
+        <p class="note">
+            <code>currentColor</code> 表示「跟随当前文字颜色」，所以只要改外层元素的 <code>color</code>，
+            图标就跟着变；SVG 图标同样可以填充渐变，这是字体图标做不到的。
+        </p>
+    </div>
+
+    <h2><i data-lucide="layout-grid"></i>五、实用场景</h2>
+    <div class="grid grid-3">
+        <div class="card">
+            <h3 style="margin:0 0 10px;font-size:17px;color:var(--forest)">按钮</h3>
+            <div class="btn-row">
+                <button class="btn"><i data-lucide="download"></i> 下载</button>
+                <button class="btn ghost"><i data-lucide="share-2"></i> 分享</button>
+                <button class="btn danger"><i data-lucide="trash-2"></i> 删除</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 10px;font-size:17px;color:var(--forest)">导航</h3>
+            <nav class="nav-bar">
+                <a class="on" href="#"><i data-lucide="house"></i> 首页</a>
+                <a href="#"><i data-lucide="folder"></i> 资源</a>
+                <a href="#"><i data-lucide="user"></i> 我的</a>
+                <a href="#"><i data-lucide="settings"></i> 设置</a>
+            </nav>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 10px;font-size:17px;color:var(--forest)">搜索框</h3>
+            <form class="form-row" onsubmit="return false;">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="搜索…">
+                <button type="submit"><i data-lucide="arrow-right"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+        <div class="feature">
+            <span class="feature-icon"><i data-lucide="rocket"></i></span>
+            <div>
+                <h3>性能与体积</h3>
+                <p>Lucide 全部图标打包进一个 JS 文件（约 340 KB），按需引入时也可以只打包用到的几枚；相比字体图标，SVG 可被浏览器缓存、也更容易做 tree-shaking。</p>
+            </div>
+        </div>
+        <div class="feature">
+            <span class="feature-icon"><i data-lucide="accessibility"></i></span>
+            <div>
+                <h3>可访问性</h3>
+                <p>SVG 节点可以加 <code>role="img"</code>、<code>aria-label</code> 等无障碍属性，也可以像本页一样直接用 <code>title</code> 元素提供说明，比字体图标更容易做对。</p>
+            </div>
+        </div>
+        <div class="feature">
+            <span class="feature-icon"><i data-lucide="paintbrush"></i></span>
+            <div>
+                <h3>可改造性</h3>
+                <p>线宽、端点样式、填充、渐变、动画都能自由调整，同一枚图标可以衍生出多种风格，适合做品牌化设计系统。</p>
+            </div>
+        </div>
+        <div class="feature">
+            <span class="feature-icon"><i data-lucide="code-2"></i></span>
+            <div>
+                <h3>无障碍与降级</h3>
+                <p>手写内联 SVG 时若 JS 失效，图标依然正常显示；用 JS 替换时建议配合 <code>aria-hidden="true"</code> 标注纯装饰图标。</p>
+            </div>
+        </div>
+    </div>
+
+    <h2><i data-lucide="list"></i>六、图标速查（可搜索）</h2>
+    <div class="card">
+        <div class="toolbar">
+            <label class="search">
+                <i data-lucide="search"></i>
+                <input type="search" id="lucideSearch" placeholder="输入图标名，如 house / mail / rocket">
+            </label>
+            <span class="count" id="lucideCount"></span>
+        </div>
+        <div class="icon-grid" id="lucideGrid">
+
+            <button class="icon-cell" data-name="house"><i data-lucide="house"></i><span>house</span></button>
+            <button class="icon-cell" data-name="user"><i data-lucide="user"></i><span>user</span></button>
+            <button class="icon-cell" data-name="heart"><i data-lucide="heart"></i><span>heart</span></button>
+            <button class="icon-cell" data-name="star"><i data-lucide="star"></i><span>star</span></button>
+            <button class="icon-cell" data-name="bookmark"><i data-lucide="bookmark"></i><span>bookmark</span></button>
+            <button class="icon-cell" data-name="search"><i data-lucide="search"></i><span>search</span></button>
+            <button class="icon-cell" data-name="settings"><i data-lucide="settings"></i><span>settings</span></button>
+            <button class="icon-cell" data-name="camera"><i data-lucide="camera"></i><span>camera</span></button>
+            <button class="icon-cell" data-name="check"><i data-lucide="check"></i><span>check</span></button>
+            <button class="icon-cell" data-name="circle"><i data-lucide="circle"></i><span>circle</span></button>
+            <button class="icon-cell" data-name="square"><i data-lucide="square"></i><span>square</span></button>
+            <button class="icon-cell" data-name="triangle"><i data-lucide="triangle"></i><span>triangle</span></button>
+            <button class="icon-cell" data-name="bell"><i data-lucide="bell"></i><span>bell</span></button>
+            <button class="icon-cell" data-name="mail"><i data-lucide="mail"></i><span>mail</span></button>
+            <button class="icon-cell" data-name="message-circle"><i data-lucide="message-circle"></i><span>message-circle</span></button>
+            <button class="icon-cell" data-name="phone"><i data-lucide="phone"></i><span>phone</span></button>
+            <button class="icon-cell" data-name="map-pin"><i data-lucide="map-pin"></i><span>map-pin</span></button>
+            <button class="icon-cell" data-name="calendar"><i data-lucide="calendar"></i><span>calendar</span></button>
+            <button class="icon-cell" data-name="clock"><i data-lucide="clock"></i><span>clock</span></button>
+            <button class="icon-cell" data-name="cloud"><i data-lucide="cloud"></i><span>cloud</span></button>
+            <button class="icon-cell" data-name="file-text"><i data-lucide="file-text"></i><span>file-text</span></button>
+            <button class="icon-cell" data-name="folder"><i data-lucide="folder"></i><span>folder</span></button>
+            <button class="icon-cell" data-name="image"><i data-lucide="image"></i><span>image</span></button>
+            <button class="icon-cell" data-name="download"><i data-lucide="download"></i><span>download</span></button>
+            <button class="icon-cell" data-name="upload"><i data-lucide="upload"></i><span>upload</span></button>
+            <button class="icon-cell" data-name="trash-2"><i data-lucide="trash-2"></i><span>trash-2</span></button>
+            <button class="icon-cell" data-name="printer"><i data-lucide="printer"></i><span>printer</span></button>
+            <button class="icon-cell" data-name="shopping-cart"><i data-lucide="shopping-cart"></i><span>shopping-cart</span></button>
+            <button class="icon-cell" data-name="tag"><i data-lucide="tag"></i><span>tag</span></button>
+            <button class="icon-cell" data-name="truck"><i data-lucide="truck"></i><span>truck</span></button>
+            <button class="icon-cell" data-name="link"><i data-lucide="link"></i><span>link</span></button>
+            <button class="icon-cell" data-name="lock"><i data-lucide="lock"></i><span>lock</span></button>
+            <button class="icon-cell" data-name="eye"><i data-lucide="eye"></i><span>eye</span></button>
+            <button class="icon-cell" data-name="pencil"><i data-lucide="pencil"></i><span>pencil</span></button>
+            <button class="icon-cell" data-name="palette"><i data-lucide="palette"></i><span>palette</span></button>
+            <button class="icon-cell" data-name="video"><i data-lucide="video"></i><span>video</span></button>
+            <button class="icon-cell" data-name="play"><i data-lucide="play"></i><span>play</span></button>
+            <button class="icon-cell" data-name="sun"><i data-lucide="sun"></i><span>sun</span></button>
+            <button class="icon-cell" data-name="moon"><i data-lucide="moon"></i><span>moon</span></button>
+            <button class="icon-cell" data-name="wifi"><i data-lucide="wifi"></i><span>wifi</span></button>
+            <button class="icon-cell" data-name="wifi-off"><i data-lucide="wifi-off"></i><span>wifi-off</span></button>
+            <button class="icon-cell" data-name="globe"><i data-lucide="globe"></i><span>globe</span></button>
+            <button class="icon-cell" data-name="code"><i data-lucide="code"></i><span>code</span></button>
+            <button class="icon-cell" data-name="layers"><i data-lucide="layers"></i><span>layers</span></button>
+            <button class="icon-cell" data-name="rocket"><i data-lucide="rocket"></i><span>rocket</span></button>
+            <button class="icon-cell" data-name="send"><i data-lucide="send"></i><span>send</span></button>
+            <button class="icon-cell" data-name="share-2"><i data-lucide="share-2"></i><span>share-2</span></button>
+            <button class="icon-cell" data-name="plus"><i data-lucide="plus"></i><span>plus</span></button>
+            <button class="icon-cell" data-name="minus"><i data-lucide="minus"></i><span>minus</span></button>
+            <button class="icon-cell" data-name="x"><i data-lucide="x"></i><span>x</span></button>
+            <button class="icon-cell" data-name="circle-check"><i data-lucide="circle-check"></i><span>circle-check</span></button>
+            <button class="icon-cell" data-name="triangle-alert"><i data-lucide="triangle-alert"></i><span>triangle-alert</span></button>
+            <button class="icon-cell" data-name="circle-help"><i data-lucide="circle-help"></i><span>circle-help</span></button>
+            <button class="icon-cell" data-name="menu"><i data-lucide="menu"></i><span>menu</span></button>
+            <button class="icon-cell" data-name="chevron-right"><i data-lucide="chevron-right"></i><span>chevron-right</span></button>
+            <button class="icon-cell" data-name="refresh-cw"><i data-lucide="refresh-cw"></i><span>refresh-cw</span></button>
+            <button class="icon-cell" data-name="thumbs-up"><i data-lucide="thumbs-up"></i><span>thumbs-up</span></button>
+            <button class="icon-cell" data-name="github"><i data-lucide="github"></i><span>github</span></button>
+            <button class="icon-cell" data-name="package"><i data-lucide="package"></i><span>package</span></button>
+            <button class="icon-cell" data-name="git-branch"><i data-lucide="git-branch"></i><span>git-branch</span></button>
+            <button class="icon-cell" data-name="pen-tool"><i data-lucide="pen-tool"></i><span>pen-tool</span></button>
+            <button class="icon-cell" data-name="zap"><i data-lucide="zap"></i><span>zap</span></button>
+            <button class="icon-cell" data-name="accessibility"><i data-lucide="accessibility"></i><span>accessibility</span></button>
+            <button class="icon-cell" data-name="code-2"><i data-lucide="code-2"></i><span>code-2</span></button>
+            <button class="icon-cell" data-name="move-diagonal-2"><i data-lucide="move-diagonal-2"></i><span>move-diagonal-2</span></button>
+            <button class="icon-cell" data-name="layout-grid"><i data-lucide="layout-grid"></i><span>layout-grid</span></button>
+            <button class="icon-cell" data-name="list"><i data-lucide="list"></i><span>list</span></button>
+            <button class="icon-cell" data-name="arrow-right"><i data-lucide="arrow-right"></i><span>arrow-right</span></button>
+            <button class="icon-cell" data-name="paintbrush"><i data-lucide="paintbrush"></i><span>paintbrush</span></button>
+
+        </div>
+        <p class="note">点击任意图标即可复制它的名称，例如 <code>data-lucide="rocket"</code>。</p>
+    </div>
+
+    <h2><i data-lucide="microscope"></i>七、原理：一枚 SVG 图标的结构</h2>
+    <div class="split grid grid-2">
+        <div class="card">
+            <pre>&lt;<span class="tag">svg</span>
+  <span class="attr">xmlns</span>=<span class="val">"http://www.w3.org/2000/svg"</span>  <span class="cmt">← SVG 命名空间</span>
+  <span class="attr">width</span>=<span class="val">"24"</span> <span class="attr">height</span>=<span class="val">"24"</span>       <span class="cmt">← 显示尺寸</span>
+  <span class="attr">viewBox</span>=<span class="val">"0 0 24 24"</span>            <span class="cmt">← 内部坐标系 24×24</span>
+  <span class="attr">fill</span>=<span class="val">"none"</span>                 <span class="cmt">← 默认不填充</span>
+  <span class="attr">stroke</span>=<span class="val">"currentColor"</span>       <span class="cmt">← 描边跟随文字色</span>
+  <span class="attr">stroke-width</span>=<span class="val">"2"</span>            <span class="cmt">← 线宽</span>
+  <span class="attr">stroke-linecap</span>=<span class="val">"round"</span>      <span class="cmt">← 端点圆润</span>
+  <span class="attr">stroke-linejoin</span>=<span class="val">"round"</span>     <span class="cmt">← 拐角圆润</span>
+  <span class="attr">class</span>=<span class="val">"lucide lucide-house"</span>
+&gt;
+  &lt;<span class="tag">path</span> <span class="attr">d</span>=<span class="val">"M3 10a2 2 0 0 1 .709-1.528l7-5.999…"</span> /&gt;
+&lt;/<span class="tag">svg</span>&gt;</pre>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 10px;font-size:18px;color:var(--forest)">三个关键点</h3>
+            <ol style="margin:0;padding-left:22px;color:var(--muted);line-height:2">
+                <li><strong>viewBox：</strong>图形都在 24×24 的坐标系里绘制，显示尺寸再大也只是缩放，不会模糊。</li>
+                <li><strong>stroke 而非 fill：</strong>Lucide 是「描边派」，图标本质是一圈线条，所以线宽可以自由调。</li>
+                <li><strong>currentColor：</strong>颜色交给 CSS 的 <code>color</code> 属性，和文字排版保持一致。</li>
+            </ol>
+            <p class="note">
+                <code>createIcons()</code> 做的事，说白了就是「查表 + 造节点 + 替换节点」：
+                把 <code>data-lucide="house"</code> 翻译成图标名 <code>House</code>，
+                从 <code>lucide.icons</code> 里取出路径数据，组装成 <code>&lt;svg&gt;</code> 后替换原来的 <code>&lt;i&gt;</code>。
+            </p>
+        </div>
+    </div>
+
+    <h2><i data-lucide="scale"></i>八、SVG 图标 vs 字体图标</h2>
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>维度</th>
+                <th>Lucide（SVG）</th>
+                <th>Font Awesome（字体）</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>本质</td>
+                <td>矢量路径，随 DOM 存在</td>
+                <td>字体里的一个字符（Glyph）</td>
+            </tr>
+            <tr>
+                <td>线宽 / 风格</td>
+                <td>可自由调节 <code>stroke-width</code>、端点、填充</td>
+                <td>只有字体里做好的几种固定风格</td>
+            </tr>
+            <tr>
+                <td>颜色</td>
+                <td><code>currentColor</code>，还能用渐变</td>
+                <td><code>color</code>，单色</td>
+            </tr>
+            <tr>
+                <td>尺寸</td>
+                <td>用 <code>width/height</code> 或 CSS 精确控制</td>
+                <td>跟随 <code>font-size</code>，倍数类较粗糙</td>
+            </tr>
+            <tr>
+                <td>首屏渲染</td>
+                <td>依赖 JS 替换时略慢；手写内联则立即显示</td>
+                <td>需等字体文件下载，可能出现闪动</td>
+            </tr>
+            <tr>
+                <td>无障碍</td>
+                <td>可加 <code>role</code>、<code>aria-label</code>、<code>title</code></td>
+                <td>需要额外处理，读屏可能读出乱码</td>
+            </tr>
+            <tr>
+                <td>适用场景</td>
+                <td>设计系统、需要精细控制的界面</td>
+                <td>快速配图、图标数量巨大且风格固定</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="note">
+            想看<strong>字体图标</strong>方案？请看
+            <a href="./13-1.html" style="color:var(--forest)">13-1.html · Font Awesome 字体图标</a>。
+        </p>
+    </div>
+
+    <h2><i data-lucide="folder-open"></i>九、本地资源清单</h2>
+    <div class="card">
+        <pre>cdn/
+├─ font-awesome/          <span class="cmt">← 13-1.html 使用（字体图标）</span>
+│  ├─ css/all.min.css
+│  └─ webfonts/*.woff2
+└─ lucide/                 <span class="cmt">← 本页使用（SVG 图标）</span>
+   ├─ lucide.min.js        <span class="cmt">← UMD 版本，含 1700+ 枚图标</span>
+   └─ lucide.min.js.map    <span class="cmt">← Source Map，便于调试</span></pre>
+        <p class="note">
+            <code>lucide.min.js</code> 以 UMD 方式打包，在浏览器里直接 <code>&lt;script src&gt;</code> 引入即可，
+            全局变量是 <code>lucide</code>，其中 <code>lucide.icons</code> 是图标字典，<code>lucide.createIcons()</code> 负责渲染。
+            若用打包工具，也可以 <code>import { createIcons, icons } from 'lucide'</code> 按需引入。
+        </p>
+    </div>
+
+    <footer>121 陈曦 · 《高级网页设计》 · 13-2 Lucide SVG 图标</footer>
+</div>
+
+<div class="toast" id="toast">已复制：data-lucide="rocket"</div>
+
+<script src="./cdn/lucide/lucide.min.js"></script>
+<script>
+    lucide.createIcons();
+
+    var searchInput = document.getElementById("lucideSearch");
+    var grid = document.getElementById("lucideGrid");
+    var countLabel = document.getElementById("lucideCount");
+    var toast = document.getElementById("toast");
+    var cells = Array.prototype.slice.call(grid.querySelectorAll(".icon-cell"));
+
+    countLabel.textContent = "共 " + cells.length + " 枚图标";
+
+    searchInput.addEventListener("input", function () {
+        var keyword = this.value.trim().toLowerCase();
+        var visible = 0;
+        cells.forEach(function (cell) {
+            var hit = cell.dataset.name.toLowerCase().indexOf(keyword) > -1;
+            cell.classList.toggle("is-hidden", !hit);
+            if (hit) {
+                visible++;
+            }
+        });
+        countLabel.textContent = keyword ? "匹配到 " + visible + " 枚图标" : "共 " + cells.length + " 枚图标";
+    });
+
+    grid.addEventListener("click", function (event) {
+        var cell = event.target.closest(".icon-cell");
+        if (!cell) {
+            return;
+        }
+        var code = 'data-lucide="' + cell.dataset.name + '"';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code);
+        }
+        toast.textContent = "已复制：" + code;
+        toast.classList.add("show");
+        clearTimeout(window.__lucideToastTimer);
+        window.__lucideToastTimer = setTimeout(function () {
+            toast.classList.remove("show");
+        }, 1600);
+    });
+</script>
+</body>
+</html>

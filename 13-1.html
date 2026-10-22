@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Font Awesome 6 字体图标实践 - 121 陈曦《高级网页设计》">
+    <title>13-1 · Font Awesome 字体图标 - 121 陈曦</title>
+    <link rel="stylesheet" href="./cdn/font-awesome/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --fa-blue: #339af0;
+            --fa-deep: #1864ab;
+            --fa-ink: #14213d;
+            --fa-soft: #5b6b85;
+            --fa-bg: #eef4fb;
+            --fa-card: #ffffff;
+            --fa-line: rgba(20, 33, 61, .12);
+            --fa-shadow: 0 18px 44px rgba(24, 100, 171, .12);
+            --fa-radius: 16px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 34px 16px 60px;
+            color: var(--fa-ink);
+            background:
+                radial-gradient(circle at 12% 6%, rgba(51, 154, 240, .18), transparent 26rem),
+                radial-gradient(circle at 88% 84%, rgba(24, 100, 171, .12), transparent 28rem),
+                var(--fa-bg);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.7;
+        }
+
+        .page {
+            width: min(1080px, 100%);
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--fa-line);
+        }
+
+        .home-link {
+            color: var(--fa-deep);
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            color: var(--fa-deep);
+            background: rgba(51, 154, 240, .14);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .badge i {
+            color: var(--fa-blue);
+        }
+
+        h1 {
+            margin: 30px 0 10px;
+            font-size: clamp(28px, 5vw, 44px);
+            line-height: 1.2;
+        }
+
+        h1 span {
+            color: var(--fa-blue);
+        }
+
+        .lead {
+            max-width: 820px;
+            margin: 0 0 30px;
+            color: var(--fa-soft);
+            font-size: 16px;
+        }
+
+        .lead code,
+        .note code {
+            padding: 2px 6px;
+            border-radius: 5px;
+            color: var(--fa-deep);
+            background: rgba(51, 154, 240, .13);
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 42px 0 18px;
+            padding-left: 12px;
+            border-left: 4px solid var(--fa-blue);
+            font-size: 22px;
+        }
+
+        h2 .fa-solid {
+            color: var(--fa-blue);
+            font-size: 20px;
+        }
+
+        .card {
+            padding: 24px;
+            border: 1px solid var(--fa-line);
+            border-radius: var(--fa-radius);
+            background: var(--fa-card);
+            box-shadow: var(--fa-shadow);
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .demo {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px;
+            margin-top: 16px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #f5f9fe;
+        }
+
+        .demo.center {
+            justify-content: center;
+        }
+
+        .demo-label {
+            width: 100%;
+            margin: 0;
+            color: var(--fa-soft);
+            font-size: 13px;
+        }
+
+        pre {
+            margin: 0;
+            padding: 16px 18px;
+            overflow-x: auto;
+            border-radius: 12px;
+            color: #dbeafe;
+            background: #10233d;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13.5px;
+            line-height: 1.85;
+            white-space: pre;
+        }
+
+        pre .tag {
+            color: #7dd3fc;
+        }
+
+        pre .attr {
+            color: #fbbf24;
+        }
+
+        pre .val {
+            color: #86efac;
+        }
+
+        pre .cmt {
+            color: #64748b;
+        }
+
+        .size-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 22px;
+        }
+
+        .size-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--fa-soft);
+            font-size: 12px;
+        }
+
+        .size-item .fa-solid {
+            color: var(--fa-deep);
+        }
+
+        .style-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 96px;
+            padding: 18px 12px;
+            border: 1px solid var(--fa-line);
+            border-radius: 12px;
+            background: #f8fbff;
+            color: var(--fa-soft);
+            font-size: 13px;
+        }
+
+        .style-item .fa-solid,
+        .style-item .fa-regular,
+        .style-item .fa-brands {
+            color: var(--fa-deep);
+            font-size: 30px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .search {
+            position: relative;
+            flex: 1 1 240px;
+        }
+
+        .search i {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            color: var(--fa-soft);
+            transform: translateY(-50%);
+        }
+
+        .search input {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            border: 1px solid var(--fa-line);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--fa-ink);
+            background: #fff;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .search input:focus {
+            border-color: var(--fa-blue);
+            box-shadow: 0 0 0 3px rgba(51, 154, 240, .18);
+        }
+
+        .count {
+            color: var(--fa-soft);
+            font-size: 13px;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+            gap: 10px;
+        }
+
+        .icon-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 6px;
+            border: 1px solid var(--fa-line);
+            border-radius: 12px;
+            background: #fbfdff;
+            color: var(--fa-soft);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform .2s ease, border-color .2s ease, color .2s ease;
+        }
+
+        .icon-cell:hover {
+            color: var(--fa-deep);
+            border-color: var(--fa-blue);
+            transform: translateY(-3px);
+        }
+
+        .icon-cell .fa-solid {
+            font-size: 24px;
+        }
+
+        .icon-cell.is-hidden {
+            display: none;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 22px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--fa-deep);
+            cursor: pointer;
+            transition: background-color .2s ease, transform .2s ease;
+        }
+
+        .btn:hover {
+            background: var(--fa-blue);
+            transform: translateY(-2px);
+        }
+
+        .btn.ghost {
+            color: var(--fa-deep);
+            background: rgba(51, 154, 240, .14);
+        }
+
+        .btn.ghost:hover {
+            background: rgba(51, 154, 240, .24);
+        }
+
+        .btn.danger {
+            background: #e03131;
+        }
+
+        .nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px;
+            border: 1px solid var(--fa-line);
+            border-radius: 12px;
+            background: #f5f9fe;
+        }
+
+        .nav-bar a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: 8px;
+            color: var(--fa-soft);
+            font-size: 14px;
+            text-decoration: none;
+            transition: background-color .2s, color .2s;
+        }
+
+        .nav-bar a:hover {
+            color: var(--fa-deep);
+            background: rgba(51, 154, 240, .14);
+        }
+
+        .nav-bar a.on {
+            color: #fff;
+            background: var(--fa-deep);
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 13px;
+            border: 1px solid var(--fa-line);
+            border-radius: 999px;
+            color: var(--fa-soft);
+            background: #f8fbff;
+            font-size: 13px;
+        }
+
+        .tag .fa-solid {
+            color: var(--fa-blue);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--fa-line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--fa-deep);
+            background: #f5f9fe;
+            font-weight: 700;
+        }
+
+        td {
+            color: var(--fa-soft);
+        }
+
+        td:first-child {
+            color: var(--fa-ink);
+            font-weight: 700;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 16px;
+        }
+
+        .note {
+            margin: 14px 0 0;
+            color: var(--fa-soft);
+            font-size: 14px;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 34px;
+            padding: 11px 22px;
+            border-radius: 999px;
+            color: #fff;
+            background: rgba(16, 35, 61, .93);
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, 14px);
+            transition: opacity .25s, transform .25s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        footer {
+            margin-top: 52px;
+            padding-top: 20px;
+            border-top: 1px solid var(--fa-line);
+            color: var(--fa-soft);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        @media (max-width: 720px) {
+            .split {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <div class="topbar">
+        <a class="home-link" href="./index.html">&larr; 返回首页</a>
+        <span class="badge"><i class="fa-solid fa-layer-group"></i> 本地 CDN：cdn/font-awesome/</span>
+    </div>
+
+    <h1>Font Awesome <span>字体图标</span></h1>
+    <p class="lead">
+        Font Awesome 是最经典的图标库之一，它的本质是<strong>字体图标（Icon Font）</strong>：
+        把整张图标表打包成一个 <code>.woff2 / .ttf</code> 字体文件，再用 CSS 把每个图标映射到字体里的一个 Unicode 字符。
+        本页所有资源均已下载到本地 <code>./cdn/font-awesome/</code>，离线也能正常显示。
+    </p>
+
+    <h2><i class="fa-solid fa-code"></i>一、基本用法</h2>
+    <div class="split">
+        <div class="card">
+            <pre><span class="cmt">&lt;!-- 引入本地样式表 --&gt;</span>
+&lt;<span class="tag">link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span>
+      <span class="attr">href</span>=<span class="val">"./cdn/font-awesome/css/all.min.css"</span>&gt;
+
+<span class="cmt">&lt;!-- 使用图标：样式类 + 图标名 --&gt;</span>
+&lt;<span class="tag">i</span> <span class="attr">class</span>=<span class="val">"fa-solid fa-house"</span>&gt;&lt;/<span class="tag">i</span>&gt;</pre>
+        </div>
+        <div class="card">
+            <div class="demo center">
+                <span style="font-size:34px;color:var(--fa-deep)"><i class="fa-solid fa-house"></i></span>
+                <span style="font-size:34px;color:var(--fa-deep)"><i class="fa-solid fa-heart"></i></span>
+                <span style="font-size:34px;color:var(--fa-deep)"><i class="fa-solid fa-star"></i></span>
+                <span style="font-size:34px;color:var(--fa-deep)"><i class="fa-solid fa-user"></i></span>
+                <span style="font-size:34px;color:var(--fa-deep)"><i class="fa-solid fa-search"></i></span>
+            </div>
+            <p class="note">
+                类名规则：<code>fa-风格 + fa-图标名</code>。常用风格有 <code>fa-solid</code>（实心）、<code>fa-regular</code>（线框/空心）、
+                <code>fa-brands</code>（品牌标志）。图标名可以在下一节的网格里搜索复制。
+            </p>
+        </div>
+    </div>
+
+    <h2><i class="fa-solid fa-layer-group"></i>二、三种字体风格</h2>
+    <div class="card">
+        <div class="demo">
+            <div class="style-item">
+                <i class="fa-solid fa-heart"></i>
+                <span>fa-solid</span>
+            </div>
+            <div class="style-item">
+                <i class="fa-regular fa-heart"></i>
+                <span>fa-regular</span>
+            </div>
+            <div class="style-item">
+                <i class="fa-brands fa-github"></i>
+                <span>fa-brands</span>
+            </div>
+            <div class="style-item">
+                <i class="fa-solid fa-user"></i>
+                <span>fa-solid</span>
+            </div>
+            <div class="style-item">
+                <i class="fa-regular fa-user"></i>
+                <span>fa-regular</span>
+            </div>
+            <div class="style-item">
+                <i class="fa-brands fa-html5"></i>
+                <span>fa-brands</span>
+            </div>
+        </div>
+        <pre style="margin-top:16px"><span class="cmt">&lt;!-- 同一枚图标的三种字体 --&gt;</span>
+&lt;<span class="tag">i</span> <span class="attr">class</span>=<span class="val">"fa-solid   fa-heart"</span>&gt;&lt;/<span class="tag">i</span>&gt;   <span class="cmt">&lt;!-- 实心 --&gt;</span>
+&lt;<span class="tag">i</span> <span class="attr">class</span>=<span class="val">"fa-regular fa-heart"</span>&gt;&lt;/<span class="tag">i</span>&gt;   <span class="cmt">&lt;!-- 空心 --&gt;</span>
+&lt;<span class="tag">i</span> <span class="attr">class</span>=<span class="val">"fa-brands  fa-github"</span>&gt;&lt;/<span class="tag">i</span>&gt; <span class="cmt">&lt;!-- 品牌 --&gt;</span></pre>
+        <p class="note">
+            三种风格其实是<strong>三个独立的字体文件</strong>：<code>fa-solid-900.woff2</code>（字重 900）、
+            <code>fa-regular-400.woff2</code>（字重 400）、<code>fa-brands-400.woff2</code>。
+            CSS 通过 <code>font-family</code> + <code>font-weight</code> 把它们区分开。
+        </p>
+    </div>
+
+    <h2><i class="fa-solid fa-ruler-combined"></i>三、尺寸控制</h2>
+    <div class="card">
+        <div class="size-row demo">
+            <div class="size-item"><i class="fa-solid fa-star fa-xs"></i><span>fa-xs</span></div>
+            <div class="size-item"><i class="fa-solid fa-star fa-sm"></i><span>fa-sm</span></div>
+            <div class="size-item"><i class="fa-solid fa-star"></i><span>默认</span></div>
+            <div class="size-item"><i class="fa-solid fa-star fa-lg"></i><span>fa-lg</span></div>
+            <div class="size-item"><i class="fa-solid fa-star fa-2x"></i><span>fa-2x</span></div>
+            <div class="size-item"><i class="fa-solid fa-star fa-3x"></i><span>fa-3x</span></div>
+            <div class="size-item"><i class="fa-solid fa-star fa-5x"></i><span>fa-5x</span></div>
+            <div class="size-item"><i class="fa-solid fa-star fa-10x"></i><span>fa-10x</span></div>
+        </div>
+        <p class="note">
+            尺寸类只是把 <code>font-size</code> 放大若干倍。因为图标本身是<strong>文字</strong>，
+            所以它天然继承父元素的字号与颜色——这是字体图标最方便的地方。
+        </p>
+    </div>
+
+    <h2><i class="fa-solid fa-wand-magic-sparkles"></i>四、修饰类与实用组合</h2>
+    <div class="grid grid-3">
+        <div class="card">
+            <h3 style="margin:0 0 8px;font-size:17px;color:var(--fa-deep)">定宽对齐 fa-fw</h3>
+            <div class="demo">
+                <i class="fa-solid fa-envelope fa-fw"></i> 邮件
+                <i class="fa-solid fa-phone fa-fw"></i> 电话
+                <i class="fa-solid fa-location-dot fa-fw"></i> 地址
+            </div>
+            <p class="note">给图标固定宽度，让列表里的文字整齐对齐。</p>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 8px;font-size:17px;color:var(--fa-deep)">旋转与翻转</h3>
+            <div class="demo">
+                <i class="fa-solid fa-rotate fa-rotate-90"></i>
+                <i class="fa-solid fa-rotate fa-rotate-180"></i>
+                <i class="fa-solid fa-rotate fa-rotate-270"></i>
+                <i class="fa-solid fa-right-left"></i>
+                <i class="fa-solid fa-right-left fa-flip-horizontal"></i>
+            </div>
+            <p class="note">用 CSS <code>transform</code> 处理方向类图标，省去另存一份素材。</p>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 8px;font-size:17px;color:var(--fa-deep)">描边与堆叠</h3>
+            <div class="demo">
+                <i class="fa-solid fa-square fa-border"></i>
+                <i class="fa-solid fa-certificate fa-border"></i>
+                <span class="fa-stack" style="font-size:2.2em">
+                    <i class="fa-solid fa-circle fa-stack-2x"></i>
+                    <i class="fa-solid fa-house fa-stack-1x"></i>
+                </span>
+            </div>
+            <p class="note"><code>fa-border</code> 加外框，<code>fa-stack</code> 把两枚图标叠成一组。</p>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 8px;font-size:17px;color:var(--fa-deep)">动画效果</h3>
+            <div class="demo">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <i class="fa-solid fa-heart fa-beat"></i>
+                <i class="fa-solid fa-bell fa-fade"></i>
+                <i class="fa-solid fa-circle-notch fa-spin" style="color:#e03131"></i>
+            </div>
+            <p class="note"><code>fa-spin</code> 旋转、<code>fa-beat</code> 心跳、<code>fa-fade</code> 淡入淡出。</p>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 8px;font-size:17px;color:var(--fa-deep)">图标按钮</h3>
+            <div class="btn-row">
+                <button class="btn"><i class="fa-solid fa-download"></i> 下载</button>
+                <button class="btn ghost"><i class="fa-solid fa-share-nodes"></i> 分享</button>
+                <button class="btn danger"><i class="fa-solid fa-trash-can"></i> 删除</button>
+            </div>
+            <p class="note">按钮里的图标和文字同属一行文字流，天然垂直居中。</p>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 8px;font-size:17px;color:var(--fa-deep)">图标导航</h3>
+            <nav class="nav-bar">
+                <a class="on" href="#"><i class="fa-solid fa-house"></i> 首页</a>
+                <a href="#"><i class="fa-solid fa-folder"></i> 资源</a>
+                <a href="#"><i class="fa-solid fa-user"></i> 我的</a>
+                <a href="#"><i class="fa-solid fa-gear"></i> 设置</a>
+            </nav>
+            <p class="note">导航项 = 图标 + 文字，是图标库最常见的落地场景。</p>
+        </div>
+    </div>
+
+    <h2><i class="fa-solid fa-magnifying-glass"></i>五、图标速查（可搜索）</h2>
+    <div class="card">
+        <div class="toolbar">
+            <label class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" id="faSearch" placeholder="输入关键字，如 user / heart / github">
+            </label>
+            <span class="count" id="faCount"></span>
+        </div>
+        <div class="icon-grid" id="faGrid">
+
+            <button class="icon-cell" data-name="house"><i class="fa-solid fa-house"></i><span>house</span></button>
+            <button class="icon-cell" data-name="user"><i class="fa-solid fa-user"></i><span>user</span></button>
+            <button class="icon-cell" data-name="users"><i class="fa-solid fa-users"></i><span>users</span></button>
+            <button class="icon-cell" data-name="heart"><i class="fa-solid fa-heart"></i><span>heart</span></button>
+            <button class="icon-cell" data-name="star"><i class="fa-solid fa-star"></i><span>star</span></button>
+            <button class="icon-cell" data-name="bookmark"><i class="fa-solid fa-bookmark"></i><span>bookmark</span></button>
+            <button class="icon-cell" data-name="search"><i class="fa-solid fa-search"></i><span>search</span></button>
+            <button class="icon-cell" data-name="magnifying-glass"><i class="fa-solid fa-magnifying-glass"></i><span>magnifying-glass</span></button>
+            <button class="icon-cell" data-name="gear"><i class="fa-solid fa-gear"></i><span>gear</span></button>
+            <button class="icon-cell" data-name="sliders"><i class="fa-solid fa-sliders"></i><span>sliders</span></button>
+            <button class="icon-cell" data-name="bell"><i class="fa-solid fa-bell"></i><span>bell</span></button>
+            <button class="icon-cell" data-name="envelope"><i class="fa-solid fa-envelope"></i><span>envelope</span></button>
+            <button class="icon-cell" data-name="comment"><i class="fa-solid fa-comment"></i><span>comment</span></button>
+            <button class="icon-cell" data-name="phone"><i class="fa-solid fa-phone"></i><span>phone</span></button>
+            <button class="icon-cell" data-name="location-dot"><i class="fa-solid fa-location-dot"></i><span>location-dot</span></button>
+            <button class="icon-cell" data-name="calendar"><i class="fa-solid fa-calendar"></i><span>calendar</span></button>
+            <button class="icon-cell" data-name="clock"><i class="fa-solid fa-clock"></i><span>clock</span></button>
+            <button class="icon-cell" data-name="camera"><i class="fa-solid fa-camera"></i><span>camera</span></button>
+            <button class="icon-cell" data-name="image"><i class="fa-solid fa-image"></i><span>image</span></button>
+            <button class="icon-cell" data-name="folder"><i class="fa-solid fa-folder"></i><span>folder</span></button>
+            <button class="icon-cell" data-name="file-lines"><i class="fa-solid fa-file-lines"></i><span>file-lines</span></button>
+            <button class="icon-cell" data-name="download"><i class="fa-solid fa-download"></i><span>download</span></button>
+            <button class="icon-cell" data-name="upload"><i class="fa-solid fa-upload"></i><span>upload</span></button>
+            <button class="icon-cell" data-name="trash-can"><i class="fa-solid fa-trash-can"></i><span>trash-can</span></button>
+            <button class="icon-cell" data-name="print"><i class="fa-solid fa-print"></i><span>print</span></button>
+            <button class="icon-cell" data-name="cart-shopping"><i class="fa-solid fa-cart-shopping"></i><span>cart-shopping</span></button>
+            <button class="icon-cell" data-name="tag"><i class="fa-solid fa-tag"></i><span>tag</span></button>
+            <button class="icon-cell" data-name="truck"><i class="fa-solid fa-truck"></i><span>truck</span></button>
+            <button class="icon-cell" data-name="link"><i class="fa-solid fa-link"></i><span>link</span></button>
+            <button class="icon-cell" data-name="lock"><i class="fa-solid fa-lock"></i><span>lock</span></button>
+            <button class="icon-cell" data-name="key"><i class="fa-solid fa-key"></i><span>key</span></button>
+            <button class="icon-cell" data-name="shield-halved"><i class="fa-solid fa-shield-halved"></i><span>shield-halved</span></button>
+            <button class="icon-cell" data-name="eye"><i class="fa-solid fa-eye"></i><span>eye</span></button>
+            <button class="icon-cell" data-name="pen"><i class="fa-solid fa-pen"></i><span>pen</span></button>
+            <button class="icon-cell" data-name="paintbrush"><i class="fa-solid fa-paintbrush"></i><span>paintbrush</span></button>
+            <button class="icon-cell" data-name="palette"><i class="fa-solid fa-palette"></i><span>palette</span></button>
+            <button class="icon-cell" data-name="camera-retro"><i class="fa-solid fa-camera-retro"></i><span>camera-retro</span></button>
+            <button class="icon-cell" data-name="video"><i class="fa-solid fa-video"></i><span>video</span></button>
+            <button class="icon-cell" data-name="play"><i class="fa-solid fa-play"></i><span>play</span></button>
+            <button class="icon-cell" data-name="music"><i class="fa-solid fa-music"></i><span>music</span></button>
+            <button class="icon-cell" data-name="cloud"><i class="fa-solid fa-cloud"></i><span>cloud</span></button>
+            <button class="icon-cell" data-name="bolt"><i class="fa-solid fa-bolt"></i><span>bolt</span></button>
+            <button class="icon-cell" data-name="sun"><i class="fa-solid fa-sun"></i><span>sun</span></button>
+            <button class="icon-cell" data-name="moon"><i class="fa-solid fa-moon"></i><span>moon</span></button>
+            <button class="icon-cell" data-name="wifi"><i class="fa-solid fa-wifi"></i><span>wifi</span></button>
+            <button class="icon-cell" data-name="globe"><i class="fa-solid fa-globe"></i><span>globe</span></button>
+            <button class="icon-cell" data-name="code"><i class="fa-solid fa-code"></i><span>code</span></button>
+            <button class="icon-cell" data-name="code-branch"><i class="fa-solid fa-code-branch"></i><span>code-branch</span></button>
+            <button class="icon-cell" data-name="database"><i class="fa-solid fa-database"></i><span>database</span></button>
+            <button class="icon-cell" data-name="server"><i class="fa-solid fa-server"></i><span>server</span></button>
+            <button class="icon-cell" data-name="layer-group"><i class="fa-solid fa-layer-group"></i><span>layer-group</span></button>
+            <button class="icon-cell" data-name="chart-line"><i class="fa-solid fa-chart-line"></i><span>chart-line</span></button>
+            <button class="icon-cell" data-name="rocket"><i class="fa-solid fa-rocket"></i><span>rocket</span></button>
+            <button class="icon-cell" data-name="paper-plane"><i class="fa-solid fa-paper-plane"></i><span>paper-plane</span></button>
+            <button class="icon-cell" data-name="share-nodes"><i class="fa-solid fa-share-nodes"></i><span>share-nodes</span></button>
+            <button class="icon-cell" data-name="plus"><i class="fa-solid fa-plus"></i><span>plus</span></button>
+            <button class="icon-cell" data-name="minus"><i class="fa-solid fa-minus"></i><span>minus</span></button>
+            <button class="icon-cell" data-name="check"><i class="fa-solid fa-check"></i><span>check</span></button>
+            <button class="icon-cell" data-name="xmark"><i class="fa-solid fa-xmark"></i><span>xmark</span></button>
+            <button class="icon-cell" data-name="circle-info"><i class="fa-solid fa-circle-info"></i><span>circle-info</span></button>
+            <button class="icon-cell" data-name="triangle-exclamation"><i class="fa-solid fa-triangle-exclamation"></i><span>triangle-exclamation</span></button>
+            <button class="icon-cell" data-name="circle-check"><i class="fa-solid fa-circle-check"></i><span>circle-check</span></button>
+            <button class="icon-cell" data-name="bars"><i class="fa-solid fa-bars"></i><span>bars</span></button>
+            <button class="icon-cell" data-name="chevron-right"><i class="fa-solid fa-chevron-right"></i><span>chevron-right</span></button>
+            <button class="icon-cell" data-name="arrow-right"><i class="fa-solid fa-arrow-right"></i><span>arrow-right</span></button>
+            <button class="icon-cell" data-name="rotate"><i class="fa-solid fa-rotate"></i><span>rotate</span></button>
+            <button class="icon-cell" data-name="refresh"><i class="fa-solid fa-refresh"></i><span>refresh</span></button>
+            <button class="icon-cell" data-name="spinner"><i class="fa-solid fa-spinner"></i><span>spinner</span></button>
+            <button class="icon-cell" data-name="circle-notch"><i class="fa-solid fa-circle-notch"></i><span>circle-notch</span></button>
+            <button class="icon-cell" data-name="thumbs-up"><i class="fa-solid fa-thumbs-up"></i><span>thumbs-up</span></button>
+            <button class="icon-cell" data-name="flask"><i class="fa-solid fa-flask"></i><span>flask</span></button>
+            <button class="icon-cell" data-name="graduation-cap"><i class="fa-solid fa-graduation-cap"></i><span>graduation-cap</span></button>
+            <button class="icon-cell" data-name="book"><i class="fa-solid fa-book"></i><span>book</span></button>
+            <button class="icon-cell" data-name="github"><i class="fa-brands fa-github"></i><span>github</span></button>
+            <button class="icon-cell" data-name="html5"><i class="fa-brands fa-html5"></i><span>html5</span></button>
+            <button class="icon-cell" data-name="css3-alt"><i class="fa-brands fa-css3-alt"></i><span>css3-alt</span></button>
+            <button class="icon-cell" data-name="js"><i class="fa-brands fa-js"></i><span>js</span></button>
+            <button class="icon-cell" data-name="python"><i class="fa-brands fa-python"></i><span>python</span></button>
+            <button class="icon-cell" data-name="java"><i class="fa-brands fa-java"></i><span>java</span></button>
+            <button class="icon-cell" data-name="react"><i class="fa-brands fa-react"></i><span>react</span></button>
+            <button class="icon-cell" data-name="vuejs"><i class="fa-brands fa-vuejs"></i><span>vuejs</span></button>
+            <button class="icon-cell" data-name="npm"><i class="fa-brands fa-npm"></i><span>npm</span></button>
+            <button class="icon-cell" data-name="git-alt"><i class="fa-brands fa-git-alt"></i><span>git-alt</span></button>
+            <button class="icon-cell" data-name="linkedin"><i class="fa-brands fa-linkedin"></i><span>linkedin</span></button>
+            <button class="icon-cell" data-name="wechat"><i class="fa-brands fa-weixin"></i><span>weixin</span></button>
+            <button class="icon-cell" data-name="qq"><i class="fa-brands fa-qq"></i><span>qq</span></button>
+            <button class="icon-cell" data-name="weibo"><i class="fa-brands fa-weibo"></i><span>weibo</span></button>
+            <button class="icon-cell" data-name="alipay"><i class="fa-brands fa-alipay"></i><span>alipay</span></button>
+            <button class="icon-cell" data-name="apple"><i class="fa-brands fa-apple"></i><span>apple</span></button>
+            <button class="icon-cell" data-name="android"><i class="fa-brands fa-android"></i><span>android</span></button>
+            <button class="icon-cell" data-name="windows"><i class="fa-brands fa-windows"></i><span>windows</span></button>
+            <button class="icon-cell" data-name="chrome"><i class="fa-brands fa-chrome"></i><span>chrome</span></button>
+            <button class="icon-cell" data-name="firefox"><i class="fa-brands fa-firefox"></i><span>firefox</span></button>
+            <button class="icon-cell" data-name="safari"><i class="fa-brands fa-safari"></i><span>safari</span></button>
+            <button class="icon-cell" data-name="edge"><i class="fa-brands fa-edge"></i><span>edge</span></button>
+            <button class="icon-cell" data-name="discord"><i class="fa-brands fa-discord"></i><span>discord</span></button>
+
+        </div>
+        <p class="note">点击任意图标即可复制它的类名，例如 <code>fa-solid fa-heart</code>。</p>
+    </div>
+
+    <h2><i class="fa-solid fa-microscope"></i>六、原理：字体图标是怎样画出来的</h2>
+    <div class="split">
+        <div class="card">
+            <pre><span class="cmt">/* ① @font-face 把字体文件注册成 Web Font */</span>
+@font-face {
+  <span class="attr">font-family</span>: <span class="val">"Font Awesome 6 Free"</span>;
+  <span class="attr">font-weight</span>: 900;
+  <span class="attr">src</span>: <span class="val">url(../webfonts/fa-solid-900.woff2) format("woff2")</span>;
+}
+
+<span class="cmt">/* ② 设定字体与字重 */</span>
+.fa-solid {
+  <span class="attr">font-family</span>: <span class="val">"Font Awesome 6 Free"</span>;
+  <span class="attr">font-weight</span>: 900;
+}
+
+<span class="cmt">/* ③ 每枚图标 = 一个 Unicode 码位 */</span>
+.fa-house:before  { <span class="attr">content</span>: <span class="val">"\f015"</span>; }
+.fa-heart:before  { <span class="attr">content</span>: <span class="val">"\f004"</span>; }
+.fa-star:before   { <span class="attr">content</span>: <span class="val">"\f005"</span>; }
+.fa-user:before   { <span class="attr">content</span>: <span class="val">"\f007"</span>; }</pre>
+        </div>
+        <div class="card">
+            <h3 style="margin:0 0 10px;font-size:18px;color:var(--fa-deep)">三步看懂一个字体图标</h3>
+            <ol style="margin:0;padding-left:22px;color:var(--fa-soft);line-height:2">
+                <li><strong>字形：</strong>设计师把图标画成矢量轮廓，转成字体里的一个「字」，比如 <code>\f015</code> 对应房子。</li>
+                <li><strong>注入：</strong><code>::before</code> 伪元素把这个字符插到元素内容里，于是页面上就出现了图标。</li>
+                <li><strong>排版：</strong>既然是文字，它就受 <code>font-size</code>、<code>color</code>、<code>line-height</code> 控制，和文字排版完全一致。</li>
+            </ol>
+            <p class="note">
+                真正的图标长这样：<i class="fa-solid fa-house"></i> <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-star"></i>
+                —— 它们只是「长得像图形的字」。
+            </p>
+            <p class="note">
+                另一个细节：<code>unicode-range</code> 让字体只声明自己能渲染的那一段码位，
+                没覆盖到的字符会自动回退到系统字体，不会出现「豆腐块」。
+            </p>
+        </div>
+    </div>
+
+    <h2><i class="fa-solid fa-scale-balanced"></i>七、字体图标的优点与局限</h2>
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>维度</th>
+                <th>优点</th>
+                <th>局限</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>颜色</td>
+                <td>直接用 <code>color</code> 控制，还能做渐变、继承、悬停变色</td>
+                <td>只能单色，无法双色/多色（Pro 版双色调另收费）</td>
+            </tr>
+            <tr>
+                <td>尺寸</td>
+                <td>与文字一起缩放，任意分辨率都清晰（矢量字形）</td>
+                <td>尺寸完全跟随字号，想单独控制要额外包一层</td>
+            </tr>
+            <tr>
+                <td>加载</td>
+                <td>一个字体文件打包上千枚图标，请求数少</td>
+                <td>字体体积大（<code>fa-solid-900.woff2</code> 约 100 KB），且要等字体下载完才显示</td>
+            </tr>
+            <tr>
+                <td>可访问性</td>
+                <td>可加 <code>aria-hidden</code>、<code>role="img"</code> 等属性</td>
+                <td>纯装饰时若不处理，读屏软件会读出无意义的字符</td>
+            </tr>
+            <tr>
+                <td>形态</td>
+                <td>实心风格厚重有力，视觉识别度高</td>
+                <td>只能有字体里预先做好的几种风格，不能自由改线宽</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="note">
+            想对比<strong>纯 SVG 方案</strong>（Lucide）？请看
+            <a href="./13-2.html" style="color:var(--fa-deep)">13-2.html · Lucide SVG 图标</a>。
+        </p>
+    </div>
+
+    <h2><i class="fa-solid fa-folder-open"></i>八、本地资源清单</h2>
+    <div class="card">
+        <pre>cdn/
+├─ font-awesome/
+│  ├─ css/
+│  │  └─ all.min.css            <span class="cmt">← 页面通过 &lt;link&gt; 引入</span>
+│  └─ webfonts/
+│     ├─ fa-solid-900.woff2     <span class="cmt">← 实心图标（字重 900）</span>
+│     ├─ fa-solid-900.ttf       <span class="cmt">← 旧浏览器兜底</span>
+│     ├─ fa-regular-400.woff2   <span class="cmt">← 空心图标（字重 400）</span>
+│     ├─ fa-regular-400.ttf
+│     ├─ fa-brands-400.woff2    <span class="cmt">← 品牌图标</span>
+│     ├─ fa-brands-400.ttf
+│     ├─ fa-v4compatibility.woff2 <span class="cmt">← 兼容 FA4 旧类名</span>
+│     └─ fa-v4compatibility.ttf
+└─ lucide/
+   ├─ lucide.min.js             <span class="cmt">← 13-2.html 使用的 SVG 图标库</span>
+   └─ lucide.min.js.map</pre>
+        <p class="note">
+            字体图标的路径写在 CSS 的 <code>url(../webfonts/...)</code> 里，
+            因此 <code>all.min.css</code> 必须和 <code>webfonts/</code> 保持“一层目录”的相对关系；
+            把整个 <code>font-awesome/</code> 目录一起移动，页面依然正常工作。
+        </p>
+    </div>
+
+    <footer>121 陈曦 · 《高级网页设计》 · 13-1 Font Awesome 字体图标</footer>
+</div>
+
+<div class="toast" id="toast">已复制：fa-solid fa-heart</div>
+
+<script>
+    var searchInput = document.getElementById("faSearch");
+    var grid = document.getElementById("faGrid");
+    var countLabel = document.getElementById("faCount");
+    var toast = document.getElementById("toast");
+    var cells = Array.prototype.slice.call(grid.querySelectorAll(".icon-cell"));
+
+    function refreshCount() {
+        countLabel.textContent = "共 " + cells.length + " 枚图标";
+    }
+
+    refreshCount();
+
+    searchInput.addEventListener("input", function () {
+        var keyword = this.value.trim().toLowerCase();
+        var visible = 0;
+        cells.forEach(function (cell) {
+            var hit = cell.dataset.name.toLowerCase().indexOf(keyword) > -1;
+            cell.classList.toggle("is-hidden", !hit);
+            if (hit) {
+                visible++;
+            }
+        });
+        countLabel.textContent = keyword ? "匹配到 " + visible + " 枚图标" : "共 " + cells.length + " 枚图标";
+    });
+
+    grid.addEventListener("click", function (event) {
+        var cell = event.target.closest(".icon-cell");
+        if (!cell) {
+            return;
+        }
+        var name = cell.dataset.name;
+        var isBrand = cell.querySelector(".fa-brands") !== null;
+        var code = (isBrand ? "fa-brands fa-" : "fa-solid fa-") + name;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code);
+        }
+        toast.textContent = "已复制：" + code;
+        toast.classList.add("show");
+        clearTimeout(window.__faToastTimer);
+        window.__faToastTimer = setTimeout(function () {
+            toast.classList.remove("show");
+        }, 1600);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{
+  "id": "5245800",
+  "name": "chenxi2026",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8615346",
+      "name": "图鉴",
+      "font_class": "tujian",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "10332475",
+      "name": "个人中心",
+      "font_class": "gerenzhongxin",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "11532041",
+      "name": "发现",
+      "font_class": "faxian",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "21242876",
+      "name": "我的",
+      "font_class": "wode",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "25076961",
+      "name": "首页",
+      "font_class": "B--copy-copy",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "47224414",
+      "name": "236_箭头",
+      "font_class": "a-236_jiantou",
+      "unicode": "e9bf",
+      "unicode_decimal": 59839
+    },
+    {
+      "icon_id": "47224422",
+      "name": "236_对话-11",
+      "font_class": "a-236_duihua-11",
+      "unicode": "e9c0",
+      "unicode_decimal": 59840
+    },
+    {
+      "icon_id": "47224425",
+      "name": "236_数据",
+      "font_class": "a-236_shuju",
+      "unicode": "e9c1",
+      "unicode_decimal": 59841
+    },
+    {
+      "icon_id": "47224429",
+      "name": "236_生态",
+      "font_class": "a-236_shengtai",
+      "unicode": "e9c2",
+      "unicode_decimal": 59842
+    },
+    {
+      "icon_id": "47224430",
+      "name": "236_图层-13",
+      "font_class": "a-236_tuceng-13",
+      "unicode": "e9c3",
+      "unicode_decimal": 59843
+    },
+    {
+      "icon_id": "48294403",
+      "name": "功率",
+      "font_class": "gongshuai-125",
+      "unicode": "e694",
+      "unicode_decimal": 59028
+    },
+    {
+      "icon_id": "48294549",
+      "name": "脉冲频率",
+      "font_class": "maichongpinshuai-126",
+      "unicode": "e695",
+      "unicode_decimal": 59029
+    },
+    {
+      "icon_id": "48636390",
+      "name": "预约挂号",
+      "font_class": "yuyueguahao-131",
+      "unicode": "e69a",
+      "unicode_decimal": 59034
+    },
+    {
+      "icon_id": "48637877",
+      "name": "项目套餐",
+      "font_class": "xiangmutaocan-132",
+      "unicode": "e69b",
+      "unicode_decimal": 59035
+    },
+    {
+      "icon_id": "48638163",
+      "name": "腿部射频",
+      "font_class": "tuibushepin-133",
+      "unicode": "e69c",
+      "unicode_decimal": 59036
+    },
+    {
+      "icon_id": "48650710",
+      "name": "射频塑形",
+      "font_class": "shepinsuxing-134",
+      "unicode": "e69d",
+      "unicode_decimal": 59037
+    },
+    {
+      "icon_id": "48650766",
+      "name": "面部评估",
+      "font_class": "mianbupinggu-135",
+      "unicode": "e69e",
+      "unicode_decimal": 59038
+    },
+    {
+      "icon_id": "48709626",
+      "name": "急救巾",
+      "font_class": "jijiujin",
+      "unicode": "e7af",
+      "unicode_decimal": 59311
+    },
+    {
+      "icon_id": "48709638",
+      "name": "药",
+      "font_class": "yao",
+      "unicode": "e7b0",
+      "unicode_decimal": 59312
+    },
+    {
+      "icon_id": "48709648",
+      "name": "在线问诊",
+      "font_class": "zaixianwenzhen",
+      "unicode": "e7b1",
+      "unicode_decimal": 59313
+    }
+  ]
+}
