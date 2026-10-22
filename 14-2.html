@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-10-22，功能：JavaScript六种基础数据类型演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14-2 JavaScript六种基础数据类型</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            margin: 30px;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            color: #1e4b3b;
+        }
+
+        .cx_container {
+            max-width: 820px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        th {
+            background: #1e4b3b;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        code {
+            background: #eef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #c7254e;
+        }
+    </style>
+</head>
+<body>
+    <div class="cx_container">
+        <h1>JavaScript 六种基础数据类型</h1>
+        <p>打开浏览器控制台（F12）可查看每一行 <code>console.log</code> 的输出。</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>typeof 结果</th>
+                    <th>示例值</th>
+                </tr>
+            </thead>
+            <tbody id="cx_table-body">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        /* ===== 1. String 字符串 ===== */
+        var cx_name = "陈曦";
+        var cx_greeting = 'Hello JavaScript';
+        var cx_template = `我是 ${cx_name}`;
+        console.log("【String】", cx_name, cx_greeting, cx_template);
+        console.log("  typeof cx_name =", typeof cx_name);
+
+        /* ===== 2. Number 数字 ===== */
+        var cx_age = 20;
+        var cx_pi = 3.14159;
+        var cx_inf = Infinity;
+        var cx_nan = NaN;
+        console.log("【Number】", cx_age, cx_pi, cx_inf, cx_nan);
+        console.log("  typeof cx_age =", typeof cx_age);
+
+        /* ===== 3. Boolean 布尔 ===== */
+        var cx_isStudent = true;
+        var cx_hasJob = false;
+        console.log("【Boolean】", cx_isStudent, cx_hasJob);
+        console.log("  typeof cx_isStudent =", typeof cx_isStudent);
+
+        /* ===== 4. Null 空值 ===== */
+        var cx_empty = null;
+        console.log("【Null】", cx_empty);
+        console.log("  typeof cx_empty =", typeof cx_empty, "（注意：这是 JS 的历史遗留 bug）");
+
+        /* ===== 5. Undefined 未定义 ===== */
+        var cx_undefinedVar;
+        console.log("【Undefined】", cx_undefinedVar);
+        console.log("  typeof cx_undefinedVar =", typeof cx_undefinedVar);
+
+        /* ===== 6. Symbol 符号（ES6 新增） ===== */
+        var cx_sym1 = Symbol("id");
+        var cx_sym2 = Symbol("id");
+        console.log("【Symbol】", cx_sym1, cx_sym2);
+        console.log("  typeof cx_sym1 =", typeof cx_sym1);
+        console.log("  cx_sym1 === cx_sym2 →", cx_sym1 === cx_sym2, "（每个 Symbol 都唯一）");
+
+        /* ===== 汇总输出到页面 ===== */
+        var cx_dataTypes = [
+            { name: "String 字符串", type: typeof cx_name, value: cx_name },
+            { name: "Number 数字", type: typeof cx_age, value: cx_age + ", " + cx_pi },
+            { name: "Boolean 布尔", type: typeof cx_isStudent, value: cx_isStudent },
+            { name: "Null 空值", type: typeof cx_empty, value: cx_empty },
+            { name: "Undefined 未定义", type: typeof cx_undefinedVar, value: cx_undefinedVar },
+            { name: "Symbol 符号", type: typeof cx_sym1, value: "Symbol('id')" }
+        ];
+
+        var cx_tbody = document.getElementById("cx_table-body");
+        for (var i = 0; i < cx_dataTypes.length; i++) {
+            var cx_tr = document.createElement("tr");
+            cx_tr.innerHTML =
+                "<td>" + cx_dataTypes[i].name + "</td>" +
+                "<td><code>" + cx_dataTypes[i].type + "</code></td>" +
+                "<td><code>" + cx_dataTypes[i].value + "</code></td>";
+            cx_tbody.appendChild(cx_tr);
+        }
+    </script>
+</body>
+</html>
