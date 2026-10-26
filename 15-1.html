@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-10-26，功能：100个盒子演示数7规则 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-1 数7游戏 - 陈曦</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e4b3b;
+            margin: 0 0 6px;
+        }
+
+        .cx_author {
+            text-align: center;
+            color: #888;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .cx_rule {
+            text-align: center;
+            color: #c7254e;
+            margin-bottom: 26px;
+            font-size: 15px;
+        }
+
+        .cx_container {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 24px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .cx_grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 6px;
+        }
+
+        .cx_box {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 2px solid #1e4b3b;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e4b3b;
+            transition: background 0.2s;
+        }
+
+        .cx_box-empty {
+            background: #1e4b3b;
+            color: #fff;
+        }
+
+        .cx_box-empty::after {
+            content: "";
+            width: 60%;
+            height: 60%;
+            border: 2px solid #fff;
+            border-radius: 50%;
+        }
+
+        .cx_stat {
+            margin-top: 20px;
+            padding: 12px;
+            background: #eaf4ef;
+            border-radius: 6px;
+            text-align: center;
+            color: #1e4b3b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>数7游戏 — 陈曦</h1>
+    <p class="cx_author">姓名：陈曦 · 第 15 章练习</p>
+    <p class="cx_rule">规则：7 的倍数 或 个位为 7 → 空盒子，其余显示数字</p>
+
+    <div class="cx_container">
+        <div class="cx_grid" id="cx_grid"></div>
+        <div class="cx_stat" id="cx_stat"></div>
+    </div>
+
+    <script>
+        var CX_TOTAL = 100;
+        var cx_hitCount = 0;
+        var cx_grid = document.getElementById("cx_grid");
+
+        for (var i = 1; i <= CX_TOTAL; i++) {
+            var cx_isHit = (i % 7 === 0 || i % 10 === 7);
+            var cx_box = document.createElement("div");
+            cx_box.className = "cx_box";
+
+            if (cx_isHit) {
+                cx_box.classList.add("cx_box-empty");
+                cx_hitCount++;
+            } else {
+                cx_box.textContent = i;
+            }
+
+            cx_box.title = cx_isHit ? "命中规则：" + i : i;
+            cx_grid.appendChild(cx_box);
+        }
+
+        document.getElementById("cx_stat").textContent =
+            "共 " + CX_TOTAL + " 个盒子，命中规则 " + cx_hitCount + " 个（空），显示数字 " + (CX_TOTAL - cx_hitCount) + " 个";
+    </script>
+</body>
+</html>
