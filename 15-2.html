@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-10-26，功能：JavaScript条件与循环程序结构演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-2 JavaScript 条件与循环 - 陈曦</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e4b3b;
+            margin: 0 0 6px;
+        }
+
+        .cx_author {
+            text-align: center;
+            color: #888;
+            margin-bottom: 26px;
+            font-size: 14px;
+        }
+
+        .cx_container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .cx_section {
+            background: #fff;
+            border-radius: 10px;
+            padding: 22px 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .cx_section h2 {
+            color: #1e4b3b;
+            border-left: 5px solid #c7254e;
+            padding-left: 12px;
+            margin-top: 0;
+        }
+
+        .cx_code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 14px 18px;
+            border-radius: 6px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .cx_code .cx_comment { color: #888; }
+        .cx_code .cx_keyword { color: #cc99cd; }
+        .cx_code .cx_string { color: #b5bd68; }
+        .cx_code .cx_number { color: #de935f; }
+
+        .cx_output {
+            background: #eaf4ef;
+            border: 1px solid #b8d4c4;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-top: 10px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            color: #1e4b3b;
+            white-space: pre-wrap;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .cx_label {
+            display: inline-block;
+            background: #c7254e;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .cx_tip {
+            background: #fffbe6;
+            border-left: 4px solid #faad14;
+            padding: 8px 14px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: #8c6d1f;
+        }
+
+        .cx_grid-demo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .cx_grid-demo span {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .cx_grid-demo .cx_num {
+            background: #e8f4ec;
+            color: #1e4b3b;
+            border: 1px solid #1e4b3b;
+        }
+
+        .cx_grid-demo .cx_skip {
+            background: #fde2e2;
+            color: #c7254e;
+            border: 1px dashed #c7254e;
+            text-decoration: line-through;
+        }
+
+        .cx_grid-demo .cx_break {
+            background: #1e4b3b;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript 条件与循环</h1>
+    <p class="cx_author">姓名：陈曦 · 第 15 章 · 程序结构演示</p>
+
+    <div class="cx_container">
+
+        <!-- ===== 条件结构 ===== -->
+        <div class="cx_section">
+            <h2>一、条件结构</h2>
+
+            <div>
+                <span class="cx_label">1. if / else if / else</span>
+                <div class="cx_code">
+<span class="cx_comment">// 根据分数评级</span>
+<span class="cx_keyword">var</span> cx_score = <span class="cx_number">85</span>;
+<span class="cx_keyword">var</span> cx_grade;
+<span class="cx_keyword">if</span> (cx_score >= <span class="cx_number">90</span>) {
+    cx_grade = <span class="cx_string">"A 优秀"</span>;
+} <span class="cx_keyword">else if</span> (cx_score >= <span class="cx_number">75</span>) {
+    cx_grade = <span class="cx_string">"B 良好"</span>;
+} <span class="cx_keyword">else if</span> (cx_score >= <span class="cx_number">60</span>) {
+    cx_grade = <span class="cx_string">"C 及格"</span>;
+} <span class="cx_keyword">else</span> {
+    cx_grade = <span class="cx_string">"D 不及格"</span>;
+}
+<span class="cx_keyword">console</span>.log(cx_grade);
+                </div>
+                <div class="cx_output" id="cx_out_if"></div>
+            </div>
+
+            <div style="margin-top: 18px;">
+                <span class="cx_label">2. switch 多分支</span>
+                <div class="cx_code">
+<span class="cx_comment">// 根据星期几输出安排</span>
+<span class="cx_keyword">var</span> cx_day = <span class="cx_number">3</span>;  <span class="cx_comment">// 0=周日 1=周一 ...</span>
+<span class="cx_keyword">var</span> cx_plan;
+<span class="cx_keyword">switch</span> (cx_day) {
+    <span class="cx_keyword">case</span> <span class="cx_number">1</span>:
+    <span class="cx_keyword">case</span> <span class="cx_number">2</span>:
+    <span class="cx_keyword">case</span> <span class="cx_number">3</span>:
+        cx_plan = <span class="cx_string">"上课学习"</span>; <span class="cx_keyword">break</span>;
+    <span class="cx_keyword">case</span> <span class="cx_number">4</span>:
+    <span class="cx_keyword">case</span> <span class="cx_number">5</span>:
+        cx_plan = <span class="cx_string">"做作业 + 运动"</span>; <span class="cx_keyword">break</span>;
+    <span class="cx_keyword">default</span>:
+        cx_plan = <span class="cx_string">"休息娱乐"</span>;
+}
+                </div>
+                <div class="cx_output" id="cx_out_switch"></div>
+            </div>
+
+            <div style="margin-top: 18px;">
+                <span class="cx_label">3. 三元运算符（简写的 if/else）</span>
+                <div class="cx_code">
+<span class="cx_keyword">var</span> cx_age = <span class="cx_number">20</span>;
+<span class="cx_keyword">var</span> cx_status = (cx_age >= <span class="cx_number">18</span>) ? <span class="cx_string">"成年人"</span> : <span class="cx_string">"未成年"</span>;
+                </div>
+                <div class="cx_output" id="cx_out_ternary"></div>
+            </div>
+        </div>
+
+        <!-- ===== 循环结构 ===== -->
+        <div class="cx_section">
+            <h2>二、循环结构</h2>
+
+            <div>
+                <span class="cx_label">1. for 循环（计数循环）</span>
+                <p style="margin:6px 0;font-size:13px;color:#666;">输出 1~10，遇到 7 的倍数跳过（continue），遇到 &gt;8 停止（break）</p>
+                <div class="cx_code">
+<span class="cx_keyword">for</span> (<span class="cx_keyword">var</span> i = <span class="cx_number">1</span>; i <= <span class="cx_number">10</span>; i++) {
+    <span class="cx_keyword">if</span> (i % <span class="cx_number">7</span> === <span class="cx_number">0</span>) <span class="cx_keyword">continue</span>;
+    <span class="cx_keyword">if</span> (i > <span class="cx_number">8</span>) <span class="cx_keyword">break</span>;
+    <span class="cx_keyword">console</span>.log(i);
+}
+                </div>
+                <div class="cx_grid-demo" id="cx_demo_for"></div>
+                <div class="cx_output" id="cx_out_for"></div>
+            </div>
+
+            <div style="margin-top: 18px;">
+                <span class="cx_label">2. while 循环（条件循环）</span>
+                <div class="cx_code">
+<span class="cx_comment">// 计算 1~100 的和</span>
+<span class="cx_keyword">var</span> cx_sum = <span class="cx_number">0</span>;
+<span class="cx_keyword">var</span> cx_i = <span class="cx_number">1</span>;
+<span class="cx_keyword">while</span> (cx_i <= <span class="cx_number">100</span>) {
+    cx_sum += cx_i;
+    cx_i++;
+}
+                </div>
+                <div class="cx_output" id="cx_out_while"></div>
+            </div>
+
+            <div style="margin-top: 18px;">
+                <span class="cx_label">3. do...while（至少执行一次）</span>
+                <div class="cx_code">
+<span class="cx_keyword">var</span> cx_n = <span class="cx_number">0</span>;
+<span class="cx_keyword">do</span> {
+    cx_n++;
+} <span class="cx_keyword">while</span> (cx_n < <span class="cx_number">5</span>);
+                </div>
+                <div class="cx_output" id="cx_out_dowhile"></div>
+            </div>
+
+            <div style="margin-top: 18px;">
+                <span class="cx_label">4. for...of（遍历数组 / 可迭代对象）</span>
+                <div class="cx_code">
+<span class="cx_keyword">var</span> cx_fruits = [<span class="cx_string">"苹果"</span>, <span class="cx_string">"香蕉"</span>, <span class="cx_string">"橙子"</span>, <span class="cx_string">"葡萄"</span>];
+<span class="cx_keyword">for</span> (<span class="cx_keyword">var</span> cx_fruit <span class="cx_keyword">of</span> cx_fruits) {
+    <span class="cx_keyword">console</span>.log(cx_fruit);
+}
+                </div>
+                <div class="cx_output" id="cx_out_forof"></div>
+            </div>
+
+            <div style="margin-top: 18px;">
+                <span class="cx_label">5. for...in（遍历对象键名）</span>
+                <div class="cx_code">
+<span class="cx_keyword">var</span> cx_student = {
+    name: <span class="cx_string">"陈曦"</span>,
+    age: <span class="cx_number">20</span>,
+    school: <span class="cx_string">"阳光大学"</span>
+};
+<span class="cx_keyword">for</span> (<span class="cx_keyword">var</span> cx_key <span class="cx_keyword">in</span> cx_student) {
+    <span class="cx_keyword">console</span>.log(cx_key + <span class="cx_string">" = "</span> + cx_student[cx_key]);
+}
+                </div>
+                <div class="cx_output" id="cx_out_forin"></div>
+            </div>
+
+            <div class="cx_tip">
+                💡 小提示：<b>break</b> 立即跳出整个循环；<b>continue</b> 跳过当前这一次，继续下一轮。
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* ========== 条件结构 ========== */
+
+        // 1. if / else if / else
+        var cx_score = 85;
+        var cx_grade;
+        if (cx_score >= 90) {
+            cx_grade = "A 优秀";
+        } else if (cx_score >= 75) {
+            cx_grade = "B 良好";
+        } else if (cx_score >= 60) {
+            cx_grade = "C 及格";
+        } else {
+            cx_grade = "D 不及格";
+        }
+        document.getElementById("cx_out_if").textContent =
+            "分数：" + cx_score + "  →  等级：" + cx_grade;
+
+        // 2. switch
+        var cx_day = 3;
+        var cx_plan;
+        switch (cx_day) {
+            case 1:
+            case 2:
+            case 3:
+                cx_plan = "上课学习"; break;
+            case 4:
+            case 5:
+                cx_plan = "做作业 + 运动"; break;
+            default:
+                cx_plan = "休息娱乐";
+        }
+        document.getElementById("cx_out_switch").textContent =
+            "星期 " + cx_day + "（周三）→ " + cx_plan;
+
+        // 3. 三元
+        var cx_age = 20;
+        var cx_status = (cx_age >= 18) ? "成年人" : "未成年";
+        document.getElementById("cx_out_ternary").textContent =
+            "年龄 " + cx_age + " 岁 → " + cx_status;
+
+        /* ========== 循环结构 ========== */
+
+        // 1. for + continue + break
+        var cx_forLog = "输出：";
+        var cx_demo = document.getElementById("cx_demo_for");
+        for (var i = 1; i <= 10; i++) {
+            var cx_span = document.createElement("span");
+            if (i % 7 === 0) {
+                cx_span.className = "cx_skip";
+                cx_span.textContent = i;
+                cx_demo.appendChild(cx_span);
+                continue;
+            }
+            if (i > 8) {
+                cx_span.className = "cx_break";
+                cx_span.textContent = i;
+                cx_demo.appendChild(cx_span);
+                break;
+            }
+            cx_span.className = "cx_num";
+            cx_span.textContent = i;
+            cx_demo.appendChild(cx_span);
+            cx_forLog += i + " ";
+        }
+        document.getElementById("cx_out_for").textContent = cx_forLog + "\n" +
+            "（灰色虚线=被 continue 跳过，深色=触发 break 停止）";
+
+        // 2. while - 累加
+        var cx_sum = 0;
+        var cx_i = 1;
+        while (cx_i <= 100) {
+            cx_sum += cx_i;
+            cx_i++;
+        }
+        document.getElementById("cx_out_while").textContent =
+            "1 + 2 + 3 + ... + 100 = " + cx_sum;
+
+        // 3. do...while
+        var cx_n = 0;
+        do {
+            cx_n++;
+        } while (cx_n < 5);
+        document.getElementById("cx_out_dowhile").textContent =
+            "循环结束后 cx_n = " + cx_n + "（先执行一次再判断，所以从 0 到 5）";
+
+        // 4. for...of
+        var cx_fruits = ["苹果", "香蕉", "橙子", "葡萄"];
+        var cx_fruitLog = "水果列表：";
+        for (var cx_fruit of cx_fruits) {
+            cx_fruitLog += cx_fruit + "、";
+        }
+        document.getElementById("cx_out_forof").textContent = cx_fruitLog.slice(0, -1);
+
+        // 5. for...in
+        var cx_student = { name: "陈曦", age: 20, school: "阳光大学" };
+        var cx_stuLog = "";
+        for (var cx_key in cx_student) {
+            cx_stuLog += cx_key + " = " + cx_student[cx_key] + "\n";
+        }
+        document.getElementById("cx_out_forin").textContent = cx_stuLog;
+
+        console.log("===== 陈曦的 15-2 条件与循环 =====");
+        console.log("if/else 评级:", cx_grade);
+        console.log("while 累加 1~100:", cx_sum);
+        console.log("for...of fruits:", cx_fruits);
+    </script>
+</body>
+</html>
