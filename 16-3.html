@@ -101,6 +101,40 @@
             transform: translateX(-50%);
         }
 
+        .cx_icon-live {
+            position: relative;
+            width: 24px;
+            height: 18px;
+            border: 2px solid #222;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .cx_icon-live::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-35%, -50%);
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 9px solid #222;
+        }
+
+        .cx_icon-live::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 2px;
+            background: #222;
+            border-radius: 1px;
+        }
+
         .cx_icon-bell {
             font-size: 22px;
             color: #222;
@@ -152,7 +186,7 @@
                 <span>RED</span>
             </li>
             <li class="cx_menu-item">
-                <i class="iconfont icon-tuibushepin cx_icon"></i>
+                <span class="cx_icon-live"></span>
                 <span>直播</span>
             </li>
             <li class="cx_menu-item">
