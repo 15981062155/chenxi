@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-10-29，功能：Tab 切换排行榜页面（点击排行 / 评论排行） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-4 Tab 排行榜 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .cx_card {
+            width: 720px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .cx_tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cx_tab {
+            flex: 1;
+            padding: 16px 0;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+            background: #fff;
+            border: none;
+            font-family: inherit;
+        }
+
+        .cx_tab.active {
+            color: #0079fe;
+        }
+
+        .cx_tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 3px;
+            background: #0079fe;
+            border-radius: 2px;
+        }
+
+        .cx_list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cx_list-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f3f3f3;
+            gap: 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .cx_list-item:last-child {
+            border-bottom: none;
+        }
+
+        .cx_list-item:hover {
+            background: #fafafa;
+        }
+
+        .cx_rank {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            background: #ff5555;
+            border-radius: 4px;
+        }
+
+        .cx_rank.top {
+            background: #ff2b2b;
+        }
+
+        .cx_rank.normal {
+            background: #fff;
+            color: #999;
+        }
+
+        .cx_title {
+            flex: 1;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .cx_title:hover {
+            color: #0079fe;
+        }
+
+        .cx_value {
+            font-size: 14px;
+            color: #999;
+            flex-shrink: 0;
+        }
+
+        .cx_panel {
+            display: none;
+        }
+
+        .cx_panel.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .cx_card {
+                width: 100%;
+            }
+            .cx_title {
+                white-space: normal;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cx_card">
+        <div class="cx_tabs">
+            <button class="cx_tab active" data-target="click-panel">点击排行</button>
+            <button class="cx_tab" data-target="comment-panel">评论排行</button>
+        </div>
+
+        <div id="click-panel" class="cx_panel active">
+            <ul class="cx_list">
+                <li class="cx_list-item"><span class="cx_rank top">1</span><span class="cx_title">中国各城市房子还要卖多少年(详细数据)</span><span class="cx_value">187706</span></li>
+                <li class="cx_list-item"><span class="cx_rank top">2</span><span class="cx_title">任志强：60多年来 我不知道国企给了我们</span><span class="cx_value">171160</span></li>
+                <li class="cx_list-item"><span class="cx_rank top">3</span><span class="cx_title">三精制药跳楼老总被查因华闫商贿案 省食</span><span class="cx_value">127631</span></li>
+                <li class="cx_list-item"><span class="cx_rank">4</span><span class="cx_title">内地17省铺开不动产能统一登记职责整合工作</span><span class="cx_value">113865</span></li>
+                <li class="cx_list-item"><span class="cx_rank">5</span><span class="cx_title">山西煤老板抛售整套99套二手房 8年投资翻</span><span class="cx_value">72770</span></li>
+                <li class="cx_list-item"><span class="cx_rank">6</span><span class="cx_title">北京城南楼市"沦陷"变相伴价格施加码</span><span class="cx_value">62971</span></li>
+                <li class="cx_list-item"><span class="cx_rank">7</span><span class="cx_title">中国3D打印技术取得重大突破 近1200人连</span><span class="cx_value">27456</span></li>
+                <li class="cx_list-item"><span class="cx_rank">8</span><span class="cx_title">重磅利空突至致全球暴跌 A股或周五无悬</span><span class="cx_value">25322</span></li>
+                <li class="cx_list-item"><span class="cx_rank">9</span><span class="cx_title">七匹狼早盘上演奇葩一幕：单笔4手卖单刷</span><span class="cx_value">20912</span></li>
+                <li class="cx_list-item"><span class="cx_rank">10</span><span class="cx_title">长油小股东主导股东大会 当场爆料董事长</span><span class="cx_value">11667</span></li>
+            </ul>
+        </div>
+
+        <div id="comment-panel" class="cx_panel">
+            <ul class="cx_list">
+                <li class="cx_list-item"><span class="cx_rank top">1</span><span class="cx_title">关于延迟退休 专家和网友吵翻了天 你怎么看？</span><span class="cx_value">35218</span></li>
+                <li class="cx_list-item"><span class="cx_rank top">2</span><span class="cx_title">95后毕业生宁愿送外卖也不进工厂 原因扎心</span><span class="cx_value">28945</span></li>
+                <li class="cx_list-item"><span class="cx_rank top">3</span><span class="cx_title">月薪三万养不起一个孩子？网友:算完账我沉默了</span><span class="cx_value">24301</span></li>
+                <li class="cx_list-item"><span class="cx_rank">4</span><span class="cx_title">年轻人为什么都不想结婚了 评论区太真实</span><span class="cx_value">19876</span></li>
+                <li class="cx_list-item"><span class="cx_rank">5</span><span class="cx_title">房价跌了 为什么大家反而更焦虑了？</span><span class="cx_value">17543</span></li>
+                <li class="cx_list-item"><span class="cx_rank">6</span><span class="cx_title">县城里的年轻人:月薪4000也能活得很舒服</span><span class="cx_value">15220</span></li>
+                <li class="cx_list-item"><span class="cx_rank">7</span><span class="cx_title">老板问我要不要降薪20% 我立刻同意了</span><span class="cx_value">13654</span></li>
+                <li class="cx_list-item"><span class="cx_rank">8</span><span class="cx_title">中国人的存钱率全球第一 钱都去哪了？</span><span class="cx_value">12098</span></li>
+                <li class="cx_list-item"><span class="cx_rank">9</span><span class="cx_title">为什么越来越多的人喜欢独处？看完沉默</span><span class="cx_value">10876</span></li>
+                <li class="cx_list-item"><span class="cx_rank">10</span><span class="cx_title">程序员35岁后真的没有出路了吗？过来人说了实话</span><span class="cx_value">9543</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var cx_tabs = document.querySelectorAll('.cx_tab');
+            var cx_panels = document.querySelectorAll('.cx_panel');
+
+            cx_tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    cx_tabs.forEach(function (t) { t.classList.remove('active'); });
+                    cx_panels.forEach(function (p) { p.classList.remove('active'); });
+
+                    tab.classList.add('active');
+                    var target = document.getElementById(tab.getAttribute('data-target'));
+                    if (target) target.classList.add('active');
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
