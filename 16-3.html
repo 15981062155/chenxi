@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-10-29，功能：小红书RED风格侧边栏菜单还原 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-3 RED 侧边栏 - 陈曦</title>
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .cx_sidebar {
+            width: 260px;
+            background: #f5f5f5;
+            border-radius: 16px;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .cx_menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cx_menu-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 24px;
+            gap: 14px;
+            color: #222;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .cx_menu-item:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .cx_icon {
+            font-size: 22px;
+            color: #222;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .cx_icon-circle {
+            display: inline-flex;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-family: "Arial", sans-serif;
+        }
+
+        .cx_icon-plus {
+            position: relative;
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .cx_icon-plus::before,
+        .cx_icon-plus::after {
+            content: "";
+            position: absolute;
+            background: #222;
+            border-radius: 2px;
+        }
+
+        .cx_icon-plus::before {
+            width: 22px;
+            height: 3px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .cx_icon-plus::after {
+            width: 3px;
+            height: 22px;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .cx_icon-bell {
+            font-size: 22px;
+            color: #222;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .cx_login-btn {
+            display: block;
+            width: calc(100% - 40px);
+            margin: 20px 20px 0;
+            padding: 14px 0;
+            background: #ff2442;
+            color: #fff;
+            border: none;
+            border-radius: 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.15s;
+            font-family: inherit;
+        }
+
+        .cx_login-btn:hover {
+            opacity: 0.9;
+        }
+
+        .cx_login-btn:active {
+            opacity: 0.8;
+        }
+
+        .cx_hint {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="cx_sidebar">
+        <ul class="cx_menu">
+            <li class="cx_menu-item">
+                <i class="iconfont icon-faxian cx_icon"></i>
+                <span>发现</span>
+            </li>
+            <li class="cx_menu-item">
+                <span class="cx_icon-circle">R</span>
+                <span>RED</span>
+            </li>
+            <li class="cx_menu-item">
+                <i class="iconfont icon-tuibushepin cx_icon"></i>
+                <span>直播</span>
+            </li>
+            <li class="cx_menu-item">
+                <span class="cx_icon-plus"></span>
+                <span>发布</span>
+            </li>
+            <li class="cx_menu-item">
+                <span class="cx_icon-bell">🔔</span>
+                <span>通知</span>
+            </li>
+            <li class="cx_menu-item">
+                <i class="iconfont icon-a-236_duihua-11 cx_icon"></i>
+                <span>消息</span>
+            </li>
+        </ul>
+        <button class="cx_login-btn">登录</button>
+        <p class="cx_hint">姓名：陈曦 · 16-3 侧边栏还原</p>
+    </aside>
+</body>
+</html>
