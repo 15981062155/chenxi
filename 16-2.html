@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-10-29，功能：JavaScript 对象与字符串图解演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-2 JavaScript 对象与字符串图解 - 陈曦</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 26px 18px 50px;
+            background: #f0f2f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e4b3b;
+            margin: 0 0 6px;
+        }
+
+        .cx_author {
+            text-align: center;
+            color: #888;
+            margin: 0 0 22px;
+            font-size: 14px;
+        }
+
+        .cx_container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ===== 输入条 ===== */
+        .cx_bar {
+            background: #fff;
+            border-radius: 10px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .cx_bar label {
+            font-size: 14px;
+            color: #1e4b3b;
+            font-weight: bold;
+        }
+
+        .cx_bar input {
+            flex: 1;
+            min-width: 220px;
+            padding: 7px 12px;
+            border: 1px solid #b8d4c4;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: "Consolas", monospace;
+            color: #1e4b3b;
+        }
+
+        .cx_btn {
+            background: #1e4b3b;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .cx_btn:hover { background: #276b53; }
+
+        .cx_btn.cx_btn-light {
+            background: #fff;
+            color: #1e4b3b;
+            border: 1px solid #1e4b3b;
+        }
+
+        .cx_btn.cx_btn-light:hover { background: #e8f4ec; }
+
+        .cx_btn.cx_btn-play { background: #c7254e; }
+        .cx_btn.cx_btn-play:hover { background: #a81d3f; }
+
+        /* ===== 分区 / 卡片 ===== */
+        .cx_part {
+            background: #fff;
+            border-radius: 10px;
+            padding: 18px 22px 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .cx_part > h2 {
+            color: #1e4b3b;
+            border-left: 5px solid #c7254e;
+            padding-left: 12px;
+            margin: 0 0 4px;
+            font-size: 19px;
+        }
+
+        .cx_part > .cx_part-desc {
+            color: #888;
+            font-size: 13px;
+            margin: 0 0 16px;
+            padding-left: 17px;
+        }
+
+        .cx_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+            gap: 16px;
+        }
+
+        .cx_card {
+            border: 1px solid #e3e8e6;
+            border-radius: 9px;
+            padding: 14px 16px 16px;
+            background: #fcfdfc;
+        }
+
+        .cx_card h3 {
+            margin: 0 0 6px;
+            font-size: 16px;
+            color: #1e4b3b;
+            font-family: "Consolas", monospace;
+        }
+
+        .cx_tag {
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+            background: #e8f4ec;
+            color: #1e4b3b;
+            border: 1px solid #b8d4c4;
+        }
+
+        .cx_tag-obj { background: #e8f4ec; color: #1e4b3b; border-color: #b8d4c4; }
+        .cx_tag-str { background: #e6f0fa; color: #1f5c8b; border-color: #b3d0e8; }
+
+        .cx_desc {
+            font-size: 13px;
+            color: #555;
+            margin: 0 0 8px;
+            line-height: 1.5;
+        }
+
+        .cx_code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 8px 0;
+            white-space: pre;
+        }
+
+        .cx_code .cx_c { color: #888; }
+        .cx_code .cx_s { color: #b5bd68; }
+        .cx_code .cx_k { color: #cc99cd; }
+        .cx_code .cx_n { color: #de935f; }
+
+        .cx_btns {
+            margin: 8px 0 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .cx_var {
+            font-size: 12px;
+            padding: 4px 11px;
+            border-radius: 14px;
+            border: 1px solid #b8d4c4;
+            background: #fff;
+            color: #1e4b3b;
+            cursor: pointer;
+            font-family: "Consolas", monospace;
+        }
+
+        .cx_var.cx_on {
+            background: #1e4b3b;
+            color: #fff;
+            border-color: #1e4b3b;
+        }
+
+        .cx_replay {
+            font-size: 12px;
+            padding: 4px 11px;
+            border-radius: 14px;
+            border: 1px dashed #c7254e;
+            background: #fff;
+            color: #c7254e;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .cx_line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            flex-wrap: wrap;
+        }
+
+        .cx_lt {
+            font-size: 12px;
+            color: #888;
+            min-width: 62px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .cx_arrow {
+            color: #c7254e;
+            font-size: 13px;
+            font-family: "Consolas", monospace;
+            padding-left: 68px;
+            margin: 2px 0;
+        }
+
+        .cx_flag {
+            font-size: 11px;
+            color: #1e4b3b;
+            background: #e8f4ec;
+            border: 1px solid #b8d4c4;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .cx_flag.cx_flag-no {
+            color: #999;
+            background: #f5f5f5;
+            border-color: #ddd;
+        }
+
+        /* ===== 对象盒子 ===== */
+        .cx_obj {
+            border: 2px dashed #b8d4c4;
+            border-radius: 8px;
+            padding: 8px 10px;
+            background: #f7fbf9;
+            min-width: 150px;
+        }
+
+        .cx_obj-label {
+            font-size: 11px;
+            color: #9ab8a8;
+            font-family: "Consolas", monospace;
+            margin-bottom: 5px;
+        }
+
+        .cx_pair {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 3px 0;
+            font-family: "Consolas", monospace;
+            font-size: 13px;
+            padding: 2px 4px;
+            border-radius: 5px;
+        }
+
+        .cx_key {
+            background: #1e4b3b;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .cx_colon { color: #9ab8a8; }
+
+        .cx_val {
+            background: #e8f4ec;
+            border: 1px solid #b8d4c4;
+            color: #1e4b3b;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        @keyframes cx_pairIn {
+            from { transform: translateX(-24px); opacity: 0; }
+            60%  { transform: translateX(3px); opacity: 1; }
+            to   { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes cx_flash {
+            0%   { background: #fff7e0; }
+            50%  { background: #faad14; color: #fff; }
+            100% { background: #fff7e0; }
+        }
+
+        @keyframes cx_pairDel {
+            0%   { transform: translateX(0); }
+            30%  { transform: translateX(-6px) rotate(-3deg); }
+            60%  { transform: translateX(6px) rotate(3deg); }
+            100% { transform: translateX(0); }
+        }
+
+        .cx_pair-add { animation: cx_pairIn .5s ease-out; background: #eaf6ef; }
+        .cx_pair-add .cx_key { background: #276b53; }
+
+        .cx_pair-hit { animation: cx_flash 1s ease-out; }
+        .cx_pair-hit .cx_val { background: #fff7e0; border-color: #faad14; color: #8c6d1f; }
+
+        .cx_pair-del {
+            animation: cx_pairDel .6s ease-in-out;
+            text-decoration: line-through;
+            opacity: .75;
+        }
+
+        .cx_pair-del .cx_key { background: #c7254e; }
+        .cx_pair-del .cx_val { background: #fde2e2; border-color: #c7254e; color: #c7254e; }
+
+        .cx_empty {
+            font-family: "Consolas", monospace;
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* ===== 字符串字符格 ===== */
+        .cx_str {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .cx_ch {
+            min-width: 24px;
+            height: 40px;
+            box-sizing: border-box;
+            padding: 0 2px;
+            background: #eef4fb;
+            border: 2px solid #c3d9ec;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: "Consolas", monospace;
+            font-weight: bold;
+            font-size: 14px;
+            color: #1f5c8b;
+        }
+
+        .cx_ch i {
+            font-size: 9px;
+            color: #8fb4d4;
+            font-style: normal;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .cx_ch-space { color: #b0c4d8; }
+
+        @keyframes cx_chCut {
+            0%   { box-shadow: 0 0 0 0 rgba(39, 107, 83, .8); }
+            70%  { box-shadow: 0 0 0 8px rgba(39, 107, 83, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 107, 83, 0); }
+        }
+
+        @keyframes cx_chIn {
+            from { transform: translateY(-14px) scale(.4); opacity: 0; }
+            60%  { transform: translateY(2px) scale(1.15); opacity: 1; }
+            to   { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .cx_ch-hit {
+            background: #fff7e0;
+            border-color: #faad14;
+            color: #8c6d1f;
+            animation: cx_chCut .9s ease-out;
+        }
+
+        .cx_ch-cut {
+            background: #e8f4ec;
+            border-color: #276b53;
+            color: #1e4b3b;
+            animation: cx_chCut .9s ease-out;
+        }
+
+        .cx_ch-del {
+            background: #fde2e2;
+            border-color: #c7254e;
+            border-style: dashed;
+            color: #c7254e;
+            text-decoration: line-through;
+            animation: cx_chCut .9s ease-out;
+        }
+
+        .cx_ch-new { animation: cx_chIn .45s ease-out; background: #e8f4ec; border-color: #276b53; color: #1e4b3b; }
+
+        /* ===== 引用类型示意图 ===== */
+        .cx_ref {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cx_vars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .cx_varbox {
+            font-family: "Consolas", monospace;
+            font-size: 13px;
+            font-weight: bold;
+            background: #1e4b3b;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .cx_ptr {
+            font-family: "Consolas", monospace;
+            color: #c7254e;
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .cx_ref-note {
+            font-size: 12px;
+            color: #c7254e;
+            align-self: center;
+            max-width: 220px;
+            line-height: 1.5;
+        }
+
+        /* ===== 结果区 ===== */
+        .cx_ret {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .cx_chip {
+            font-family: "Consolas", monospace;
+            font-size: 13px;
+            background: #1e4b3b;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            animation: cx_chIn .45s ease-out;
+        }
+
+        .cx_chip-red { background: #c7254e; }
+        .cx_chip-gray { background: #999; }
+        .cx_chip-blue { background: #1f5c8b; }
+
+        .cx_ret-txt { font-size: 12px; color: #888; }
+
+        .cx_log {
+            background: #eaf4ef;
+            border: 1px solid #b8d4c4;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: "Consolas", monospace;
+            font-size: 12px;
+            color: #1e4b3b;
+            white-space: pre-wrap;
+            max-height: 150px;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .cx_cell {
+            min-width: 40px;
+            height: 38px;
+            padding: 0 6px;
+            box-sizing: border-box;
+            background: #e8f4ec;
+            border: 2px solid #b8d4c4;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: #1e4b3b;
+            font-family: "Consolas", monospace;
+            animation: cx_chIn .45s ease-out;
+        }
+
+        .cx_cells { display: flex; flex-wrap: wrap; gap: 5px; }
+
+        .cx_note {
+            font-size: 12px;
+            color: #8c6d1f;
+            background: #fffbe6;
+            border-left: 4px solid #faad14;
+            padding: 6px 12px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        /* ===== 速查表 ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        th, td {
+            border: 1px solid #e3e8e6;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th { background: #1e4b3b; color: #fff; }
+        tr:nth-child(even) { background: #f7faf9; }
+
+        td code {
+            background: #eef;
+            color: #c7254e;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript 对象与字符串图解</h1>
+    <p class="cx_author">姓名：陈曦 · 第 16 章 · 对象 Object 与字符串 String 一图看懂</p>
+
+    <div class="cx_container">
+
+        <!-- ===== 对象输入条 ===== -->
+        <div class="cx_bar">
+            <label>对象（JSON）：</label>
+            <input id="cx_objInput" value='{"name":"陈曦","age":20,"school":"阳光大学","score":88}'>
+            <button class="cx_btn" id="cx_objApply">应用</button>
+            <button class="cx_btn cx_btn-light" id="cx_objReset">重置对象</button>
+            <button class="cx_btn cx_btn-play" id="cx_replayAll">全部重播动画</button>
+        </div>
+
+        <div id="cx_objParts"></div>
+
+        <!-- ===== 字符串输入条 ===== -->
+        <div class="cx_bar">
+            <label>演示字符串：</label>
+            <input id="cx_strInput" value="Hello JavaScript">
+            <button class="cx_btn" id="cx_strApply">应用</button>
+            <button class="cx_btn cx_btn-light" id="cx_strReset">重置字符串</button>
+        </div>
+
+        <div id="cx_strParts"></div>
+
+        <!-- ===== 速查表 ===== -->
+        <div class="cx_part">
+            <h2>七、方法速查表</h2>
+            <p class="cx_part-desc">对象与字符串的常用方法汇总，随用随查。</p>
+
+            <h3 style="font-size:15px;color:#1e4b3b;margin:16px 0 4px;">对象常用方法</h3>
+            <table>
+                <thead>
+                    <tr><th>方法 / 语法</th><th>作用</th><th>返回值</th></tr>
+                </thead>
+                <tbody id="cx_objTable"></tbody>
+            </table>
+
+            <h3 style="font-size:15px;color:#1f5c8b;margin:20px 0 4px;">字符串常用方法</h3>
+            <table>
+                <thead>
+                    <tr><th>方法 / 语法</th><th>作用</th><th>返回值</th></tr>
+                </thead>
+                <tbody id="cx_strTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        /* =========================================================
+           陈曦 · 16-2  JavaScript 对象与字符串图解
+           ========================================================= */
+
+        var CX_OBJ_DEFAULT = { name: "陈曦", age: 20, school: "阳光大学", score: 88 };
+        var CX_STR_DEFAULT = "Hello JavaScript";
+
+        var cx_obj = {};
+        var cx_str = CX_STR_DEFAULT;
+
+        for (var cx_k in CX_OBJ_DEFAULT) cx_obj[cx_k] = CX_OBJ_DEFAULT[cx_k];
+
+        /* ---------- 工具函数 ---------- */
+        function cx_show(v) {
+            if (Array.isArray(v)) return "[" + v.map(cx_show).join(", ") + "]";
+            if (typeof v === "function") return "ƒ function()";
+            if (v === null) return "null";
+            if (typeof v === "string") return '"' + v + '"';
+            if (typeof v === "undefined") return "undefined";
+            if (typeof v === "object") return JSON.stringify(v);
+            return String(v);
+        }
+
+        function cx_esc(s) {
+            return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function cx_clone(o) {
+            var n = {};
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) n[k] = o[k];
+            return n;
+        }
+
+        /* ---------- 代码高亮 ---------- */
+        function cx_hl(src) {
+            var re = /(\/\/[^\n]*)|('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")|\b(var|let|const|function|return|if|else|for|of|in|new|true|false|null|undefined|delete|this)\b|\b(\d+)\b/g;
+            var out = "", last = 0, m;
+            while ((m = re.exec(src)) !== null) {
+                out += cx_esc(src.slice(last, m.index));
+                if (m[1]) out += '<span class="cx_c">' + cx_esc(m[1]) + '</span>';
+                else if (m[2]) out += '<span class="cx_s">' + cx_esc(m[2]) + '</span>';
+                else if (m[3]) out += '<span class="cx_k">' + cx_esc(m[3]) + '</span>';
+                else out += '<span class="cx_n">' + cx_esc(m[4]) + '</span>';
+                last = m.index + m[0].length;
+            }
+            out += cx_esc(src.slice(last));
+            return out;
+        }
+
+        /* ---------- 渲染：对象盒 ---------- */
+        function cx_renderObj(box, obj, opt, label) {
+            opt = opt || {};
+            var wrap = document.createElement("div");
+
+            if (label) {
+                var lb = document.createElement("div");
+                lb.className = "cx_obj-label";
+                lb.textContent = label;
+                wrap.appendChild(lb);
+            }
+
+            var ob = document.createElement("div");
+            ob.className = "cx_obj";
+            var keys = Object.keys(obj);
+
+            if (keys.length === 0) {
+                ob.innerHTML = '<span class="cx_empty">{ } 空对象</span>';
+            }
+
+            for (var i = 0; i < keys.length; i++) {
+                var k = keys[i];
+                var pair = document.createElement("div");
+                pair.className = "cx_pair";
+                if (opt.add && opt.add.indexOf(k) >= 0) pair.className += " cx_pair-add";
+                if (opt.hit && opt.hit.indexOf(k) >= 0) pair.className += " cx_pair-hit";
+                if (opt.del && opt.del.indexOf(k) >= 0) pair.className += " cx_pair-del";
+                pair.innerHTML =
+                    '<span class="cx_key">' + cx_esc(k) + '</span>' +
+                    '<span class="cx_colon">:</span>' +
+                    '<span class="cx_val">' + cx_esc(cx_show(obj[k])) + '</span>';
+                ob.appendChild(pair);
+            }
+
+            wrap.appendChild(ob);
+            box.appendChild(wrap);
+        }
+
+        /* ---------- 渲染：字符串字符格 ---------- */
+        function cx_renderStr(box, str, opt, label) {
+            opt = opt || {};
+            var wrap = document.createElement("div");
+
+            if (label) {
+                var lb = document.createElement("div");
+                lb.className = "cx_obj-label";
+                lb.textContent = label;
+                wrap.appendChild(lb);
+            }
+
+            var line = document.createElement("div");
+            line.className = "cx_str";
+
+            if (str === "") {
+                line.innerHTML = '<span class="cx_empty">"" 空字符串</span>';
+            }
+
+            for (var i = 0; i < str.length; i++) {
+                var ch = document.createElement("div");
+                ch.className = "cx_ch";
+                var showCh = str[i];
+                var isSpace = (showCh === " ");
+                if (isSpace) { showCh = "␣"; ch.className += " cx_ch-space"; }
+                if (showCh === "\n") showCh = "⏎";
+                if (opt.hit && opt.hit.indexOf(i) >= 0) ch.className += " cx_ch-hit";
+                if (opt.cut && opt.cut.indexOf(i) >= 0) ch.className += " cx_ch-cut";
+                if (opt.del && opt.del.indexOf(i) >= 0) ch.className += " cx_ch-del";
+                if (opt.allNew) ch.className += " cx_ch-new";
+                ch.innerHTML = "<b>" + cx_esc(showCh) + "</b><i>" + i + "</i>";
+                line.appendChild(ch);
+            }
+
+            wrap.appendChild(line);
+            box.appendChild(wrap);
+        }
+
+        /* ---------- 渲染：引用类型示意图 ---------- */
+        function cx_renderRef(box, spec) {
+            var d = spec.data;
+            var wrap = document.createElement("div");
+            wrap.className = "cx_ref";
+
+            var vars = document.createElement("div");
+            vars.className = "cx_vars";
+            for (var i = 0; i < d.vars.length; i++) {
+                var vb = document.createElement("div");
+                vb.className = "cx_varbox";
+                vb.textContent = d.vars[i];
+                vars.appendChild(vb);
+            }
+            wrap.appendChild(vars);
+
+            var ptr = document.createElement("div");
+            ptr.className = "cx_ptr";
+            for (var p = 0; p < d.vars.length; p++) {
+                var a = document.createElement("div");
+                a.textContent = "──→";
+                ptr.appendChild(a);
+            }
+            wrap.appendChild(ptr);
+
+            if (d.mode === "same") {
+                cx_renderObj(wrap, d.obj, { hit: d.hit }, d.objLabel || "同一个对象");
+            } else {
+                var col = document.createElement("div");
+                cx_renderObj(col, d.obj1, { hit: d.hit1 }, d.label1 || "对象 A");
+                var sp = document.createElement("div");
+                sp.style.height = "8px";
+                col.appendChild(sp);
+                cx_renderObj(col, d.obj2, { hit: d.hit2 }, d.label2 || "对象 B");
+                wrap.appendChild(col);
+            }
+
+            if (spec.sub) {
+                var nt = document.createElement("div");
+                nt.className = "cx_ref-note";
+                nt.textContent = spec.sub;
+                wrap.appendChild(nt);
+            }
+
+            box.appendChild(wrap);
+        }
+
+        /* ---------- 渲染：数组方块（split 等结果） ---------- */
+        function cx_renderCells(box, arr) {
+            var wrap = document.createElement("div");
+            wrap.className = "cx_cells";
+            if (!arr || arr.length === 0) {
+                wrap.innerHTML = '<span class="cx_empty">[ ] 空数组</span>';
+            }
+            for (var i = 0; i < arr.length; i++) {
+                var c = document.createElement("div");
+                c.className = "cx_cell";
+                c.textContent = arr[i] === "" ? '""' : arr[i];
+                wrap.appendChild(c);
+            }
+            box.appendChild(wrap);
+        }
+
+        /* ---------- 统一渲染入口 ---------- */
+        function cx_renderSpec(box, spec) {
+            box.innerHTML = "";
+            if (!spec) return;
+
+            if (spec.kind === "obj") {
+                cx_renderObj(box, spec.data, spec, spec.label);
+            } else if (spec.kind === "objs") {
+                for (var i = 0; i < spec.data.length; i++) {
+                    cx_renderObj(box, spec.data[i].obj, spec.data[i], spec.data[i].label);
+                }
+            } else if (spec.kind === "str") {
+                cx_renderStr(box, spec.data, spec, spec.label);
+            } else if (spec.kind === "ref") {
+                cx_renderRef(box, spec);
+            } else if (spec.kind === "array") {
+                cx_renderCells(box, spec.data);
+            } else if (spec.kind === "list") {
+                var lg = document.createElement("div");
+                lg.className = "cx_log";
+                lg.textContent = spec.data;
+                box.appendChild(lg);
+            } else {
+                var chip = document.createElement("span");
+                chip.className = "cx_chip" +
+                    (spec.red ? " cx_chip-red" : (spec.gray ? " cx_chip-gray" : (spec.blue ? " cx_chip-blue" : "")));
+                chip.textContent = cx_show(spec.data);
+                box.appendChild(chip);
+            }
+
+            if (spec.sub && spec.kind !== "ref") {
+                var sub = document.createElement("span");
+                sub.className = "cx_ret-txt";
+                sub.textContent = " " + spec.sub;
+                box.appendChild(sub);
+            }
+        }
+
+        /* =========================================================
+           对象部分数据
+           ========================================================= */
+        var cx_objParts = [
+            {
+                title: "一、创建对象与访问属性",
+                desc: "对象是“键值对”的集合：一个名字（键 key）对应一个值（value）。",
+                methods: [
+                    {
+                        name: "创建对象",
+                        tag: "obj",
+                        desc: "三种常见写法：对象字面量 { }、new Object()、构造函数 + new。",
+                        variants: [
+                            {
+                                label: "字面量 { }",
+                                code: "var stu = {\n    name: '陈曦',\n    age: 20,\n    school: '阳光大学'\n};\n// 最常用、最简洁的写法",
+                                run: function () {
+                                    var o = { name: "陈曦", age: 20, school: "阳光大学" };
+                                    return {
+                                        before: { kind: "obj", data: {}, label: "第 1 步：先是一个空对象" },
+                                        after: { kind: "obj", data: o, add: ["name", "age", "school"], label: "第 2 步：往里装键值对" },
+                                        changed: true,
+                                        ret: { kind: "value", data: o, sub: "（花括号里写 键: 值，多个之间用逗号隔开）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "new Object()",
+                                code: "var stu = new Object();\nstu.name = '陈曦';\nstu.age = 20;\n// 先造空对象，再一个个加属性",
+                                run: function () {
+                                    var o = new Object();
+                                    o.name = "陈曦";
+                                    o.age = 20;
+                                    return {
+                                        before: { kind: "obj", data: {}, label: "new Object() 得到空对象" },
+                                        after: { kind: "obj", data: o, add: ["name", "age"], label: "逐个赋值后" },
+                                        changed: true,
+                                        ret: { kind: "value", data: o, sub: "（写法繁琐，实际开发很少用）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "构造函数 new",
+                                code: "function Student(n, a) {\n    this.name = n;\n    this.age = a;\n}\nvar stu = new Student('陈曦', 20);\n// 适合批量造出结构相同的对象",
+                                run: function () {
+                                    function Student(n, a) {
+                                        this.name = n;
+                                        this.age = a;
+                                    }
+                                    var o = new Student("陈曦", 20);
+                                    return {
+                                        before: { kind: "obj", data: {}, label: "this = 新建的空对象" },
+                                        after: { kind: "obj", data: o, add: ["name", "age"], label: "构造函数用 this 挂上属性" },
+                                        changed: true,
+                                        ret: { kind: "value", data: o, sub: "（构造函数名首字母大写，用 new 调用）" },
+                                        note: "构造函数里的 this，指向的是 new 出来的那个新对象。"
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "访问属性",
+                        tag: "obj",
+                        desc: "点语法 对象.键名 最常用；中括号 对象['键名'] 更灵活，键名可以是变量或特殊字符。",
+                        variants: [
+                            {
+                                label: "点语法 stu.name",
+                                code: "stu.name;      // → '陈曦'",
+                                run: function (o) {
+                                    var keys = Object.keys(o);
+                                    var k = keys.indexOf("name") >= 0 ? "name" : keys[0];
+                                    return {
+                                        before: { kind: "obj", data: o, hit: [k], label: "黄色 = 正在访问的属性" },
+                                        after: null,
+                                        ret: { kind: "value", data: o[k], sub: "（点后面直接写键名）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "中括号 stu['name']",
+                                code: "stu['name'];   // → '陈曦'\n// 键名要写成字符串",
+                                run: function (o) {
+                                    var keys = Object.keys(o);
+                                    var k = keys.indexOf("name") >= 0 ? "name" : keys[0];
+                                    return {
+                                        before: { kind: "obj", data: o, hit: [k], label: "黄色 = 正在访问的属性" },
+                                        after: null,
+                                        ret: { kind: "value", data: o[k], sub: "（中括号里是字符串形式的键名）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "键名是变量 stu[k]",
+                                code: "var k = 'age';\nstu[k];        // → 20\n// 中括号里可以放变量，点语法做不到",
+                                run: function (o) {
+                                    var keys = Object.keys(o);
+                                    var k = keys.indexOf("age") >= 0 ? "age" : keys[0];
+                                    return {
+                                        before: { kind: "obj", data: o, hit: [k], label: "k = '" + k + "'，动态取属性" },
+                                        after: null,
+                                        ret: { kind: "value", data: o[k], sub: "（变量 k 的值决定了访问哪个属性）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "访问不存在的属性",
+                                code: "stu.height;    // → undefined\n// 不报错，只是得到 undefined",
+                                run: function (o) {
+                                    return {
+                                        before: { kind: "obj", data: o, label: "对象里没有 height 这个键" },
+                                        after: null,
+                                        ret: { kind: "value", data: undefined, gray: true, sub: "（访问不存在的属性得到 undefined）" }
+                                    };
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "二、对象的增、改、删与遍历",
+                desc: "对象创建后依然可以随时加属性、改值、删除属性，也能逐个遍历。",
+                methods: [
+                    {
+                        name: "添加 / 修改属性",
+                        tag: "obj",
+                        desc: "给一个不存在的键赋值 = 添加；给已存在的键赋值 = 修改。",
+                        variants: [
+                            {
+                                label: "添加新属性",
+                                code: "stu.gender = '女';\n// 原来没有 gender，赋值后自动新增",
+                                run: function (o) {
+                                    var before = cx_clone(o);
+                                    o.gender = "女";
+                                    return {
+                                        before: { kind: "obj", data: before, label: "添加前" },
+                                        after: { kind: "obj", data: o, add: ["gender"], label: "添加后" },
+                                        changed: true,
+                                        ret: { kind: "value", data: "女", sub: "（赋值表达式的值就是右边的值）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "修改已有属性",
+                                code: "stu.age = 21;\n// age 已经存在，这次是覆盖旧值",
+                                run: function (o) {
+                                    var before = cx_clone(o);
+                                    var keys = Object.keys(o);
+                                    var k = keys.indexOf("age") >= 0 ? "age" : keys[0];
+                                    o[k] = o[k] === 21 ? 22 : (typeof o[k] === "number" ? o[k] + 1 : "新值");
+                                    return {
+                                        before: { kind: "obj", data: before, hit: [k], label: "修改前" },
+                                        after: { kind: "obj", data: o, hit: [k], label: "修改后（值闪烁）" },
+                                        changed: true,
+                                        ret: { kind: "value", data: o[k], sub: "（同一个键再次赋值会覆盖旧值）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "delete 删除属性",
+                        tag: "obj",
+                        desc: "delete 对象.键名 会把整个键值对从对象中移除，删除后访问得到 undefined。",
+                        variants: [{
+                            label: "delete stu.score",
+                            code: "delete stu.score;\nstu.score;     // → undefined\n// 连键一起删掉，不是把值变成空",
+                            run: function (o) {
+                                var before = cx_clone(o);
+                                var keys = Object.keys(o);
+                                var k = keys.length > 1 ? keys[keys.length - 1] : keys[0];
+                                delete o[k];
+                                return {
+                                    before: { kind: "obj", data: before, del: [k], label: "红色划掉的就是要删的" },
+                                    after: { kind: "obj", data: o, label: "删除后" },
+                                    changed: true,
+                                    ret: { kind: "value", data: true, sub: "（delete 成功返回 true）" }
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "判断属性是否存在",
+                        tag: "obj",
+                        desc: "'键名' in 对象 会连原型链上的一起查；hasOwnProperty 只查对象自己的。",
+                        variants: [
+                            {
+                                label: "'name' in stu",
+                                code: "'name' in stu;          // → true\nstu.hasOwnProperty('name'); // → true",
+                                run: function (o) {
+                                    var keys = Object.keys(o);
+                                    var k = keys.indexOf("name") >= 0 ? "name" : keys[0];
+                                    return {
+                                        before: { kind: "obj", data: o, hit: [k], label: "黄色 = 被检查的属性" },
+                                        after: null,
+                                        ret: { kind: "value", data: true, sub: "（两种方式都是 true）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "'toString' in stu",
+                                code: "'toString' in stu;          // → true  ← 继承自原型\nstu.hasOwnProperty('toString'); // → false ← 不是自己的\nstu.hasOwnProperty('name');     // → true",
+                                run: function (o) {
+                                    return {
+                                        before: { kind: "obj", data: o, label: "对象自带的属性" },
+                                        after: null,
+                                        ret: { kind: "list", data: "'toString' in stu                → true\nstu.hasOwnProperty('toString')  → false\nstu.hasOwnProperty('name')      → true" },
+                                        note: "in 会顺着原型链往上找，所以继承自 Object 的 toString 也会返回 true；判断“自己的属性”要用 hasOwnProperty。"
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "遍历对象",
+                        tag: "obj",
+                        desc: "for...in 逐个取键名；Object.keys / values / entries 分别得到键、值、键值对的数组。",
+                        variants: [
+                            {
+                                label: "for...in",
+                                code: "for (var k in stu) {\n    console.log(k + ' = ' + stu[k]);\n}\n// k 是键名，stu[k] 才是值",
+                                run: function (o) {
+                                    var log = "";
+                                    var hits = [];
+                                    for (var k in o) {
+                                        log += k + " = " + cx_show(o[k]) + "\n";
+                                        hits.push(k);
+                                    }
+                                    return {
+                                        before: { kind: "obj", data: o, hit: hits, label: "逐个访问每个键" },
+                                        after: null,
+                                        ret: { kind: "list", data: log, sub: "" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "Object.keys()",
+                                code: "Object.keys(stu);\n// → ['name', 'age', 'school', 'score']\n// 得到键名组成的数组",
+                                run: function (o) {
+                                    var keys = Object.keys(o);
+                                    return {
+                                        before: { kind: "obj", data: o, hit: keys, label: "全部键名" },
+                                        after: null,
+                                        ret: { kind: "array", data: keys, sub: "（键名数组，常配合 forEach 使用）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "Object.values()",
+                                code: "Object.values(stu);\n// → ['陈曦', 20, '阳光大学', 88]\n// 得到值组成的数组",
+                                run: function (o) {
+                                    var vals = Object.keys(o).map(function (k) { return cx_show(o[k]); });
+                                    return {
+                                        before: { kind: "obj", data: o, hit: Object.keys(o), label: "取出每个键对应的值" },
+                                        after: null,
+                                        ret: { kind: "array", data: vals, sub: "（值数组）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "Object.entries()",
+                                code: "Object.entries(stu);\n// → [['name','陈曦'], ['age',20], ...]\n// 得到 [键, 值] 小数组组成的大数组",
+                                run: function (o) {
+                                    var log = "";
+                                    var keys = Object.keys(o);
+                                    for (var i = 0; i < keys.length; i++) {
+                                        log += "[ '" + keys[i] + "', " + cx_show(o[keys[i]]) + " ]\n";
+                                    }
+                                    return {
+                                        before: { kind: "obj", data: o, hit: keys, label: "键值对配对输出" },
+                                        after: null,
+                                        ret: { kind: "list", data: log, sub: "（每项都是 [键, 值]）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "对象里的方法与 this",
+                        tag: "obj",
+                        desc: "属性的值也可以是函数，这时它叫“方法”；方法里用 this 访问对象自己的其他属性。",
+                        variants: [{
+                            label: "stu.sayHi()",
+                            code: "stu.sayHi = function () {\n    return '大家好，我是' + this.name\n         + '，今年' + this.age + '岁';\n};\nstu.sayHi();",
+                            run: function (o) {
+                                var before = cx_clone(o);
+                                o.sayHi = function () {
+                                    return "大家好，我是" + this.name + "，今年" + this.age + "岁";
+                                };
+                                var msg = o.sayHi();
+                                return {
+                                    before: { kind: "obj", data: before, label: "添加方法前" },
+                                    after: { kind: "obj", data: o, add: ["sayHi"], label: "方法也是一个“值”" },
+                                    changed: true,
+                                    ret: { kind: "value", data: msg, blue: true, sub: "（this 指向调用它的对象 stu）" },
+                                    note: "this.name 里的 this 就是“点前面的那个对象”：stu.sayHi() 中 this === stu。"
+                                };
+                            }
+                        }]
+                    }
+                ]
+            },
+            {
+                title: "三、对象进阶：合并、引用与 JSON",
+                desc: "这几个点最容易踩坑：对象合并、引用类型、对象与字符串的互转。",
+                methods: [
+                    {
+                        name: "对象合并",
+                        tag: "obj",
+                        desc: "把多个对象合成一个新对象，同名属性后面的覆盖前面的。",
+                        variants: [
+                            {
+                                label: "Object.assign()",
+                                code: "var base  = { name: '陈曦', age: 20 };\nvar extra = { age: 21, city: '北京' };\nvar all = Object.assign({}, base, extra);\n// → { name:'陈曦', age:21, city:'北京' }",
+                                run: function () {
+                                    var base = { name: "陈曦", age: 20 };
+                                    var extra = { age: 21, city: "北京" };
+                                    var all = Object.assign({}, base, extra);
+                                    return {
+                                        before: {
+                                            kind: "objs",
+                                            data: [
+                                                { obj: base, label: "base", hit: ["age"] },
+                                                { obj: extra, label: "extra", hit: ["age", "city"] }
+                                            ]
+                                        },
+                                        after: null,
+                                        ret: {
+                                            kind: "obj", data: all, add: ["city"], hit: ["age"],
+                                            label: "合并结果", sub: "（第 1 个参数 {} 是目标对象，不会改动 base）"
+                                        },
+                                        note: "同名属性 age：extra 的 21 覆盖了 base 的 20。写成 Object.assign(base, extra) 会直接改 base，要小心。"
+                                    };
+                                }
+                            },
+                            {
+                                label: "展开运算符 ...",
+                                code: "var all = { ...base, ...extra };\n// ES6 写法，效果同 Object.assign({}, ...)",
+                                run: function () {
+                                    var base = { name: "陈曦", age: 20 };
+                                    var extra = { age: 21, city: "北京" };
+                                    var all = {};
+                                    for (var k1 in base) all[k1] = base[k1];
+                                    for (var k2 in extra) all[k2] = extra[k2];
+                                    return {
+                                        before: {
+                                            kind: "objs",
+                                            data: [
+                                                { obj: base, label: "base" },
+                                                { obj: extra, label: "extra" }
+                                            ]
+                                        },
+                                        after: null,
+                                        ret: { kind: "obj", data: all, add: ["city"], label: "合并结果", sub: "（... 把对象“摊开”成键值对）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "引用类型陷阱",
+                        tag: "obj",
+                        desc: "对象是引用类型：变量里存的是“地址”，两个变量指向同一个对象时会互相影响。",
+                        variants: [
+                            {
+                                label: "引用赋值（会互相影响）",
+                                code: "var a = { name: '陈曦', age: 20 };\nvar b = a;          // 复制的是地址！\nb.age = 21;\na.age;              // → 21   a 也跟着变了",
+                                run: function () {
+                                    var a = { name: "陈曦", age: 20 };
+                                    var b = a;
+                                    b.age = 21;
+                                    return {
+                                        before: null,
+                                        after: {
+                                            kind: "ref",
+                                            data: { mode: "same", vars: ["a", "b"], obj: a, hit: ["age"], objLabel: "堆里的同一个对象" },
+                                            sub: "a 和 b 是同一个对象的两个名字，改 b 就是改 a"
+                                        },
+                                        changed: true,
+                                        ret: { kind: "value", data: a.age, red: true, sub: "（a.age 也被改成了 21）" },
+                                        note: "基本类型（数字、字符串、布尔）复制的是值，互不影响；对象复制的是地址，改动会同步。"
+                                    };
+                                }
+                            },
+                            {
+                                label: "浅拷贝（互不影响）",
+                                code: "var a = { name: '陈曦', age: 20 };\nvar b = Object.assign({}, a);  // 造一个新对象\nb.age = 21;\na.age;              // → 20   a 没变",
+                                run: function () {
+                                    var a = { name: "陈曦", age: 20 };
+                                    var b = Object.assign({}, a);
+                                    b.age = 21;
+                                    return {
+                                        before: null,
+                                        after: {
+                                            kind: "ref",
+                                            data: {
+                                                mode: "copy", vars: ["a", "b"],
+                                                obj1: a, label1: "a 指向的对象（未变）",
+                                                obj2: b, hit2: ["age"], label2: "b 指向的新对象（已改）"
+                                            },
+                                            sub: "两个独立对象，改 b 不会影响 a"
+                                        },
+                                        ret: { kind: "value", data: a.age, sub: "（a.age 仍然是 20）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "JSON 互转",
+                        tag: "obj",
+                        desc: "JSON.stringify 把对象变成字符串（便于存储/传输）；JSON.parse 再变回对象。",
+                        variants: [
+                            {
+                                label: "JSON.stringify()",
+                                code: "var json = JSON.stringify(stu);\n// → '{\"name\":\"陈曦\",\"age\":20,...}'\nJSON.stringify(stu, null, 2);  // 带缩进，更好看",
+                                run: function (o) {
+                                    var json = JSON.stringify(o);
+                                    return {
+                                        before: { kind: "obj", data: o, hit: Object.keys(o), label: "对象 →" },
+                                        after: null,
+                                        ret: { kind: "str", data: json, label: "字符串", sub: "（长度 " + json.length + "）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "JSON.parse()",
+                                code: "var json = '{\"name\":\"陈曦\",\"age\":20}';\nvar obj = JSON.parse(json);\nobj.name;      // → '陈曦'",
+                                run: function () {
+                                    var json = '{"name":"陈曦","age":20}';
+                                    var obj = JSON.parse(json);
+                                    return {
+                                        before: { kind: "str", data: json, label: "JSON 字符串 →" },
+                                        after: null,
+                                        ret: { kind: "obj", data: obj, add: Object.keys(obj), label: "对象", sub: "（JSON 的键必须带双引号）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "解构赋值",
+                        tag: "obj",
+                        desc: "ES6 语法：用花括号一次性把对象里的属性取出来，变成独立变量。",
+                        variants: [{
+                            label: "var { name, age } = stu",
+                            code: "var { name, age } = stu;\nname;   // → '陈曦'\nage;    // → 20\n// 变量名必须和键名一致\nvar { name: 姓名 } = stu;  // 改名写法",
+                            run: function (o) {
+                                var keys = Object.keys(o);
+                                var a = keys[0], b = keys.length > 1 ? keys[1] : keys[0];
+                                var log = "var { " + a + ", " + b + " } = stu;\n\n" +
+                                    a + " = " + cx_show(o[a]) + "\n" +
+                                    b + " = " + cx_show(o[b]);
+                                return {
+                                    before: { kind: "obj", data: o, hit: [a, b], label: "黄色 = 被解构出来的属性" },
+                                    after: null,
+                                    ret: { kind: "list", data: log, sub: "" }
+                                };
+                            }
+                        }]
+                    }
+                ]
+            }
+        ];
+
+        /* =========================================================
+           字符串部分数据
+           ========================================================= */
+        var cx_strParts = [
+            {
+                title: "四、字符串基础与不可变性",
+                desc: "字符串可以像数组一样按下标取字符，但它一旦创建就不能被修改。",
+                methods: [
+                    {
+                        name: "length 与下标",
+                        tag: "str",
+                        desc: "str.length 是字符个数；str[下标] 或 charAt(下标) 取单个字符，下标从 0 开始。",
+                        variants: [
+                            {
+                                label: "str.length",
+                                code: "var s = 'Hello JavaScript';\ns.length;       // → 16\n// 空格也算一个字符",
+                                run: function (s) {
+                                    var idx = [];
+                                    for (var i = 0; i < s.length; i++) idx.push(i);
+                                    return {
+                                        before: { kind: "str", data: s, hit: idx, label: "每个格子是一个字符，下方是下标" },
+                                        after: null,
+                                        ret: { kind: "value", data: s.length, sub: "（最后一个字符的下标是 length - 1）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "str[0] / charAt(1)",
+                                code: "s[0];          // → 'H'\ns.charAt(1);   // → 'e'\ns[s.length-1]; // → 't'  最后一个字符",
+                                run: function (s) {
+                                    return {
+                                        before: { kind: "str", data: s, hit: [0, 1, s.length - 1], label: "黄色 = 被取出的字符" },
+                                        after: null,
+                                        ret: { kind: "list", data: "s[0]              → " + cx_show(s[0]) + "\ns.charAt(1)       → " + cx_show(s.charAt(1)) + "\ns[s.length - 1]   → " + cx_show(s[s.length - 1]) }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "字符串不可变",
+                        tag: "str",
+                        desc: "任何“修改”字符串的方法，都是返回一个新字符串，原字符串纹丝不动。",
+                        variants: [
+                            {
+                                label: "改下标无效",
+                                code: "s[0] = 'h';\ns;             // → 'Hello JavaScript'\n// 第一个字符还是大写 H，赋值被忽略",
+                                run: function (s) {
+                                    var copy = s.slice();
+                                    try { copy[0] = "h"; } catch (e) { }
+                                    return {
+                                        before: { kind: "str", data: s, del: [0], label: "试图改第 0 个字符（红叉）" },
+                                        after: { kind: "str", data: copy, label: "字符串本身没有变化" },
+                                        changed: false,
+                                        ret: { kind: "value", data: copy, sub: "（字符串是只读的，改不动）" },
+                                        note: "严格模式下这样赋值会直接报错；非严格模式静默失败。"
+                                    };
+                                }
+                            },
+                            {
+                                label: "toUpperCase()",
+                                code: "var up = s.toUpperCase();\nup;  // → 'HELLO JAVASCRIPT'\ns;   // → 'Hello JavaScript'  原串不变",
+                                run: function (s) {
+                                    var up = s.toUpperCase();
+                                    return {
+                                        before: { kind: "str", data: s, label: "原字符串 s" },
+                                        after: { kind: "str", data: s, label: "调用后 s 依然没变" },
+                                        changed: false,
+                                        ret: { kind: "str", data: up, label: "返回的新字符串", sub: "（必须用变量接收返回值）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "toLowerCase()",
+                                code: "var low = s.toLowerCase();\nlow; // → 'hello javascript'",
+                                run: function (s) {
+                                    var low = s.toLowerCase();
+                                    return {
+                                        before: { kind: "str", data: s, label: "原字符串 s" },
+                                        after: null,
+                                        ret: { kind: "str", data: low, label: "返回的新字符串", sub: "（原串不受影响）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "拼接字符串",
+                        tag: "str",
+                        desc: "三种拼接方式：+ 号、concat()、ES6 模板字符串（推荐）。",
+                        variants: [
+                            {
+                                label: "+ 号拼接",
+                                code: "var s = 'Hello' + ' ' + 'JS';\ns;   // → 'Hello JS'\n// 字符串 + 数字 会得到字符串",
+                                run: function (s) {
+                                    var r = s + " !";
+                                    return {
+                                        before: { kind: "str", data: s, label: "原字符串" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "拼接结果", sub: "（+ 号最简单直观）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "concat()",
+                                code: "'Hello'.concat(' ', 'JS');\n// → 'Hello JS'",
+                                run: function (s) {
+                                    var r = s.concat(" ~ ");
+                                    return {
+                                        before: { kind: "str", data: s, label: "原字符串" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "拼接结果", sub: "（数组也有 concat，别混淆）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "模板字符串 `${}`",
+                                code: "var name = '陈曦', age = 20;\nvar s = `我是${name}，今年${age}岁`;\n// 用反引号，${} 里可以放变量/表达式",
+                                run: function () {
+                                    var name = "陈曦", age = 20;
+                                    var r = "我是" + name + "，今年" + age + "岁";
+                                    return {
+                                        before: { kind: "list", data: "name = \"陈曦\"\nage  = 20" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "拼接结果", sub: "（反引号 ` 里用 ${} 插入变量，最方便）", blue: true }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "转义字符与多行",
+                        tag: "str",
+                        desc: "\\n 换行、\\t 制表符；模板字符串可以直接写多行。",
+                        variants: [{
+                            label: "\\n 换行 / 多行模板串",
+                            code: "// 普通字符串要加 \\n\nvar a = '第一行\\n第二行';\n\n// 模板字符串直接回车换行\nvar b = `第一行\n第二行`;",
+                            run: function () {
+                                var a = "第一行\n第二行";
+                                var b = "第一行\n第二行";
+                                return {
+                                    before: { kind: "list", data: "var a = '第一行\\n第二行';   // \\n 表示换行\nvar b = `第一行\n第二行`;          // 模板串直接回车" },
+                                    after: null,
+                                    ret: { kind: "list", data: "a 实际内容：\n" + a + "\n\nb 实际内容：\n" + b + "\n\n（两者完全一样，模板字符串可读性更好）" }
+                                };
+                            }
+                        }]
+                    }
+                ]
+            },
+            {
+                title: "五、字符串的查找与截取",
+                desc: "找位置、找内容、切片段——字符串处理里最高频的操作。",
+                methods: [
+                    {
+                        name: "indexOf() / lastIndexOf()",
+                        tag: "str",
+                        desc: "indexOf 从前往后找子串首次出现的位置；lastIndexOf 从后往前找；找不到都返回 -1。",
+                        variants: [
+                            {
+                                label: "indexOf('Java')",
+                                code: "s.indexOf('Java');\n// → 6   'Java' 从下标 6 开始\ns.indexOf('xyz');  // → -1   找不到",
+                                run: function (s) {
+                                    var i = s.indexOf("Java");
+                                    var idx = [];
+                                    if (i >= 0) {
+                                        for (var k = i; k < i + 4 && k < s.length; k++) idx.push(k);
+                                    } else {
+                                        i = s.indexOf("a");
+                                        if (i >= 0) idx.push(i);
+                                    }
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 命中的子串" },
+                                        after: null,
+                                        ret: { kind: "value", data: s.indexOf("Java"), sub: "（返回子串首字母的下标）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "lastIndexOf('a')",
+                                code: "s.lastIndexOf('a');\n// → 10   最后一个 a 的位置\ns.indexOf('a');     // → 8   第一个 a 的位置",
+                                run: function (s) {
+                                    var last = s.lastIndexOf("a");
+                                    var first = s.indexOf("a");
+                                    return {
+                                        before: { kind: "str", data: s, cut: last >= 0 ? [last] : [], hit: first >= 0 && first !== last ? [first] : [], label: "绿色=最后一个，黄色=第一个" },
+                                        after: null,
+                                        ret: { kind: "list", data: "indexOf('a')      → " + first + "\nlastIndexOf('a')  → " + last }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "includes / startsWith / endsWith",
+                        tag: "str",
+                        desc: "判断是否“包含 / 以…开头 / 以…结尾”，直接得到 true 或 false。",
+                        variants: [
+                            {
+                                label: "includes()",
+                                code: "s.includes('Script');  // → true\ns.includes('Python');  // → false",
+                                run: function (s) {
+                                    var i = s.indexOf("Script");
+                                    var idx = [];
+                                    for (var k = i; i >= 0 && k < i + 6 && k < s.length; k++) idx.push(k);
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 找到的子串" },
+                                        after: null,
+                                        ret: { kind: "value", data: s.includes("Script"), sub: "（是否包含某段内容）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "startsWith()",
+                                code: "s.startsWith('Hello');  // → true\ns.startsWith('Java');   // → false",
+                                run: function (s) {
+                                    var idx = [0, 1, 2, 3, 4];
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 开头的 5 个字符" },
+                                        after: null,
+                                        ret: { kind: "value", data: s.startsWith("Hello"), sub: "（是否以 'Hello' 开头）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "endsWith()",
+                                code: "s.endsWith('Script');   // → true\ns.endsWith('Java');     // → false",
+                                run: function (s) {
+                                    var idx = [];
+                                    for (var k = s.length - 6; k < s.length; k++) if (k >= 0) idx.push(k);
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 结尾的 6 个字符" },
+                                        after: null,
+                                        ret: { kind: "value", data: s.endsWith("Script"), sub: "（是否以 'Script' 结尾）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "slice() / substring()",
+                        tag: "str",
+                        desc: "截取片段：含头不含尾。slice 支持负数下标（倒数），substring 不支持。",
+                        variants: [
+                            {
+                                label: "slice(0, 5)",
+                                code: "s.slice(0, 5);   // → 'Hello'\n// 从 0 开始，取到 5 之前（不含 5）",
+                                run: function (s) {
+                                    var idx = [0, 1, 2, 3, 4];
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 被截取的范围 [0, 5)" },
+                                        after: null,
+                                        ret: { kind: "str", data: s.slice(0, 5), label: "截取结果", sub: "（含头不含尾）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "slice(6)",
+                                code: "s.slice(6);      // → 'JavaScript'\n// 只给一个参数：从 6 一直取到末尾",
+                                run: function (s) {
+                                    var idx = [];
+                                    for (var i = 6; i < s.length; i++) idx.push(i);
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 从下标 6 到末尾" },
+                                        after: null,
+                                        ret: { kind: "str", data: s.slice(6), label: "截取结果", sub: "（省略第二个参数 = 取到最后）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "slice(-6) 倒数",
+                                code: "s.slice(-6);     // → 'Script'\n// 负数表示从末尾往前数",
+                                run: function (s) {
+                                    var idx = [];
+                                    for (var i = s.length - 6; i < s.length; i++) if (i >= 0) idx.push(i);
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 倒数 6 个字符" },
+                                        after: null,
+                                        ret: { kind: "str", data: s.slice(-6), label: "截取结果", sub: "（-6 = 倒数第 6 个字符开始）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "substring(6, 10)",
+                                code: "s.substring(6, 10);  // → 'Java'\n// 与 slice 一样含头不含尾，但不支持负数",
+                                run: function (s) {
+                                    var idx = [6, 7, 8, 9];
+                                    return {
+                                        before: { kind: "str", data: s, cut: idx, label: "绿色 = 被截取的范围" },
+                                        after: null,
+                                        ret: { kind: "str", data: s.substring(6, 10), label: "截取结果", sub: "（负数下标会被当成 0）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "split() 拆成数组",
+                        tag: "str",
+                        desc: "按分隔符把字符串切成数组，是 join() 的逆操作；split('') 会逐字符切开。",
+                        variants: [
+                            {
+                                label: "split(' ')",
+                                code: "s.split(' ');   // → ['Hello', 'JavaScript']\n// 按空格切开",
+                                run: function (s) {
+                                    var arr = s.split(" ");
+                                    return {
+                                        before: { kind: "str", data: s, cut: [s.indexOf(" ")], label: "绿色 = 分隔符（空格）" },
+                                        after: null,
+                                        ret: { kind: "array", data: arr, sub: "（切成 " + arr.length + " 段）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "split('')",
+                                code: "s.split('');    // → ['H','e','l','l','o', ...]\n// 空字符串 = 每个字符切一刀",
+                                run: function (s) {
+                                    return {
+                                        before: { kind: "str", data: s, hit: [], label: "逐字符切开" },
+                                        after: null,
+                                        ret: { kind: "array", data: s.split(""), sub: "（得到 " + s.length + " 个单字符）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "split(',') 拆数据",
+                                code: "var line = '苹果,香蕉,橙子';\nline.split(',');  // → ['苹果','香蕉','橙子']",
+                                run: function () {
+                                    var line = "苹果,香蕉,橙子";
+                                    return {
+                                        before: { kind: "str", data: line, label: "按逗号切分" },
+                                        after: null,
+                                        ret: { kind: "array", data: line.split(","), sub: "（处理 CSV 数据常用）" }
+                                    };
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "六、字符串的替换与格式化",
+                desc: "替换内容、去掉空格、补齐长度——表单处理和展示时经常用到。",
+                methods: [
+                    {
+                        name: "replace() / replaceAll()",
+                        tag: "str",
+                        desc: "replace 默认只替换第一个匹配；replaceAll 或正则 /g 替换全部。",
+                        variants: [
+                            {
+                                label: "replace（只换第 1 个）",
+                                code: "s.replace('a', '@');\n// 只把第一个 a 换掉，后面的 a 不动",
+                                run: function (s) {
+                                    var first = s.indexOf("a");
+                                    var r = s.replace("a", "@");
+                                    return {
+                                        before: { kind: "str", data: s, hit: first >= 0 ? [first] : [], label: "红色 = 被替换的字符" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "替换结果", sub: "（只替换第一个匹配）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "replaceAll（全换）",
+                                code: "s.replaceAll('a', '@');\n// 所有 a 都被换成 @\n// 等价写法：s.replace(/a/g, '@')",
+                                run: function (s) {
+                                    var hits = [];
+                                    for (var i = 0; i < s.length; i++) if (s[i] === "a") hits.push(i);
+                                    var r = s.split("a").join("@");
+                                    return {
+                                        before: { kind: "str", data: s, hit: hits, label: "黄色 = 所有将被替换的字符" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "替换结果", sub: "（共替换 " + hits.length + " 处）" }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "trim() 去空格",
+                        tag: "str",
+                        desc: "去掉字符串两端的空白字符，常用于处理用户输入。",
+                        variants: [
+                            {
+                                label: "trim()",
+                                code: "var u = '  陈曦  ';\nu.trim();      // → '陈曦'\n// 两端空格都被去掉",
+                                run: function () {
+                                    var u = "  陈曦  ";
+                                    var del = [0, 1, u.length - 2, u.length - 1];
+                                    return {
+                                        before: { kind: "str", data: u, del: del, label: "红色划掉 = 被去掉的空格" },
+                                        after: null,
+                                        ret: { kind: "str", data: u.trim(), label: "结果", sub: "（长度 " + u.length + " → " + u.trim().length + "）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "trimStart / trimEnd",
+                                code: "'  陈曦  '.trimStart();  // → '陈曦  '  只去前面\n'  陈曦  '.trimEnd();    // → '  陈曦'  只去后面",
+                                run: function () {
+                                    var u = "  陈曦  ";
+                                    return {
+                                        before: { kind: "str", data: u, del: [0, 1, u.length - 2, u.length - 1], label: "红色 = 两端的空格" },
+                                        after: null,
+                                        ret: { kind: "list", data: "原串       " + cx_show(u) + "\ntrimStart() " + cx_show(u.trimStart()) + "\ntrimEnd()   " + cx_show(u.trimEnd()) }
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "repeat() / padStart() / padEnd()",
+                        tag: "str",
+                        desc: "重复字符串、在开头或结尾补齐到指定长度（常用于编号、对齐）。",
+                        variants: [
+                            {
+                                label: "repeat(3)",
+                                code: "'ha'.repeat(3);   // → 'hahaha'\n// 把字符串重复 3 次",
+                                run: function () {
+                                    var r = "ha".repeat(3);
+                                    return {
+                                        before: { kind: "str", data: "ha", label: "原字符串" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "重复 3 次", sub: "（常用于生成分隔线）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "padStart(8, '0')",
+                                code: "'7'.padStart(8, '0');\n// → '00000007'\n// 补到 8 位，不够的在前面补 0",
+                                run: function () {
+                                    var r = "7".padStart(8, "0");
+                                    return {
+                                        before: { kind: "str", data: "7", label: "原字符串（长度 1）" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "补齐后（长度 8）", sub: "（前面补 0，适合做编号）" }
+                                    };
+                                }
+                            },
+                            {
+                                label: "padEnd(8, '-')",
+                                code: "'7'.padEnd(8, '-');\n// → '7-------'\n// 在结尾补齐",
+                                run: function () {
+                                    var r = "7".padEnd(8, "-");
+                                    return {
+                                        before: { kind: "str", data: "7", label: "原字符串（长度 1）" },
+                                        after: null,
+                                        ret: { kind: "str", data: r, label: "补齐后（长度 8）", sub: "（后面补 -，适合对齐显示）" }
+                                    };
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        /* =========================================================
+           速查表数据
+           ========================================================= */
+        var cx_objTableData = [
+            ["对象.键名", "访问属性（点语法）", "属性值"],
+            ["对象['键名']", "访问属性（中括号）", "属性值"],
+            ["对象.键名 = 值", "添加 / 修改属性", "赋的值"],
+            ["delete 对象.键名", "删除属性", "true / false"],
+            ["'键名' in 对象", "判断属性是否存在（含原型）", "true / false"],
+            ["对象.hasOwnProperty('键名')", "判断是否为自身属性", "true / false"],
+            ["for (var k in 对象)", "遍历键名", "无（循环）"],
+            ["Object.keys(对象)", "取所有键名", "键名数组"],
+            ["Object.values(对象)", "取所有值", "值数组"],
+            ["Object.entries(对象)", "取所有键值对", "[键, 值] 数组"],
+            ["Object.assign(目标, …源)", "合并对象", "合并后的对象"],
+            ["JSON.stringify(对象)", "对象 → JSON 字符串", "字符串"],
+            ["JSON.parse(字符串)", "JSON 字符串 → 对象", "对象"],
+            ["var { a, b } = 对象", "解构赋值", "无（得到变量）"]
+        ];
+
+        var cx_strTableData = [
+            ["str.length", "字符个数", "数字"],
+            ["str[下标] / charAt(下标)", "取指定位置的字符", "字符"],
+            ["str.indexOf(子串)", "查找首次出现位置", "下标，找不到 -1"],
+            ["str.lastIndexOf(子串)", "查找最后出现位置", "下标，找不到 -1"],
+            ["str.includes(子串)", "是否包含", "true / false"],
+            ["str.startsWith(子串)", "是否以…开头", "true / false"],
+            ["str.endsWith(子串)", "是否以…结尾", "true / false"],
+            ["str.slice(开始, 结束)", "截取（支持负数）", "新字符串"],
+            ["str.substring(开始, 结束)", "截取（不支持负数）", "新字符串"],
+            ["str.split(分隔符)", "拆成数组", "数组"],
+            ["str.replace(旧, 新)", "替换第一个匹配", "新字符串"],
+            ["str.replaceAll(旧, 新)", "替换所有匹配", "新字符串"],
+            ["str.toUpperCase()", "转大写", "新字符串"],
+            ["str.toLowerCase()", "转小写", "新字符串"],
+            ["str.trim()", "去掉两端空格", "新字符串"],
+            ["str.repeat(次数)", "重复字符串", "新字符串"],
+            ["str.padStart(长度, 字符)", "开头补齐", "新字符串"],
+            ["str.padEnd(长度, 字符)", "结尾补齐", "新字符串"],
+            ["str.concat(…)", "拼接字符串", "新字符串"],
+            ["`文本${变量}`", "模板字符串", "新字符串"]
+        ];
+
+        /* =========================================================
+           播放与构建
+           ========================================================= */
+        var cx_cards = [];
+        var cx_timers = [];
+
+        function cx_current(card, method) {
+            var all = card.querySelectorAll(".cx_var");
+            for (var i = 0; i < all.length; i++) {
+                if (all[i].className.indexOf("cx_on") >= 0) return i;
+            }
+            return 0;
+        }
+
+        function cx_play(card, method, vi) {
+            var variant = method.variants[vi];
+            var arg = method.tag === "str" ? cx_str : cx_clone(cx_obj);
+            var r = variant.run(arg);
+
+            card.querySelector(".cx_code").innerHTML = cx_hl(variant.code);
+
+            var noteEl = card.querySelector(".cx_note");
+            if (r.note) {
+                noteEl.style.display = "block";
+                noteEl.innerHTML = r.note;
+            } else {
+                noteEl.style.display = "none";
+            }
+
+            // 操作前
+            var beforeLine = card.querySelector(".cx_beforeLine");
+            if (r.before) {
+                beforeLine.style.display = "flex";
+                cx_renderSpec(card.querySelector(".cx_before"), r.before);
+            } else {
+                beforeLine.style.display = "none";
+            }
+
+            // 箭头
+            card.querySelector(".cx_arrow").textContent = "↓ " + method.name;
+
+            // 操作后
+            var afterLine = card.querySelector(".cx_afterLine");
+            if (r.after) {
+                afterLine.style.display = "flex";
+                cx_renderSpec(card.querySelector(".cx_after"), r.after);
+                var flag = card.querySelector(".cx_flag");
+                flag.textContent = r.changed ? "已发生变化" : "原始数据未改变";
+                flag.className = "cx_flag" + (r.changed ? "" : " cx_flag-no");
+            } else {
+                afterLine.style.display = "none";
+            }
+
+            // 结果
+            card.querySelector(".cx_retTitle").textContent = (r.ret && r.ret.title) || "结果";
+            cx_renderSpec(card.querySelector(".cx_ret"), r.ret);
+
+            console.log("【" + method.name + "】" + variant.label +
+                " → " + (r.ret ? cx_show(r.ret.data).slice(0, 60) : ""));
+        }
+
+        function cx_buildParts(parts, hostId) {
+            var host = document.getElementById(hostId);
+            host.innerHTML = "";
+
+            for (var p = 0; p < parts.length; p++) {
+                var part = parts[p];
+                var sec = document.createElement("div");
+                sec.className = "cx_part";
+
+                var h2 = document.createElement("h2");
+                h2.textContent = part.title;
+                sec.appendChild(h2);
+
+                var pd = document.createElement("p");
+                pd.className = "cx_part-desc";
+                pd.textContent = part.desc;
+                sec.appendChild(pd);
+
+                var grid = document.createElement("div");
+                grid.className = "cx_grid";
+
+                for (var m = 0; m < part.methods.length; m++) {
+                    var method = part.methods[m];
+                    var card = document.createElement("div");
+                    card.className = "cx_card";
+
+                    card.innerHTML =
+                        '<h3>' + method.name +
+                        '<span class="cx_tag ' + (method.tag === "str" ? 'cx_tag-str">字符串' : 'cx_tag-obj">对象') +
+                        '</span></h3>' +
+                        '<p class="cx_desc">' + method.desc + '</p>' +
+                        '<pre class="cx_code"></pre>' +
+                        '<div class="cx_btns"></div>' +
+                        '<div class="cx_line cx_beforeLine"><span class="cx_lt">操作前</span><div class="cx_before"></div></div>' +
+                        '<div class="cx_arrow"></div>' +
+                        '<div class="cx_line cx_afterLine"><span class="cx_lt">操作后</span><div class="cx_after"></div><span class="cx_flag"></span></div>' +
+                        '<div class="cx_line"><span class="cx_lt cx_retTitle">结果</span><div class="cx_ret"></div></div>' +
+                        '<div class="cx_note"></div>';
+
+                    var btns = card.querySelector(".cx_btns");
+                    (function (method, card, btns) {
+                        for (var v = 0; v < method.variants.length; v++) {
+                            (function (vi) {
+                                var b = document.createElement("button");
+                                b.className = "cx_var" + (vi === 0 ? " cx_on" : "");
+                                b.textContent = method.variants[vi].label;
+                                b.onclick = function () {
+                                    var all = btns.querySelectorAll(".cx_var");
+                                    for (var k = 0; k < all.length; k++) all[k].className = "cx_var";
+                                    b.className = "cx_var cx_on";
+                                    cx_play(card, method, vi);
+                                };
+                                btns.appendChild(b);
+                            })(v);
+                        }
+                        var rp = document.createElement("button");
+                        rp.className = "cx_replay";
+                        rp.textContent = "▶ 重播";
+                        rp.onclick = function () {
+                            cx_play(card, method, cx_current(card, method));
+                        };
+                        btns.appendChild(rp);
+                    })(method, card, btns);
+
+                    grid.appendChild(card);
+                    cx_cards.push({ card: card, method: method });
+                }
+
+                sec.appendChild(grid);
+                host.appendChild(sec);
+            }
+        }
+
+        function cx_playAll() {
+            for (var t = 0; t < cx_timers.length; t++) clearTimeout(cx_timers[t]);
+            cx_timers = [];
+            for (var i = 0; i < cx_cards.length; i++) {
+                (function (item, idx) {
+                    cx_timers.push(setTimeout(function () {
+                        cx_play(item.card, item.method, cx_current(item.card, item.method));
+                    }, idx * 80));
+                })(cx_cards[i], i);
+            }
+        }
+
+        function cx_buildTables() {
+            var t1 = document.getElementById("cx_objTable");
+            var html1 = "";
+            for (var i = 0; i < cx_objTableData.length; i++) {
+                html1 += "<tr><td><code>" + cx_esc(cx_objTableData[i][0]) + "</code></td><td>" +
+                    cx_objTableData[i][1] + "</td><td>" + cx_objTableData[i][2] + "</td></tr>";
+            }
+            t1.innerHTML = html1;
+
+            var t2 = document.getElementById("cx_strTable");
+            var html2 = "";
+            for (var j = 0; j < cx_strTableData.length; j++) {
+                html2 += "<tr><td><code>" + cx_esc(cx_strTableData[j][0]) + "</code></td><td>" +
+                    cx_strTableData[j][1] + "</td><td>" + cx_strTableData[j][2] + "</td></tr>";
+            }
+            t2.innerHTML = html2;
+        }
+
+        /* ---------- 事件 ---------- */
+        document.getElementById("cx_objApply").onclick = function () {
+            var txt = document.getElementById("cx_objInput").value.trim();
+            try {
+                var o = JSON.parse(txt);
+                if (o === null || typeof o !== "object" || Array.isArray(o)) {
+                    alert("请输入一个 JSON 对象，例如 {\"name\":\"陈曦\",\"age\":20}");
+                    return;
+                }
+                cx_obj = o;
+                cx_playAll();
+            } catch (e) {
+                alert("JSON 格式有误，请检查引号和逗号。\n示例：{\"name\":\"陈曦\",\"age\":20}");
+            }
+        };
+
+        document.getElementById("cx_objReset").onclick = function () {
+            cx_obj = cx_clone(CX_OBJ_DEFAULT);
+            document.getElementById("cx_objInput").value = JSON.stringify(CX_OBJ_DEFAULT);
+            cx_playAll();
+        };
+
+        document.getElementById("cx_strApply").onclick = function () {
+            var v = document.getElementById("cx_strInput").value;
+            if (v.length === 0) {
+                alert("请输入一个字符串");
+                return;
+            }
+            cx_str = v;
+            cx_playAll();
+        };
+
+        document.getElementById("cx_strReset").onclick = function () {
+            cx_str = CX_STR_DEFAULT;
+            document.getElementById("cx_strInput").value = CX_STR_DEFAULT;
+            cx_playAll();
+        };
+
+        document.getElementById("cx_replayAll").onclick = function () {
+            cx_playAll();
+        };
+
+        /* ---------- 启动 ---------- */
+        cx_buildParts(cx_objParts, "cx_objParts");
+        cx_buildParts(cx_strParts, "cx_strParts");
+        cx_buildTables();
+        cx_playAll();
+
+        console.log("===== 陈曦 · 16-2 对象与字符串图解 =====");
+        console.log("当前对象：", cx_obj);
+        console.log("当前字符串：", cx_str);
+    </script>
+</body>
+</html>

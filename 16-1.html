@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-10-29，功能：JavaScript 常用数组方法图解演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-1 JavaScript 数组方法图解 - 陈曦</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 26px 18px 50px;
+            background: #f0f2f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e4b3b;
+            margin: 0 0 6px;
+        }
+
+        .cx_author {
+            text-align: center;
+            color: #888;
+            margin: 0 0 22px;
+            font-size: 14px;
+        }
+
+        .cx_container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ===== 控制台条 ===== */
+        .cx_bar {
+            background: #fff;
+            border-radius: 10px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .cx_bar label {
+            font-size: 14px;
+            color: #1e4b3b;
+            font-weight: bold;
+        }
+
+        .cx_bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 7px 12px;
+            border: 1px solid #b8d4c4;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: "Consolas", monospace;
+            color: #1e4b3b;
+        }
+
+        .cx_btn {
+            background: #1e4b3b;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .cx_btn:hover { background: #276b53; }
+
+        .cx_btn.cx_btn-light {
+            background: #fff;
+            color: #1e4b3b;
+            border: 1px solid #1e4b3b;
+        }
+
+        .cx_btn.cx_btn-light:hover { background: #e8f4ec; }
+
+        .cx_btn.cx_btn-play {
+            background: #c7254e;
+        }
+
+        .cx_btn.cx_btn-play:hover { background: #a81d3f; }
+
+        /* ===== 当前数组总览 ===== */
+        .cx_board {
+            background: #1e4b3b;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .cx_board .cx_board-title {
+            color: #a8d5c2;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .cx_board .cx_len {
+            color: #ffd666;
+            font-size: 13px;
+            margin-top: 10px;
+            font-family: "Consolas", monospace;
+        }
+
+        /* ===== 分区 ===== */
+        .cx_part {
+            background: #fff;
+            border-radius: 10px;
+            padding: 18px 22px 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .cx_part > h2 {
+            color: #1e4b3b;
+            border-left: 5px solid #c7254e;
+            padding-left: 12px;
+            margin: 0 0 4px;
+            font-size: 19px;
+        }
+
+        .cx_part > .cx_part-desc {
+            color: #888;
+            font-size: 13px;
+            margin: 0 0 16px;
+            padding-left: 17px;
+        }
+
+        .cx_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+            gap: 16px;
+        }
+
+        /* ===== 方法卡片 ===== */
+        .cx_card {
+            border: 1px solid #e3e8e6;
+            border-radius: 9px;
+            padding: 14px 16px 16px;
+            background: #fcfdfc;
+        }
+
+        .cx_card h3 {
+            margin: 0 0 6px;
+            font-size: 16px;
+            color: #1e4b3b;
+            font-family: "Consolas", monospace;
+        }
+
+        .cx_tag {
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .cx_tag-mut { background: #fde2e2; color: #c7254e; border: 1px solid #f5b9b9; }
+        .cx_tag-keep { background: #e8f4ec; color: #1e4b3b; border: 1px solid #b8d4c4; }
+
+        .cx_desc {
+            font-size: 13px;
+            color: #555;
+            margin: 0 0 8px;
+            line-height: 1.5;
+        }
+
+        .cx_code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 8px 0;
+            white-space: pre;
+        }
+
+        .cx_code .cx_c { color: #888; }
+        .cx_code .cx_s { color: #b5bd68; }
+        .cx_code .cx_k { color: #cc99cd; }
+        .cx_code .cx_n { color: #de935f; }
+
+        .cx_btns {
+            margin: 8px 0 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .cx_var {
+            font-size: 12px;
+            padding: 4px 11px;
+            border-radius: 14px;
+            border: 1px solid #b8d4c4;
+            background: #fff;
+            color: #1e4b3b;
+            cursor: pointer;
+            font-family: "Consolas", monospace;
+        }
+
+        .cx_var.cx_on {
+            background: #1e4b3b;
+            color: #fff;
+            border-color: #1e4b3b;
+        }
+
+        .cx_replay {
+            font-size: 12px;
+            padding: 4px 11px;
+            border-radius: 14px;
+            border: 1px dashed #c7254e;
+            background: #fff;
+            color: #c7254e;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        /* ===== 演示舞台 ===== */
+        .cx_line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            flex-wrap: wrap;
+        }
+
+        .cx_lt {
+            font-size: 12px;
+            color: #888;
+            min-width: 62px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .cx_arr {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .cx_arrow {
+            color: #c7254e;
+            font-size: 13px;
+            font-family: "Consolas", monospace;
+            padding-left: 68px;
+            margin: 2px 0;
+        }
+
+        .cx_flag {
+            font-size: 11px;
+            color: #1e4b3b;
+            background: #e8f4ec;
+            border: 1px solid #b8d4c4;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .cx_flag.cx_flag-no {
+            color: #999;
+            background: #f5f5f5;
+            border-color: #ddd;
+        }
+
+        /* ===== 数组元素方块 ===== */
+        .cx_cell {
+            min-width: 44px;
+            height: 44px;
+            padding: 0 6px;
+            box-sizing: border-box;
+            background: #e8f4ec;
+            border: 2px solid #b8d4c4;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: #1e4b3b;
+            font-family: "Consolas", monospace;
+            position: relative;
+        }
+
+        .cx_cell i {
+            font-size: 10px;
+            color: #9ab8a8;
+            font-style: normal;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        /* 新增：从右侧滑入（push） */
+        @keyframes cx_inRight {
+            from { transform: translateX(46px) scale(.5); opacity: 0; }
+            60%  { transform: translateX(-4px) scale(1.12); opacity: 1; }
+            to   { transform: translateX(0) scale(1); opacity: 1; }
+        }
+
+        /* 新增：从左侧滑入（unshift） */
+        @keyframes cx_inLeft {
+            from { transform: translateX(-46px) scale(.5); opacity: 0; }
+            60%  { transform: translateX(4px) scale(1.12); opacity: 1; }
+            to   { transform: translateX(0) scale(1); opacity: 1; }
+        }
+
+        @keyframes cx_pop {
+            from { transform: scale(.3); opacity: 0; }
+            60%  { transform: scale(1.15); opacity: 1; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        .cx_cell-new-r { animation: cx_inRight .55s ease-out; }
+        .cx_cell-new-l { animation: cx_inLeft .55s ease-out; }
+        .cx_cell-new   { animation: cx_pop .5s ease-out; }
+
+        /* 被删除 */
+        @keyframes cx_del {
+            0%   { transform: translateY(0) rotate(0); }
+            25%  { transform: translateY(-6px) rotate(-6deg); }
+            50%  { transform: translateY(0) rotate(6deg); }
+            75%  { transform: translateY(-3px) rotate(-3deg); }
+            100% { transform: translateY(0) rotate(0); }
+        }
+
+        .cx_cell-del {
+            background: #fde2e2;
+            border-color: #c7254e;
+            border-style: dashed;
+            color: #c7254e;
+            text-decoration: line-through;
+            animation: cx_del .6s ease-in-out;
+        }
+
+        /* 命中 / 关注 */
+        @keyframes cx_hit {
+            0%   { box-shadow: 0 0 0 0 rgba(250, 173, 20, .9); }
+            70%  { box-shadow: 0 0 0 10px rgba(250, 173, 20, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(250, 173, 20, 0); }
+        }
+
+        .cx_cell-hit {
+            background: #fff7e0;
+            border-color: #faad14;
+            color: #8c6d1f;
+            animation: cx_hit 1s ease-out;
+        }
+
+        /* 位置重排（sort / reverse） */
+        @keyframes cx_move {
+            from { transform: rotateY(90deg) scale(.8); opacity: .2; }
+            to   { transform: rotateY(0) scale(1); opacity: 1; }
+        }
+
+        .cx_cell-move { animation: cx_move .5s ease-out; }
+
+        /* 深色底板上的方块 */
+        .cx_board .cx_cell {
+            background: #2f6b55;
+            border-color: #7fb99f;
+            color: #fff;
+        }
+
+        .cx_board .cx_cell i { color: #a8d5c2; }
+
+        /* ===== 结果区 ===== */
+        .cx_ret {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .cx_chip {
+            font-family: "Consolas", monospace;
+            font-size: 13px;
+            background: #1e4b3b;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            animation: cx_pop .5s ease-out;
+        }
+
+        .cx_chip-red { background: #c7254e; }
+        .cx_chip-gray { background: #999; }
+
+        .cx_ret-txt {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .cx_steps {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
+            font-family: "Consolas", monospace;
+            font-size: 12px;
+            color: #1e4b3b;
+        }
+
+        .cx_steps span {
+            background: #e8f4ec;
+            border: 1px solid #b8d4c4;
+            border-radius: 5px;
+            padding: 3px 8px;
+            animation: cx_pop .4s ease-out;
+        }
+
+        .cx_steps b { color: #c7254e; }
+
+        .cx_log {
+            background: #eaf4ef;
+            border: 1px solid #b8d4c4;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: "Consolas", monospace;
+            font-size: 12px;
+            color: #1e4b3b;
+            white-space: pre-wrap;
+            max-height: 130px;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .cx_note {
+            font-size: 12px;
+            color: #8c6d1f;
+            background: #fffbe6;
+            border-left: 4px solid #faad14;
+            padding: 6px 12px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .cx_empty {
+            font-family: "Consolas", monospace;
+            font-size: 13px;
+            color: #c7254e;
+        }
+
+        /* ===== 速查表 ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        th, td {
+            border: 1px solid #e3e8e6;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #1e4b3b;
+            color: #fff;
+        }
+
+        tr:nth-child(even) { background: #f7faf9; }
+
+        td code {
+            background: #eef;
+            color: #c7254e;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript 数组常用方法图解</h1>
+    <p class="cx_author">姓名：陈曦 · 第 16 章 · 23 个数组方法，看图就懂</p>
+
+    <div class="cx_container">
+
+        <!-- 控制台 -->
+        <div class="cx_bar">
+            <label>演示数组：</label>
+            <input id="cx_input" value="5, 2, 9, 1, 7, 4">
+            <button class="cx_btn" id="cx_apply">应用</button>
+            <button class="cx_btn cx_btn-light" id="cx_reset">重置</button>
+            <button class="cx_btn cx_btn-play" id="cx_replayAll">全部重播动画</button>
+        </div>
+
+        <!-- 当前数组总览 -->
+        <div class="cx_board">
+            <div class="cx_board-title">当前数组（下方所有演示都基于它，每个方法都会先复制一份再操作）</div>
+            <div class="cx_arr" id="cx_boardArr"></div>
+            <div class="cx_len" id="cx_boardLen"></div>
+        </div>
+
+        <div id="cx_parts"></div>
+
+        <!-- 速查表 -->
+        <div class="cx_part">
+            <h2>五、方法速查表</h2>
+            <p class="cx_part-desc">红色标记的方法会直接修改原数组，使用时要注意。</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>方法</th>
+                        <th>作用</th>
+                        <th>改变原数组</th>
+                        <th>返回值</th>
+                    </tr>
+                </thead>
+                <tbody id="cx_tableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        /* =========================================================
+           陈曦 · 16-1  JavaScript 数组方法图解
+           ========================================================= */
+
+        var CX_DEFAULT = [5, 2, 9, 1, 7, 4];
+        var cx_main = CX_DEFAULT.slice();
+
+        /* ---------- 工具：把值显示成文字 ---------- */
+        function cx_show(v) {
+            if (Array.isArray(v)) {
+                return "[" + v.map(cx_show).join(", ") + "]";
+            }
+            if (v === null) return "null";
+            if (typeof v === "string") return '"' + v + '"';
+            if (typeof v === "undefined") return "undefined";
+            return String(v);
+        }
+
+        function cx_esc(s) {
+            return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        /* ---------- 工具：代码高亮 ---------- */
+        function cx_hl(src) {
+            var re = /(\/\/[^\n]*)|('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")|\b(var|let|const|function|return|if|else|for|of|in|new|true|false|null|undefined)\b|\b(\d+)\b/g;
+            var out = "", last = 0, m;
+            while ((m = re.exec(src)) !== null) {
+                out += cx_esc(src.slice(last, m.index));
+                if (m[1]) out += '<span class="cx_c">' + cx_esc(m[1]) + '</span>';
+                else if (m[2]) out += '<span class="cx_s">' + cx_esc(m[2]) + '</span>';
+                else if (m[3]) out += '<span class="cx_k">' + cx_esc(m[3]) + '</span>';
+                else out += '<span class="cx_n">' + cx_esc(m[4]) + '</span>';
+                last = m.index + m[0].length;
+            }
+            out += cx_esc(src.slice(last));
+            return out;
+        }
+
+        /* ---------- 工具：渲染一行数组方块 ---------- */
+        function cx_renderCells(box, arr, opt) {
+            opt = opt || {};
+            box.innerHTML = "";
+            if (!arr || arr.length === 0) {
+                box.innerHTML = '<span class="cx_empty">[ ] 空数组</span>';
+                return;
+            }
+            for (var i = 0; i < arr.length; i++) {
+                var cell = document.createElement("div");
+                cell.className = "cx_cell";
+                if (opt.hitIdx && opt.hitIdx.indexOf(i) >= 0) cell.className += " cx_cell-hit";
+                if (opt.delIdx && opt.delIdx.indexOf(i) >= 0) cell.className += " cx_cell-del";
+                if (opt.newIdx && opt.newIdx.indexOf(i) >= 0) {
+                    cell.className += (opt.newFrom === "left") ? " cx_cell-new-l" : " cx_cell-new-r";
+                }
+                if (opt.allNew) cell.className += " cx_cell-new";
+                if (opt.allMove) cell.className += " cx_cell-move";
+                cell.innerHTML = "<b>" + cx_esc(cx_show(arr[i])) + "</b><i>" + i + "</i>";
+                box.appendChild(cell);
+            }
+        }
+
+        /* =========================================================
+           方法数据：每个 run(arr) 返回演示结果
+           ========================================================= */
+        var cx_parts = [
+            {
+                title: "一、会修改原数组的方法",
+                desc: "这些方法直接在原数组上动手脚，操作后原数组本身就变了。",
+                methods: [
+                    {
+                        name: "push()",
+                        mut: true,
+                        desc: "在数组末尾添加一个或多个元素。",
+                        variants: [{
+                            label: "push(10)",
+                            code: "var a = [5, 2, 9, 1, 7, 4];\nvar len = a.push(10);   // 返回新长度\n// a → [5, 2, 9, 1, 7, 4, 10]",
+                            run: function (a) {
+                                var before = a.slice();
+                                var ret = a.push(10);
+                                return {
+                                    before: before, after: a, ret: ret,
+                                    delIdx: [], newIdx: [a.length - 1], newFrom: "right",
+                                    changed: true, retKind: "value", retTitle: "返回值",
+                                    retSub: "（添加后数组的新长度）"
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "pop()",
+                        mut: true,
+                        desc: "删除并返回数组的最后一个元素。",
+                        variants: [{
+                            label: "pop()",
+                            code: "var a = [5, 2, 9, 1, 7, 4];\nvar last = a.pop();    // 返回被删的元素 4\n// a → [5, 2, 9, 1, 7]",
+                            run: function (a) {
+                                var before = a.slice();
+                                var ret = a.pop();
+                                return {
+                                    before: before, after: a, ret: ret,
+                                    delIdx: [before.length - 1], newIdx: [],
+                                    changed: true, retKind: "value", retTitle: "返回值",
+                                    retSub: "（被删掉的最后一个元素）", red: true
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "unshift()",
+                        mut: true,
+                        desc: "在数组开头添加一个或多个元素，其余元素依次后移。",
+                        variants: [{
+                            label: "unshift(0)",
+                            code: "var a = [5, 2, 9, 1, 7, 4];\nvar len = a.unshift(0); // 返回新长度 7\n// a → [0, 5, 2, 9, 1, 7, 4]",
+                            run: function (a) {
+                                var before = a.slice();
+                                var ret = a.unshift(0);
+                                return {
+                                    before: before, after: a, ret: ret,
+                                    delIdx: [], newIdx: [0], newFrom: "left",
+                                    changed: true, retKind: "value", retTitle: "返回值",
+                                    retSub: "（添加后数组的新长度）"
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "shift()",
+                        mut: true,
+                        desc: "删除并返回数组的第一个元素，其余元素依次前移。",
+                        variants: [{
+                            label: "shift()",
+                            code: "var a = [5, 2, 9, 1, 7, 4];\nvar first = a.shift(); // 返回被删的元素 5\n// a → [2, 9, 1, 7, 4]",
+                            run: function (a) {
+                                var before = a.slice();
+                                var ret = a.shift();
+                                return {
+                                    before: before, after: a, ret: ret,
+                                    delIdx: [0], newIdx: [],
+                                    changed: true, retKind: "value", retTitle: "返回值",
+                                    retSub: "（被删掉的第一个元素）", red: true
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "splice()",
+                        mut: true,
+                        desc: "数组界的“瑞士军刀”：splice(起始索引, 删除个数, 要插入的元素…)，能删、能插、能替换。",
+                        variants: [
+                            {
+                                label: "删除：splice(3, 2)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar out = a.splice(3, 2);  // 从索引3开始删2个\n// a    → [5, 2, 9, 4]\n// out  → [1, 7]  被删掉的元素",
+                                run: function (a) {
+                                    var before = a.slice();
+                                    var ret = a.splice(3, 2);
+                                    return {
+                                        before: before, after: a, ret: ret,
+                                        delIdx: [3, 4], newIdx: [],
+                                        changed: true, retKind: "array", retTitle: "被删除的元素",
+                                        retSub: "（返回值是被删元素组成的新数组）", red: true
+                                    };
+                                }
+                            },
+                            {
+                                label: "插入：splice(1, 0, 8)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar out = a.splice(1, 0, 8); // 删0个，插入8\n// a   → [5, 8, 2, 9, 1, 7, 4]\n// out → []  没删任何元素",
+                                run: function (a) {
+                                    var before = a.slice();
+                                    var ret = a.splice(1, 0, 8);
+                                    return {
+                                        before: before, after: a, ret: ret,
+                                        delIdx: [], newIdx: [1], newFrom: "left",
+                                        changed: true, retKind: "array", retTitle: "被删除的元素",
+                                        retSub: "（删了 0 个，所以是空数组）"
+                                    };
+                                }
+                            },
+                            {
+                                label: "替换：splice(2, 1, 6)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar out = a.splice(2, 1, 6); // 删1个再插入6\n// a   → [5, 2, 6, 1, 7, 4]\n// out → [9]",
+                                run: function (a) {
+                                    var before = a.slice();
+                                    var ret = a.splice(2, 1, 6);
+                                    return {
+                                        before: before, after: a, ret: ret,
+                                        delIdx: [2], newIdx: [2], newFrom: "right",
+                                        changed: true, retKind: "array", retTitle: "被删除的元素",
+                                        retSub: "（先删后插，实现“替换”）", red: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "sort()",
+                        mut: true,
+                        desc: "原地排序。注意：默认按字符串比较，排数字必须传比较函数！",
+                        variants: [
+                            {
+                                label: "升序：sort((a,b)=>a-b)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.sort(function (x, y) { return x - y; });\n// a → [1, 2, 4, 5, 7, 9]",
+                                run: function (a) {
+                                    var before = a.slice();
+                                    var ret = a.sort(function (x, y) { return x - y; });
+                                    return {
+                                        before: before, after: a, ret: ret,
+                                        delIdx: [], newIdx: [], allMove: true,
+                                        changed: true, retKind: "value", retTitle: "返回值",
+                                        retSub: "（返回排序后的原数组本身）"
+                                    };
+                                }
+                            },
+                            {
+                                label: "降序：sort((a,b)=>b-a)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.sort(function (x, y) { return y - x; });\n// a → [9, 7, 5, 4, 2, 1]",
+                                run: function (a) {
+                                    var before = a.slice();
+                                    var ret = a.sort(function (x, y) { return y - x; });
+                                    return {
+                                        before: before, after: a, ret: ret,
+                                        delIdx: [], newIdx: [], allMove: true,
+                                        changed: true, retKind: "value", retTitle: "返回值",
+                                        retSub: "（y - x 就是降序）"
+                                    };
+                                }
+                            },
+                            {
+                                label: "陷阱：sort() 默认排字符串",
+                                code: "var b = [10, 2, 30];\nb.sort();               // 不传比较函数\n// b → [10, 2, 30]  ← 错了！\n// 因为它按字符串比：\"10\" < \"2\" < \"30\"\nb.sort(function (x, y) { return x - y; });\n// b → [2, 10, 30]  ← 这才对",
+                                run: function () {
+                                    var b = [10, 2, 30];
+                                    var before = b.slice();
+                                    b.sort();
+                                    return {
+                                        before: before, after: b, ret: b,
+                                        delIdx: [], newIdx: [], allMove: true,
+                                        changed: true, retKind: "value", retTitle: "错误结果",
+                                        retSub: "（默认按字符串比较，数字排序一定要传比较函数）",
+                                        note: "这里换了一个新数组 [10, 2, 30] 来演示常见陷阱：不传比较函数时，sort() 会把元素转成字符串再比较。"
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "reverse()",
+                        mut: true,
+                        desc: "把数组元素顺序整个颠倒过来。",
+                        variants: [{
+                            label: "reverse()",
+                            code: "var a = [5, 2, 9, 1, 7, 4];\na.reverse();\n// a → [4, 7, 1, 9, 2, 5]",
+                            run: function (a) {
+                                var before = a.slice();
+                                var ret = a.reverse();
+                                return {
+                                    before: before, after: a, ret: ret,
+                                    delIdx: [], newIdx: [], allMove: true,
+                                    changed: true, retKind: "value", retTitle: "返回值",
+                                    retSub: "（返回反转后的原数组本身）"
+                                };
+                            }
+                        }]
+                    }
+                ]
+            },
+            {
+                title: "二、返回新数组的方法（原数组不变）",
+                desc: "这些方法不会动原数组，而是返回一个全新的数组，需要用一个变量去接收。",
+                methods: [
+                    {
+                        name: "concat()",
+                        mut: false,
+                        desc: "把多个数组或值拼接成一个新数组。",
+                        variants: [{
+                            label: "concat([10, 11])",
+                            code: "var a = [5, 2, 9, 1, 7, 4];\nvar b = a.concat([10, 11]);\n// b → [5, 2, 9, 1, 7, 4, 10, 11]\n// a 不变 → [5, 2, 9, 1, 7, 4]",
+                            run: function (a) {
+                                var ret = a.concat([10, 11]);
+                                return {
+                                    before: a.slice(), after: a.slice(), ret: ret,
+                                    changed: false, retKind: "array", retTitle: "新数组",
+                                    retSub: "（原数组保持不动）", allNew: true
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "slice()",
+                        mut: false,
+                        desc: "截取片段：slice(开始索引, 结束索引)，含头不含尾；索引可以用负数表示倒数。",
+                        variants: [
+                            {
+                                label: "slice(1, 4)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar b = a.slice(1, 4);   // 含头不含尾\n// b → [2, 9, 1]   取的是索引 1、2、3",
+                                run: function (a) {
+                                    var ret = a.slice(1, 4);
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        hitIdx: [1, 2, 3], changed: false,
+                                        retKind: "array", retTitle: "新数组",
+                                        retSub: "（黄色高亮的就是被截取的部分）", allNew: true
+                                    };
+                                }
+                            },
+                            {
+                                label: "slice(-3)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar b = a.slice(-3);     // 负数 = 倒数第3个起\n// b → [1, 7, 4]",
+                                run: function (a) {
+                                    var ret = a.slice(-3);
+                                    var hits = [];
+                                    for (var i = a.length - 3; i < a.length; i++) hits.push(i);
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        hitIdx: hits, changed: false,
+                                        retKind: "array", retTitle: "新数组",
+                                        retSub: "（-3 表示从倒数第 3 个元素开始）", allNew: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "map()",
+                        mut: false,
+                        desc: "“映射”：把每个元素按规则加工一遍，返回一个长度相同的新数组。",
+                        variants: [
+                            {
+                                label: "map(x => x * 2)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar b = a.map(function (x) { return x * 2; });\n// b → [10, 4, 18, 2, 14, 8]",
+                                run: function (a) {
+                                    var ret = a.map(function (x) { return x * 2; });
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        changed: false, retKind: "array", retTitle: "新数组",
+                                        retSub: "（每个元素都 ×2，长度不变）", allNew: true
+                                    };
+                                }
+                            },
+                            {
+                                label: "map(x => 带下标)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\n// 回调可以接收 (元素, 索引, 数组)\nvar b = a.map(function (x, i) {\n    return '第' + i + '号:' + x;\n});\n// b → ['第0号:5', '第1号:2', ...]",
+                                run: function (a) {
+                                    var ret = a.map(function (x, i) { return "第" + i + "号:" + x; });
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        changed: false, retKind: "array", retTitle: "新数组",
+                                        retSub: "（map 的回调能拿到元素和下标）", allNew: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "filter()",
+                        mut: false,
+                        desc: "“过滤”：只留下让回调返回 true 的元素，得到一个更短的新数组。",
+                        variants: [
+                            {
+                                label: "filter(x => x > 4)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar b = a.filter(function (x) { return x > 4; });\n// b → [5, 9, 7]",
+                                run: function (a) {
+                                    var ret = a.filter(function (x) { return x > 4; });
+                                    var hits = [];
+                                    a.forEach(function (x, i) { if (x > 4) hits.push(i); });
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        hitIdx: hits, changed: false,
+                                        retKind: "array", retTitle: "新数组",
+                                        retSub: "（黄色的是通过筛选留下来的）", allNew: true
+                                    };
+                                }
+                            },
+                            {
+                                label: "filter(取偶数)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar b = a.filter(function (x) { return x % 2 === 0; });\n// b → [2, 4]",
+                                run: function (a) {
+                                    var ret = a.filter(function (x) { return x % 2 === 0; });
+                                    var hits = [];
+                                    a.forEach(function (x, i) { if (x % 2 === 0) hits.push(i); });
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        hitIdx: hits, changed: false,
+                                        retKind: "array", retTitle: "新数组",
+                                        retSub: "（条件为 true 才保留）", allNew: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "flat()",
+                        mut: false,
+                        desc: "把嵌套数组“拍平”。flat() 默认拍一层，flat(2) 拍两层，flat(Infinity) 全部拍平。",
+                        variants: [
+                            {
+                                label: "flat()",
+                                code: "var a = [1, [2, 3], [4, [5]]];\nvar b = a.flat();        // 默认只拍 1 层\n// b → [1, 2, 3, 4, [5]]",
+                                run: function () {
+                                    var a = [1, [2, 3], [4, [5]]];
+                                    var ret = a.flat();
+                                    return {
+                                        before: a, after: a, ret: ret,
+                                        changed: false, retKind: "array", retTitle: "新数组",
+                                        retSub: "（只拍平一层，最里面的 [5] 还在）", allNew: true,
+                                        note: "这里用固定的嵌套数组 [1, [2, 3], [4, [5]]] 来演示。"
+                                    };
+                                }
+                            },
+                            {
+                                label: "flat(2)",
+                                code: "var a = [1, [2, 3], [4, [5]]];\nvar b = a.flat(2);       // 拍 2 层\n// b → [1, 2, 3, 4, 5]",
+                                run: function () {
+                                    var a = [1, [2, 3], [4, [5]]];
+                                    var ret = a.flat(2);
+                                    return {
+                                        before: a, after: a, ret: ret,
+                                        changed: false, retKind: "array", retTitle: "新数组",
+                                        retSub: "（深度 2，全部拍平）", allNew: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "join()",
+                        mut: false,
+                        desc: "用指定分隔符把数组连成一个字符串，是 split() 的逆操作。",
+                        variants: [
+                            {
+                                label: "join('-')",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar s = a.join('-');\n// s → '5-2-9-1-7-4'",
+                                run: function (a) {
+                                    var ret = a.join("-");
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: "（字符串，不是数组了）"
+                                    };
+                                }
+                            },
+                            {
+                                label: "join('')",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar s = a.join('');      // 空字符串 = 直接拼\n// s → '529174'",
+                                run: function (a) {
+                                    var ret = a.join("");
+                                    return {
+                                        before: a.slice(), after: a.slice(), ret: ret,
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: "（分隔符为空串，元素紧挨着拼接）"
+                                    };
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "三、查找与判断的方法",
+                desc: "用来找元素、找位置，或者判断数组是否满足某个条件。",
+                methods: [
+                    {
+                        name: "indexOf()",
+                        mut: false,
+                        desc: "从前往后找，返回元素第一次出现的索引；找不到返回 -1。",
+                        variants: [
+                            {
+                                label: "indexOf(9)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.indexOf(9);      // → 2\n// 找不到时返回 -1",
+                                run: function (a) {
+                                    var ret = a.indexOf(9);
+                                    return {
+                                        before: a.slice(), ret: ret,
+                                        hitIdx: ret >= 0 ? [ret] : [],
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: ret >= 0 ? "（9 在索引 " + ret + " 的位置）" : "（当前数组里没有 9 → -1）",
+                                        showAfter: false
+                                    };
+                                }
+                            },
+                            {
+                                label: "indexOf(100)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.indexOf(100);    // → -1  找不到",
+                                run: function (a) {
+                                    var ret = a.indexOf(100);
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: [],
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: "（-1 表示数组中不存在该元素）",
+                                        showAfter: false, gray: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "lastIndexOf()",
+                        mut: false,
+                        desc: "与 indexOf 相反，从后往前找，返回最后一次出现的索引。",
+                        variants: [{
+                            label: "lastIndexOf(2)",
+                            code: "var a = [5, 2, 9, 2, 7];   // 数组里有两个 2\na.indexOf(2);        // → 1  第一个\n a.lastIndexOf(2);   // → 3  最后一个",
+                            run: function () {
+                                var a = [5, 2, 9, 2, 7];
+                                var ret = a.lastIndexOf(2);
+                                var first = a.indexOf(2);
+                                return {
+                                    before: a, ret: ret,
+                                    hitIdx: [ret], delIdx: [first],
+                                    changed: false, retKind: "value", retTitle: "返回值",
+                                    retSub: "（红色划掉的是 indexOf 找到的第 1 个 2，黄色的是 lastIndexOf 找到的最后 1 个）",
+                                    showAfter: false,
+                                    note: "这里换了一个含重复元素的数组 [5, 2, 9, 2, 7]，才能看出 indexOf 与 lastIndexOf 的区别。"
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "includes()",
+                        mut: false,
+                        desc: "判断数组里是否包含某个值，直接返回 true / false，比 indexOf 更直观。",
+                        variants: [
+                            {
+                                label: "includes(7)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.includes(7);     // → true",
+                                run: function (a) {
+                                    var ret = a.includes(7);
+                                    var idx = a.indexOf(7);
+                                    return {
+                                        before: a.slice(), ret: ret,
+                                        hitIdx: idx >= 0 ? [idx] : [], changed: false,
+                                        retKind: "value", retTitle: "返回值",
+                                        retSub: ret ? "（数组里有 7）" : "（数组里没有 7）",
+                                        showAfter: false
+                                    };
+                                }
+                            },
+                            {
+                                label: "includes(100)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.includes(100);   // → false",
+                                run: function (a) {
+                                    var ret = a.includes(100);
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: [],
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: "（没有 100，所以是 false）",
+                                        showAfter: false, gray: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "find() / findIndex()",
+                        mut: false,
+                        desc: "find 返回第一个满足条件的元素本身；findIndex 返回它的索引。找不到分别是 undefined 和 -1。",
+                        variants: [
+                            {
+                                label: "find(x => x > 6)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.find(function (x) { return x > 6; });\n// → 9   第一个大于 6 的元素",
+                                run: function (a) {
+                                    var ret = a.find(function (x) { return x > 6; });
+                                    var idx = a.findIndex(function (x) { return x > 6; });
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: idx >= 0 ? [idx] : [],
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: idx >= 0
+                                            ? "（第一个大于 6 的元素，找到就停）"
+                                            : "（没有满足条件的元素 → undefined）",
+                                        showAfter: false
+                                    };
+                                }
+                            },
+                            {
+                                label: "findIndex(第一个偶数)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.findIndex(function (x) { return x % 2 === 0; });\n// → 1   元素 2 的下标",
+                                run: function (a) {
+                                    var idx = a.findIndex(function (x) { return x % 2 === 0; });
+                                    return {
+                                        before: a.slice(), ret: idx, hitIdx: idx >= 0 ? [idx] : [],
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: idx >= 0
+                                            ? "（第一个偶数是 " + a[idx] + "，返回它的下标）"
+                                            : "（-1，没有偶数）",
+                                        showAfter: false
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "some()",
+                        mut: false,
+                        desc: "“有没有至少一个满足？”只要有一个元素让回调返回 true，结果就是 true。",
+                        variants: [
+                            {
+                                label: "some(x => x > 8)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.some(function (x) { return x > 8; });  // → true",
+                                run: function (a) {
+                                    var ret = a.some(function (x) { return x > 8; });
+                                    var hits = [];
+                                    a.forEach(function (x, i) { if (x > 8) hits.push(i); });
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: hits,
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: ret ? "（有元素满足条件 → true）" : "（都不满足 → false）",
+                                        showAfter: false
+                                    };
+                                }
+                            },
+                            {
+                                label: "some(x => x > 100)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.some(function (x) { return x > 100; }); // → false",
+                                run: function (a) {
+                                    var ret = a.some(function (x) { return x > 100; });
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: [],
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: "（一个都不满足 → false）",
+                                        showAfter: false, gray: true
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "every()",
+                        mut: false,
+                        desc: "“是不是全部都满足？”必须每个元素都让回调返回 true，结果才是 true。",
+                        variants: [
+                            {
+                                label: "every(x => x > 0)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.every(function (x) { return x > 0; });  // → true",
+                                run: function (a) {
+                                    var ret = a.every(function (x) { return x > 0; });
+                                    var hits = [];
+                                    for (var i = 0; i < a.length; i++) hits.push(i);
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: hits,
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: ret ? "（全部满足条件 → true）" : "（有元素不满足 → false）",
+                                        showAfter: false
+                                    };
+                                }
+                            },
+                            {
+                                label: "every(x => x > 3)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\na.every(function (x) { return x > 3; });  // → false\n// 遇到 2 不满足，立刻停止并返回 false",
+                                run: function (a) {
+                                    var ret = a.every(function (x) { return x > 3; });
+                                    var stop = -1;
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (!(a[i] > 3)) { stop = i; break; }
+                                    }
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: stop >= 0 ? [stop] : [],
+                                        changed: false, retKind: "value", retTitle: "返回值",
+                                        retSub: stop >= 0
+                                            ? "（黄色是第一个不满足的元素，到此停止 → false）"
+                                            : "（全部满足 → true）",
+                                        showAfter: false, red: (ret === false)
+                                    };
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "四、遍历与归并",
+                desc: "依次访问每个元素做点事情，或者把整个数组“归并”成一个值。",
+                methods: [
+                    {
+                        name: "forEach()",
+                        mut: false,
+                        desc: "依次把每个元素交给回调函数处理，没有返回值（永远返回 undefined）。",
+                        variants: [{
+                            label: "forEach 逐个打印",
+                            code: "var a = [5, 2, 9, 1, 7, 4];\na.forEach(function (x, i) {\n    console.log(i + ' → ' + x);\n});\n// forEach 没有返回值（undefined）",
+                            run: function (a) {
+                                var log = "";
+                                var hits = [];
+                                a.forEach(function (x, i) {
+                                    log += "索引 " + i + "  →  " + cx_show(x) + "\n";
+                                    hits.push(i);
+                                });
+                                return {
+                                    before: a.slice(), ret: undefined, hitIdx: hits,
+                                    changed: false, retKind: "log", retTitle: "输出内容",
+                                    log: log, showAfter: false
+                                };
+                            }
+                        }]
+                    },
+                    {
+                        name: "reduce()",
+                        mut: false,
+                        desc: "“归并”：从左到右把数组压缩成一个值（求和、求最大值、统计等都靠它）。",
+                        variants: [
+                            {
+                                label: "reduce(求和)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar sum = a.reduce(function (acc, x) {\n    return acc + x;\n});\n// sum → 28",
+                                run: function (a) {
+                                    var ret = a.reduce(function (acc, x) { return acc + x; });
+                                    var steps = [], acc = a[0];
+                                    steps.push(String(acc));
+                                    for (var i = 1; i < a.length; i++) {
+                                        acc = acc + a[i];
+                                        steps.push("+" + a[i] + " → " + acc);
+                                    }
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: [],
+                                        changed: false, retKind: "steps", retTitle: "累加过程",
+                                        steps: steps,
+                                        retSub: "最终结果：" + cx_show(ret),
+                                        showAfter: false
+                                    };
+                                }
+                            },
+                            {
+                                label: "reduce(求最大值)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\nvar max = a.reduce(function (acc, x) {\n    return x > acc ? x : acc;\n});\n// max → 9",
+                                run: function (a) {
+                                    var ret = a.reduce(function (acc, x) { return x > acc ? x : acc; });
+                                    var steps = [], acc = a[0];
+                                    steps.push(String(acc));
+                                    for (var i = 1; i < a.length; i++) {
+                                        acc = a[i] > acc ? a[i] : acc;
+                                        steps.push("比较 " + a[i] + " → " + acc);
+                                    }
+                                    var mi = a.indexOf(ret);
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: mi >= 0 ? [mi] : [],
+                                        changed: false, retKind: "steps", retTitle: "比较过程",
+                                        steps: steps,
+                                        retSub: "最大值：" + cx_show(ret),
+                                        showAfter: false
+                                    };
+                                }
+                            },
+                            {
+                                label: "reduce(带初始值 10)",
+                                code: "var a = [5, 2, 9, 1, 7, 4];\n// 第二个参数是初始值\nvar sum = a.reduce(function (acc, x) {\n    return acc + x;\n}, 10);\n// sum → 38",
+                                run: function (a) {
+                                    var ret = a.reduce(function (acc, x) { return acc + x; }, 10);
+                                    var steps = ["初值 10"], acc = 10;
+                                    for (var i = 0; i < a.length; i++) {
+                                        acc = acc + a[i];
+                                        steps.push("+" + a[i] + " → " + acc);
+                                    }
+                                    return {
+                                        before: a.slice(), ret: ret, hitIdx: [],
+                                        changed: false, retKind: "steps", retTitle: "累加过程",
+                                        steps: steps,
+                                        retSub: "最终结果：" + cx_show(ret) + "（10 + 28）",
+                                        showAfter: false
+                                    };
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "Array.isArray()",
+                        mut: false,
+                        desc: "判断一个值是不是数组（typeof 对数组只能得到 object，所以要靠它）。",
+                        variants: [{
+                            label: "isArray 判断",
+                            code: "Array.isArray([5, 2, 9]);      // → true\nArray.isArray('hello');       // → false\ntypeof [5, 2, 9];             // → 'object' 看不出是数组",
+                            run: function (a) {
+                                var ret = Array.isArray(a);
+                                return {
+                                    before: a.slice(), ret: ret, hitIdx: [],
+                                    changed: false, retKind: "value", retTitle: "返回值",
+                                    retSub: "（数组 → true；typeof 只能得到 'object'）",
+                                    showAfter: false
+                                };
+                            }
+                        }]
+                    }
+                ]
+            }
+        ];
+
+        /* =========================================================
+           速查表数据
+           ========================================================= */
+        var cx_tableData = [
+            ["push()", "末尾添加元素", "是", "新长度"],
+            ["pop()", "删除最后一个元素", "是", "被删的元素"],
+            ["unshift()", "开头添加元素", "是", "新长度"],
+            ["shift()", "删除第一个元素", "是", "被删的元素"],
+            ["splice()", "删除 / 插入 / 替换", "是", "被删元素组成的数组"],
+            ["sort()", "排序（数字要传比较函数）", "是", "排序后的原数组"],
+            ["reverse()", "颠倒顺序", "是", "反转后的原数组"],
+            ["concat()", "拼接数组", "否", "拼接后的新数组"],
+            ["slice()", "截取片段", "否", "截取出的新数组"],
+            ["map()", "逐个映射加工", "否", "加工后的新数组"],
+            ["filter()", "按条件筛选", "否", "筛选后的新数组"],
+            ["flat()", "拍平嵌套数组", "否", "拍平后的新数组"],
+            ["join()", "连成字符串", "否", "字符串"],
+            ["indexOf()", "查找元素位置", "否", "索引，找不到为 -1"],
+            ["lastIndexOf()", "从后往前查找位置", "否", "索引，找不到为 -1"],
+            ["includes()", "是否包含某值", "否", "true / false"],
+            ["find()", "找第一个满足条件的元素", "否", "元素，找不到为 undefined"],
+            ["findIndex()", "找第一个满足条件的下标", "否", "索引，找不到为 -1"],
+            ["some()", "是否有任意一个满足", "否", "true / false"],
+            ["every()", "是否全部满足", "否", "true / false"],
+            ["forEach()", "依次遍历执行回调", "否", "undefined"],
+            ["reduce()", "归并成一个值", "否", "累加结果"],
+            ["Array.isArray()", "判断是否为数组", "否", "true / false"]
+        ];
+
+        /* =========================================================
+           渲染逻辑
+           ========================================================= */
+
+        // 渲染顶部总览
+        function cx_renderBoard() {
+            cx_renderCells(document.getElementById("cx_boardArr"), cx_main);
+            document.getElementById("cx_boardLen").textContent =
+                "length = " + cx_main.length +
+                "   |   arr[0] = " + cx_show(cx_main[0]) +
+                "   |   arr[arr.length-1] = " + cx_show(cx_main[cx_main.length - 1]);
+        }
+
+        // 渲染结果区
+        function cx_renderRet(box, r) {
+            box.innerHTML = "";
+            if (r.retKind === "array") {
+                var nb = document.createElement("div");
+                nb.className = "cx_arr";
+                box.appendChild(nb);
+                cx_renderCells(nb, r.ret, { allNew: true });
+            } else if (r.retKind === "steps") {
+                var sw = document.createElement("div");
+                sw.className = "cx_steps";
+                for (var i = 0; i < r.steps.length; i++) {
+                    var sp = document.createElement("span");
+                    sp.textContent = r.steps[i];
+                    sw.appendChild(sp);
+                    if (i < r.steps.length - 1) {
+                        var ar = document.createElement("b");
+                        ar.textContent = "›";
+                        sw.appendChild(ar);
+                    }
+                }
+                box.appendChild(sw);
+            } else if (r.retKind === "log") {
+                var lg = document.createElement("div");
+                lg.className = "cx_log";
+                lg.textContent = r.log || "";
+                box.appendChild(lg);
+            } else {
+                var chip = document.createElement("span");
+                chip.className = "cx_chip" + (r.red ? " cx_chip-red" : (r.gray ? " cx_chip-gray" : ""));
+                chip.textContent = cx_show(r.ret);
+                box.appendChild(chip);
+            }
+            if (r.retSub) {
+                var sub = document.createElement("span");
+                sub.className = "cx_ret-txt";
+                sub.textContent = " " + r.retSub;
+                box.appendChild(sub);
+            }
+        }
+
+        // 播放某个变体的动画
+        function cx_play(card, method, vi) {
+            var variant = method.variants[vi];
+            var copy = cx_main.slice();
+            var r = variant.run(copy);
+
+            card.querySelector(".cx_code").innerHTML = cx_hl(variant.code);
+            var noteEl = card.querySelector(".cx_note");
+            if (r.note || variant.note) {
+                noteEl.style.display = "block";
+                noteEl.innerHTML = r.note || variant.note || "";
+            } else {
+                noteEl.style.display = "none";
+            }
+
+            // 操作前
+            cx_renderCells(card.querySelector(".cx_before"), r.before,
+                { delIdx: r.delIdx, hitIdx: r.hitIdx });
+
+            // 操作后
+            var afterLine = card.querySelector(".cx_afterLine");
+            if (r.showAfter === false) {
+                afterLine.style.display = "none";
+            } else {
+                afterLine.style.display = "flex";
+                cx_renderCells(card.querySelector(".cx_after"), r.after,
+                    { newIdx: r.newIdx, newFrom: r.newFrom, allMove: r.allMove });
+                var flag = card.querySelector(".cx_flag");
+                flag.textContent = r.changed ? "原数组已被修改" : "原数组未改变";
+                flag.className = "cx_flag" + (r.changed ? "" : " cx_flag-no");
+            }
+
+            // 箭头说明
+            card.querySelector(".cx_arrow").textContent = "↓ " + method.name;
+
+            // 返回值
+            card.querySelector(".cx_retTitle").textContent = r.retTitle || "返回值";
+            cx_renderRet(card.querySelector(".cx_ret"), r);
+
+            console.log("【" + method.name + "】" + variant.label + " → 返回：" + cx_show(r.ret));
+        }
+
+        // 构建所有卡片
+        var cx_cards = [];
+
+        function cx_build() {
+            var host = document.getElementById("cx_parts");
+            host.innerHTML = "";
+            cx_cards = [];
+
+            for (var p = 0; p < cx_parts.length; p++) {
+                var part = cx_parts[p];
+                var sec = document.createElement("div");
+                sec.className = "cx_part";
+                var h2 = document.createElement("h2");
+                h2.textContent = part.title;
+                sec.appendChild(h2);
+                var pd = document.createElement("p");
+                pd.className = "cx_part-desc";
+                pd.textContent = part.desc;
+                sec.appendChild(pd);
+                var grid = document.createElement("div");
+                grid.className = "cx_grid";
+
+                for (var m = 0; m < part.methods.length; m++) {
+                    var method = part.methods[m];
+                    var card = document.createElement("div");
+                    card.className = "cx_card";
+
+                    var html = '<h3>' + method.name +
+                        '<span class="cx_tag ' + (method.mut ? 'cx_tag-mut">会改原数组' : 'cx_tag-keep">不改原数组') +
+                        '</span></h3>' +
+                        '<p class="cx_desc">' + method.desc + '</p>' +
+                        '<pre class="cx_code"></pre>' +
+                        '<div class="cx_btns"></div>' +
+                        '<div class="cx_line"><span class="cx_lt">操作前</span><div class="cx_arr cx_before"></div></div>' +
+                        '<div class="cx_arrow"></div>' +
+                        '<div class="cx_line cx_afterLine"><span class="cx_lt">操作后</span><div class="cx_arr cx_after"></div><span class="cx_flag"></span></div>' +
+                        '<div class="cx_line"><span class="cx_lt cx_retTitle">返回值</span><div class="cx_ret"></div></div>' +
+                        '<div class="cx_note"></div>';
+                    card.innerHTML = html;
+
+                    var btns = card.querySelector(".cx_btns");
+                    (function (method, card) {
+                        for (var v = 0; v < method.variants.length; v++) {
+                            (function (vi) {
+                                var b = document.createElement("button");
+                                b.className = "cx_var" + (vi === 0 ? " cx_on" : "");
+                                b.textContent = method.variants[vi].label;
+                                b.onclick = function () {
+                                    var all = btns.querySelectorAll(".cx_var");
+                                    for (var k = 0; k < all.length; k++) all[k].className = "cx_var";
+                                    b.className = "cx_var cx_on";
+                                    cx_play(card, method, vi);
+                                };
+                                btns.appendChild(b);
+                            })(v);
+                        }
+                        var rp = document.createElement("button");
+                        rp.className = "cx_replay";
+                        rp.textContent = "▶ 重播";
+                        rp.onclick = function () { cx_play(card, method, cx_current(card, method)); };
+                        btns.appendChild(rp);
+                    })(method, card);
+
+                    grid.appendChild(card);
+                    cx_cards.push({ card: card, method: method });
+                }
+
+                sec.appendChild(grid);
+                host.appendChild(sec);
+            }
+        }
+
+        function cx_current(card, method) {
+            var all = card.querySelectorAll(".cx_var");
+            for (var i = 0; i < all.length; i++) {
+                if (all[i].className.indexOf("cx_on") >= 0) return i;
+            }
+            return 0;
+        }
+
+        // 全部播放（带级联延迟）
+        var cx_timers = [];
+        function cx_playAll() {
+            for (var t = 0; t < cx_timers.length; t++) clearTimeout(cx_timers[t]);
+            cx_timers = [];
+            for (var i = 0; i < cx_cards.length; i++) {
+                (function (item, idx) {
+                    cx_timers.push(setTimeout(function () {
+                        cx_play(item.card, item.method, cx_current(item.card, item.method));
+                    }, idx * 90));
+                })(cx_cards[i], i);
+            }
+        }
+
+        function cx_buildTable() {
+            var tb = document.getElementById("cx_tableBody");
+            var html = "";
+            for (var i = 0; i < cx_tableData.length; i++) {
+                var row = cx_tableData[i];
+                html += "<tr><td><code>" + row[0] + "</code></td><td>" + row[1] +
+                    "</td><td style='color:" + (row[2] === "是" ? "#c7254e" : "#1e4b3b") + ";font-weight:" +
+                    (row[2] === "是" ? "bold" : "normal") + "'>" + row[2] +
+                    "</td><td>" + row[3] + "</td></tr>";
+            }
+            tb.innerHTML = html;
+        }
+
+        /* ---------- 输入解析 ---------- */
+        function cx_parse(str) {
+            var parts = str.split(",");
+            var out = [];
+            for (var i = 0; i < parts.length; i++) {
+                var s = parts[i].trim();
+                if (s === "") continue;
+                s = s.replace(/^['"]|['"]$/g, "");
+                var n = Number(s);
+                out.push(s !== "" && !isNaN(n) ? n : s);
+            }
+            return out;
+        }
+
+        /* ---------- 事件绑定 ---------- */
+        document.getElementById("cx_apply").onclick = function () {
+            var arr = cx_parse(document.getElementById("cx_input").value);
+            if (arr.length === 0) {
+                alert("请输入至少一个元素，例如：5, 2, 9, 1, 7, 4");
+                return;
+            }
+            cx_main = arr;
+            cx_renderBoard();
+            cx_playAll();
+        };
+
+        document.getElementById("cx_reset").onclick = function () {
+            cx_main = CX_DEFAULT.slice();
+            document.getElementById("cx_input").value = CX_DEFAULT.join(", ");
+            cx_renderBoard();
+            cx_playAll();
+        };
+
+        document.getElementById("cx_replayAll").onclick = function () {
+            cx_renderBoard();
+            cx_playAll();
+        };
+
+        /* ---------- 启动 ---------- */
+        cx_renderBoard();
+        cx_build();
+        cx_buildTable();
+        cx_playAll();
+
+        console.log("===== 陈曦 · 16-1 数组方法图解 =====");
+        console.log("当前演示数组：", cx_main);
+    </script>
+</body>
+</html>
