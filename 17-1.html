@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-04，功能：JSON 数据结构展示与格式化输出 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-1 JSON 展示 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", Consolas, monospace;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e4b3b;
+            margin: 0 0 6px;
+        }
+
+        .cx_author {
+            text-align: center;
+            color: #888;
+            margin: 0 0 24px;
+            font-size: 14px;
+        }
+
+        .cx_container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 720px) {
+            .cx_container { grid-template-columns: 1fr; }
+        }
+
+        .cx_card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 18px 22px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .cx_card h2 {
+            margin: 0 0 14px;
+            font-size: 16px;
+            color: #333;
+            border-left: 4px solid #1e4b3b;
+            padding-left: 10px;
+        }
+
+        .cx_stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .cx_stat {
+            background: #eef5f2;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1e4b3b;
+            font-family: inherit;
+        }
+
+        .cx_stat b {
+            font-size: 16px;
+            margin-right: 4px;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 0;
+            white-space: pre;
+        }
+
+        .key { color: #9cdcfe; }
+        .str { color: #ce9178; }
+        .num { color: #b5cea8; }
+        .bool { color: #569cd6; }
+        .null { color: #569cd6; font-style: italic; }
+        .punct { color: #d4d4d4; }
+
+        .cx_tools {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .cx_btn {
+            flex: 1;
+            padding: 9px 0;
+            background: #1e4b3b;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+
+        .cx_btn:hover { background: #276a52; }
+        .cx_btn.plain { background: #eef5f2; color: #1e4b3b; }
+        .cx_btn.plain:hover { background: #d9ebe2; }
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 220px;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            resize: vertical;
+            background: #fafafa;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #1e4b3b;
+            background: #fff;
+        }
+
+        .cx_msg {
+            margin-top: 10px;
+            font-size: 13px;
+            padding: 10px 14px;
+            border-radius: 6px;
+        }
+
+        .cx_msg.ok { background: #e6f7ed; color: #1e7a3c; }
+        .cx_msg.err { background: #fdecea; color: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>JSON 数据结构展示</h1>
+    <p class="cx_author">姓名：陈曦 · 17-1</p>
+
+    <div class="cx_container">
+        <div class="cx_card">
+            <h2>① 输入 JSON</h2>
+            <div class="cx_tools">
+                <button class="cx_btn" onclick="cx_format()">格式化 ✓ 美化</button>
+                <button class="cx_btn plain" onclick="cx_compress()">压缩 · 去空格</button>
+                <button class="cx_btn plain" onclick="cx_loadDemo()">示例数据</button>
+            </div>
+            <textarea id="cx_input" placeholder="在这里粘贴 JSON ..."></textarea>
+            <div id="cx_msg" class="cx_msg" style="display:none"></div>
+        </div>
+
+        <div class="cx_card">
+            <h2>② 美化输出</h2>
+            <div class="cx_stats">
+                <div class="cx_stat">对象 <b id="cxs_obj">0</b></div>
+                <div class="cx_stat">数组 <b id="cxs_arr">0</b></div>
+                <div class="cx_stat">字符串 <b id="cxs_str">0</b></div>
+                <div class="cx_stat">数字 <b id="cxs_num">0</b></div>
+                <div class="cx_stat">布尔 <b id="cxs_bool">0</b></div>
+                <div class="cx_stat">null <b id="cxs_null">0</b></div>
+            </div>
+            <pre id="cx_output">等待输入 JSON ...</pre>
+        </div>
+    </div>
+
+    <script>
+        var cx_demo = [
+            {
+                "id": 1,
+                "name": "陈曦",
+                "age": 20,
+                "email": "chenxi@example.com",
+                "hobbies": ["编程", "音乐", "摄影"],
+                "address": {
+                    "city": "上海",
+                    "street": "校园路 88 号"
+                },
+                "isStudent": true,
+                "score": null
+            },
+            {
+                "id": 2,
+                "name": "李雷",
+                "age": 21,
+                "email": "lilei@example.com",
+                "hobbies": ["读书", "跑步"],
+                "address": {
+                    "city": "北京",
+                    "street": "长安街 1 号"
+                },
+                "isStudent": false,
+                "score": 88.5
+            }
+        ];
+
+        function cx_loadDemo() {
+            document.getElementById('cx_input').value = JSON.stringify(cx_demo, null, 2);
+            cx_format();
+        }
+
+        function cx_format() {
+            var raw = document.getElementById('cx_input').value.trim();
+            var msg = document.getElementById('cx_msg');
+            if (!raw) {
+                cx_showMsg('请先输入 JSON 数据', 'err');
+                return;
+            }
+            try {
+                var obj = JSON.parse(raw);
+                document.getElementById('cx_output').innerHTML = cx_highlight(obj);
+                cx_countTypes(obj);
+                cx_showMsg('✓ JSON 解析成功', 'ok');
+            } catch (e) {
+                cx_showMsg('✗ 解析失败：' + e.message, 'err');
+                document.getElementById('cx_output').textContent = raw;
+            }
+        }
+
+        function cx_compress() {
+            var raw = document.getElementById('cx_input').value.trim();
+            try {
+                var obj = JSON.parse(raw);
+                document.getElementById('cx_input').value = JSON.stringify(obj);
+                cx_showMsg('✓ 已压缩', 'ok');
+            } catch (e) {
+                cx_showMsg('✗ 压缩失败：' + e.message, 'err');
+            }
+        }
+
+        function cx_showMsg(text, type) {
+            var m = document.getElementById('cx_msg');
+            m.textContent = text;
+            m.className = 'cx_msg ' + type;
+            m.style.display = 'block';
+        }
+
+        function cx_highlight(obj) {
+            var json = JSON.stringify(obj, null, 2);
+            return json
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/("(?:[^"\\]|\\.)*")(\s*:)/g, '<span class="key">$1</span><span class="punct">$2</span>')
+                .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="str">$1</span>')
+                .replace(/\b(-?\d+\.?\d*)\b/g, '<span class="num">$1</span>')
+                .replace(/\b(true|false)\b/g, '<span class="bool">$1</span>')
+                .replace(/\b(null)\b/g, '<span class="null">$1</span>');
+        }
+
+        var CX_COUNTS = { obj: 0, arr: 0, str: 0, num: 0, bool: 0, null: 0 };
+
+        function cx_countTypes(v) {
+            CX_COUNTS = { obj: 0, arr: 0, str: 0, num: 0, bool: 0, null: 0 };
+            cx_walk(v);
+            document.getElementById('cxs_obj').textContent = CX_COUNTS.obj;
+            document.getElementById('cxs_arr').textContent = CX_COUNTS.arr;
+            document.getElementById('cxs_str').textContent = CX_COUNTS.str;
+            document.getElementById('cxs_num').textContent = CX_COUNTS.num;
+            document.getElementById('cxs_bool').textContent = CX_COUNTS.bool;
+            document.getElementById('cxs_null').textContent = CX_COUNTS.null;
+        }
+
+        function cx_walk(v) {
+            if (v === null) { CX_COUNTS.null++; return; }
+            if (Array.isArray(v)) { CX_COUNTS.arr++; v.forEach(cx_walk); return; }
+            var t = typeof v;
+            if (t === 'object') { CX_COUNTS.obj++; Object.values(v).forEach(cx_walk); return; }
+            if (t === 'string') CX_COUNTS.str++;
+            else if (t === 'number') CX_COUNTS.num++;
+            else if (t === 'boolean') CX_COUNTS.bool++;
+        }
+
+        cx_loadDemo();
+    </script>
+</body>
+</html>

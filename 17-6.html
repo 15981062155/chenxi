@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-04，功能：Promise + async/await 包饺子异步流程演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-6 包饺子异步流程 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", Consolas, monospace;
+            margin: 0;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #fdf6ec 0%, #f0f2f5 100%);
+            min-height: 100vh;
+        }
+
+        h1 { text-align: center; color: #8b4513; margin: 0 0 6px; }
+        .cx_author { text-align: center; color: #888; margin: 0 0 20px; font-size: 14px; }
+
+        .cx_container {
+            max-width: 820px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 26px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .cx_overview {
+            background: #fffaf0;
+            border-left: 4px solid #8b4513;
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #6b5344;
+            line-height: 1.8;
+        }
+        .cx_overview b { color: #8b4513; }
+
+        .cx_btn {
+            display: block;
+            width: 100%;
+            padding: 14px 0;
+            background: #8b4513;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            margin-bottom: 20px;
+            transition: background 0.15s;
+        }
+        .cx_btn:hover { background: #a0522d; }
+        .cx_btn:disabled { background: #bbb; cursor: wait; }
+
+        .cx_timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .cx_timeline::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0d0c0;
+        }
+
+        .cx_step {
+            position: relative;
+            margin-bottom: 16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            background: #fafafa;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .cx_step::before {
+            content: "";
+            position: absolute;
+            left: -32px;
+            top: 16px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ccc;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #e0d0c0;
+        }
+
+        .cx_step.running {
+            background: #fff6e6;
+            border-color: #ffb347;
+        }
+        .cx_step.running::before {
+            background: #ffb347;
+            box-shadow: 0 0 0 2px #ffb347, 0 0 8px #ffb347;
+        }
+
+        .cx_step.done {
+            background: #e6f7ed;
+            border-color: #56c57a;
+        }
+        .cx_step.done::before {
+            background: #56c57a;
+            box-shadow: 0 0 0 2px #56c57a;
+        }
+
+        .cx_step .cx_name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .cx_step .cx_desc {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .cx_step .cx_status {
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        .cx_step.running .cx_status { color: #e67e22; }
+        .cx_step.done .cx_status { color: #27ae60; }
+
+        .cx_step .cx_sub {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .cx_sub-item {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #eee;
+            color: #888;
+        }
+        .cx_sub-item.running { background: #fff6e6; color: #e67e22; }
+        .cx_sub-item.done { background: #e6f7ed; color: #27ae60; }
+
+        .cx_log {
+            margin-top: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: Consolas, monospace;
+            height: 180px;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+        .cx_log .t { color: #6a9955; }
+        .cx_log .k { color: #9cdcfe; }
+        .cx_log .s { color: #ce9178; }
+        .cx_log .w { color: #dcdcaa; }
+
+        .cx_tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 6px;
+            background: #eee;
+            color: #888;
+        }
+        .cx_tag.race { background: #fff0e6; color: #e67e22; }
+        .cx_tag.all { background: #e6f0ff; color: #2980b9; }
+    </style>
+</head>
+<body>
+    <h1>🥟 包饺子异步流程</h1>
+    <p class="cx_author">姓名：陈曦 · 17-6 · Promise + async/await</p>
+
+    <div class="cx_container">
+        <div class="cx_overview">
+            <b>流程说明：</b>
+            ① 买原料（<span class="cx_tag race">Promise.race</span>线上 6s + 线下 5s，先完成者为准）<br>
+            → ② 取原料（3s）<br>
+            → ③ 和面 + 和馅（<span class="cx_tag all">Promise.all</span>和面 4s + 和馅 3s，都完成才能继续）<br>
+            → ④ 包饺子（5s） → ⑤ 煮饺子（4s） → ⑥ 吃饺子（2s）
+        </div>
+
+        <button id="cx_start" class="cx_btn">▶ 开始包饺子流程</button>
+
+        <div class="cx_timeline">
+            <div class="cx_step" id="s1">
+                <div class="cx_name">① 买原料 <span class="cx_tag race">race</span></div>
+                <div class="cx_desc">线上下单 + 线下菜市场同时进行，谁先到就用谁</div>
+                <div class="cx_sub">
+                    <span class="cx_sub-item" id="s1a">线上下单 6s</span>
+                    <span class="cx_sub-item" id="s1b">线下买菜 5s</span>
+                </div>
+                <div class="cx_status">⏸ 等待开始</div>
+            </div>
+
+            <div class="cx_step" id="s2">
+                <div class="cx_name">② 取原料</div>
+                <div class="cx_desc">去取已经买到的原料</div>
+                <div class="cx_status">⏸ 等待开始</div>
+            </div>
+
+            <div class="cx_step" id="s3">
+                <div class="cx_name">③ 准备馅料 <span class="cx_tag all">all</span></div>
+                <div class="cx_desc">和面 和 和馅 同时进行，两个都完成才能包</div>
+                <div class="cx_sub">
+                    <span class="cx_sub-item" id="s3a">和面 4s</span>
+                    <span class="cx_sub-item" id="s3b">和馅 3s</span>
+                </div>
+                <div class="cx_status">⏸ 等待开始</div>
+            </div>
+
+            <div class="cx_step" id="s4">
+                <div class="cx_name">④ 包饺子</div>
+                <div class="cx_desc">把馅包进皮里</div>
+                <div class="cx_status">⏸ 等待开始</div>
+            </div>
+
+            <div class="cx_step" id="s5">
+                <div class="cx_name">⑤ 煮饺子</div>
+                <div class="cx_desc">水开下锅，煮到浮起来</div>
+                <div class="cx_status">⏸ 等待开始</div>
+            </div>
+
+            <div class="cx_step" id="s6">
+                <div class="cx_name">⑥ 吃饺子 🥢</div>
+                <div class="cx_desc">蘸上醋，开动！</div>
+                <div class="cx_status">⏸ 等待开始</div>
+            </div>
+        </div>
+
+        <div class="cx_log" id="cx_log">准备好，点击上面按钮开始流程 ...</div>
+    </div>
+
+    <script>
+        function cx_log(msg, cls) {
+            var box = document.getElementById('cx_log');
+            var now = new Date();
+            var t = now.toTimeString().slice(0, 8);
+            var div = document.createElement('div');
+            div.innerHTML = '<span class="t">[' + t + ']</span> ' + (msg || '');
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function cx_setStep(id, status, text) {
+            var el = document.getElementById(id);
+            el.classList.remove('running', 'done');
+            if (status === 'running') el.classList.add('running');
+            if (status === 'done') el.classList.add('done');
+            if (text) el.querySelector('.cx_status').textContent = text;
+        }
+
+        function cx_setSub(id, status) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.classList.remove('running', 'done');
+            if (status) el.classList.add(status);
+        }
+
+        function cx_delay(ms) {
+            return new Promise(function (resolve) {
+                setTimeout(resolve, ms);
+            });
+        }
+
+        function cx_buyOnline() {
+            return cx_delay(6000).then(function () {
+                cx_setSub('s1a', 'done');
+                cx_log('线上下单完成 (6s)', 'w');
+                return '线上原料';
+            });
+        }
+
+        function cx_buyOffline() {
+            return cx_delay(5000).then(function () {
+                cx_setSub('s1b', 'done');
+                cx_log('线下买菜完成 (5s)', 'w');
+                return '线下原料';
+            });
+        }
+
+        async function cx_runFlow() {
+            var btn = document.getElementById('cx_start');
+            btn.disabled = true;
+            btn.textContent = '⏳ 流程进行中...';
+            document.getElementById('cx_log').innerHTML = '';
+
+            // 1. 买原料 race
+            cx_setStep('s1', 'running', '🏃 买原料中（race 线上 vs 线下）');
+            cx_log('▶ 开始：买原料（Promise.race）', 'k');
+            cx_setSub('s1a', 'running');
+            cx_setSub('s1b', 'running');
+            var source = await Promise.race([cx_buyOnline(), cx_buyOffline()]);
+            cx_setStep('s1', 'done', '✓ 已买到：' + source);
+            cx_log('✓ race 结果：' + source + ' 先到', 's');
+
+            // 2. 取原料
+            cx_setStep('s2', 'running', '🏃 取原料中...');
+            cx_log('▶ 开始：取原料（3s）', 'k');
+            await cx_delay(3000);
+            cx_setStep('s2', 'done', '✓ 原料已到家');
+            cx_log('✓ 取原料完成', 's');
+
+            // 3. 和面 + 和馅 all
+            cx_setStep('s3', 'running', '🏃 和面 + 和馅 同时进行（Promise.all）');
+            cx_log('▶ 开始：和面 + 和馅（Promise.all）', 'k');
+            cx_setSub('s3a', 'running');
+            cx_setSub('s3b', 'running');
+            await Promise.all([
+                cx_delay(4000).then(function () {
+                    cx_setSub('s3a', 'done');
+                    cx_log('和面完成 (4s)', 'w');
+                }),
+                cx_delay(3000).then(function () {
+                    cx_setSub('s3b', 'done');
+                    cx_log('和馅完成 (3s)', 'w');
+                })
+            ]);
+            cx_setStep('s3', 'done', '✓ 面和馅都准备好了');
+            cx_log('✓ all 结果：都完成了才能继续', 's');
+
+            // 4. 包饺子
+            cx_setStep('s4', 'running', '🏃 包饺子中...');
+            cx_log('▶ 开始：包饺子（5s）', 'k');
+            await cx_delay(5000);
+            cx_setStep('s4', 'done', '✓ 饺子包好啦');
+            cx_log('✓ 包饺子完成', 's');
+
+            // 5. 煮饺子
+            cx_setStep('s5', 'running', '🏃 煮饺子中...');
+            cx_log('▶ 开始：煮饺子（4s）', 'k');
+            await cx_delay(4000);
+            cx_setStep('s5', 'done', '✓ 饺子浮起来了');
+            cx_log('✓ 煮饺子完成', 's');
+
+            // 6. 吃饺子
+            cx_setStep('s6', 'running', '🏃 吃饺子中...');
+            cx_log('▶ 开始：吃饺子（2s）', 'k');
+            await cx_delay(2000);
+            cx_setStep('s6', 'done', '✓ 吃完啦，真香！🥟');
+            cx_log('🎉 整个流程完成！', 's');
+
+            btn.disabled = false;
+            btn.textContent = '▶ 再玩一次';
+        }
+
+        document.getElementById('cx_start').addEventListener('click', cx_runFlow);
+    </script>
+</body>
+</html>

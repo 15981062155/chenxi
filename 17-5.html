@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-04，功能：setTimeout / setInterval 两种定时器演示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-5 定时器演示 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        h1 { text-align: center; color: #1e4b3b; margin: 0 0 6px; }
+        .cx_author { text-align: center; color: #888; margin: 0 0 20px; font-size: 14px; }
+
+        .cx_container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 720px) {
+            .cx_container { grid-template-columns: 1fr; }
+        }
+
+        .cx_card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 22px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .cx_card h2 {
+            margin: 0 0 6px;
+            font-size: 17px;
+            color: #333;
+        }
+
+        .cx_desc {
+            font-size: 13px;
+            color: #888;
+            margin: 0 0 16px;
+            line-height: 1.6;
+        }
+
+        .cx_code {
+            background: #1e1e1e;
+            color: #9cdcfe;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: Consolas, monospace;
+            margin-bottom: 14px;
+            line-height: 1.7;
+            white-space: pre;
+        }
+        .cx_code .c { color: #6a9955; }
+        .cx_code .k { color: #569cd6; }
+
+        .cx_controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .cx_btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 9px 0;
+            background: #1e4b3b;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .cx_btn:hover { background: #276a52; }
+        .cx_btn.red { background: #e74c3c; }
+        .cx_btn.red:hover { background: #c0392b; }
+        .cx_btn.gray { background: #888; }
+        .cx_btn.gray:hover { background: #666; }
+        .cx_btn:disabled { background: #bbb; cursor: not-allowed; }
+
+        .cx_demo {
+            background: #fafafa;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .cx_counter { font-size: 40px; font-weight: bold; color: #1e4b3b; }
+
+        .cx_target {
+            width: 60px;
+            height: 60px;
+            background: #1e4b3b;
+            border-radius: 10px;
+            margin: 10px auto;
+            transition: transform 0.3s;
+        }
+
+        .cx_log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: Consolas, monospace;
+            height: 120px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .cx_log div { margin: 2px 0; }
+        .cx_log .t { color: #6a9955; }
+        .cx_log .m { color: #9cdcfe; }
+    </style>
+</head>
+<body>
+    <h1>JavaScript 定时器</h1>
+    <p class="cx_author">姓名：陈曦 · 17-5 · setTimeout 延迟执行 / setInterval 循环执行</p>
+
+    <div class="cx_container">
+        <div class="cx_card">
+            <h2>① setTimeout — 延迟执行一次</h2>
+            <p class="cx_desc">在指定毫秒后执行一次函数。像"3 秒后弹出提示"。</p>
+            <div class="cx_code"><span class="k">setTimeout</span>(<span class="k">function</span>() {
+    <span class="c">// 这里的代码只会执行一次</span>
+}, 3000);</div>
+
+            <div class="cx_controls">
+                <button id="cx_bt1" class="cx_btn">3 秒后启动</button>
+                <button id="cx_bt2" class="cx_btn gray">取消</button>
+            </div>
+            <div id="cx_demo1" class="cx_demo">点击"3 秒后启动"试试</div>
+        </div>
+
+        <div class="cx_card">
+            <h2>② setInterval — 循环执行</h2>
+            <p class="cx_desc">每隔指定毫秒重复执行。像计时器、轮播图、倒计时。</p>
+            <div class="cx_code"><span class="k">var</span> timer = <span class="k">setInterval</span>(<span class="k">function</span>() {
+    <span class="c">// 每隔 500ms 执行一次</span>
+}, 500);
+<span class="c">// 停止它</span>
+<span class="k">clearInterval</span>(timer);</div>
+
+            <div class="cx_controls">
+                <button id="cx_bt3" class="cx_btn">开始计数</button>
+                <button id="cx_bt4" class="cx_btn red">停止</button>
+                <button id="cx_bt5" class="cx_btn gray">重置</button>
+            </div>
+            <div class="cx_demo">
+                <div>计数：<span id="cx_counter" class="cx_counter">0</span></div>
+            </div>
+        </div>
+
+        <div class="cx_card">
+            <h2>③ 心跳动画</h2>
+            <p class="cx_desc">setInterval + CSS transform 做一个定时脉冲效果。</p>
+            <div class="cx_controls">
+                <button id="cx_bt6" class="cx_btn">开始跳动</button>
+                <button id="cx_bt7" class="cx_btn red">停止</button>
+            </div>
+            <div id="cx_beat" class="cx_target"></div>
+        </div>
+
+        <div class="cx_card">
+            <h2>④ 日志观察</h2>
+            <p class="cx_desc">同时开启上面三个 demo，看控制台顺序输出。</p>
+            <div class="cx_log" id="cx_log"></div>
+        </div>
+    </div>
+
+    <script>
+        var CX_T1 = null, CX_I1 = null, CX_I2 = null;
+        var CX_COUNT = 0;
+
+        function cx_log(msg) {
+            var box = document.getElementById('cx_log');
+            var now = new Date();
+            var t = now.toTimeString().slice(0, 8);
+            var div = document.createElement('div');
+            div.innerHTML = '<span class="t">[' + t + ']</span> <span class="m">' + msg + '</span>';
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function cx_clearLog() {
+            document.getElementById('cx_log').innerHTML = '';
+        }
+
+        // 1. setTimeout demo
+        document.getElementById('cx_bt1').addEventListener('click', function () {
+            if (CX_T1) clearTimeout(CX_T1);
+            document.getElementById('cx_demo1').textContent = '⏳ 等待 3 秒...';
+            cx_log('setTimeout 已安排（3000ms 后执行）');
+            CX_T1 = setTimeout(function () {
+                document.getElementById('cx_demo1').textContent = '🎉 时间到！触发了一次';
+                cx_log('setTimeout 触发！3 秒已到');
+                CX_T1 = null;
+            }, 3000);
+        });
+
+        document.getElementById('cx_bt2').addEventListener('click', function () {
+            if (CX_T1) {
+                clearTimeout(CX_T1);
+                CX_T1 = null;
+                document.getElementById('cx_demo1').textContent = '已取消，不会触发了';
+                cx_log('clearTimeout 取消了延迟任务');
+            } else {
+                document.getElementById('cx_demo1').textContent = '没有待执行的任务';
+            }
+        });
+
+        // 2. setInterval counter
+        document.getElementById('cx_bt3').addEventListener('click', function () {
+            if (CX_I1) return;
+            cx_log('setInterval 开始，每 500ms +1');
+            CX_I1 = setInterval(function () {
+                CX_COUNT++;
+                document.getElementById('cx_counter').textContent = CX_COUNT;
+            }, 500);
+        });
+
+        document.getElementById('cx_bt4').addEventListener('click', function () {
+            if (CX_I1) {
+                clearInterval(CX_I1);
+                CX_I1 = null;
+                cx_log('clearInterval 停止了计数');
+            }
+        });
+
+        document.getElementById('cx_bt5').addEventListener('click', function () {
+            clearInterval(CX_I1);
+            CX_I1 = null;
+            CX_COUNT = 0;
+            document.getElementById('cx_counter').textContent = '0';
+        });
+
+        // 3. beat animation
+        var CX_BEAT_SCALE = 1;
+        document.getElementById('cx_bt6').addEventListener('click', function () {
+            if (CX_I2) return;
+            cx_log('setInterval 心跳开始，每 400ms 一次');
+            CX_I2 = setInterval(function () {
+                CX_BEAT_SCALE = CX_BEAT_SCALE === 1 ? 1.2 : 1;
+                document.getElementById('cx_beat').style.transform = 'scale(' + CX_BEAT_SCALE + ')';
+            }, 400);
+        });
+
+        document.getElementById('cx_bt7').addEventListener('click', function () {
+            if (CX_I2) {
+                clearInterval(CX_I2);
+                CX_I2 = null;
+                cx_log('clearInterval 心跳停止');
+            }
+            document.getElementById('cx_beat').style.transform = 'scale(1)';
+        });
+
+        cx_clearLog();
+    </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-04，功能：远程接口调试工具（GET/POST/PUT/DELETE） -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-4 API 测试工具 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", Consolas, monospace;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        h1 { text-align: center; color: #1e4b3b; margin: 0 0 6px; }
+        .cx_author { text-align: center; color: #888; margin: 0 0 20px; font-size: 14px; }
+
+        .cx_container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 720px) {
+            .cx_container { grid-template-columns: 1fr; }
+        }
+
+        .cx_card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .cx_card h2 {
+            margin: 0 0 14px;
+            font-size: 16px;
+            color: #333;
+            border-left: 4px solid #1e4b3b;
+            padding-left: 10px;
+        }
+
+        label { display: block; font-size: 13px; color: #666; margin: 10px 0 6px; font-weight: 600; }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            background: #fafafa;
+        }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: #1e4b3b; background: #fff; }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .cx_row { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
+
+        .cx_methods {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .cx_method-btn {
+            padding: 8px 0;
+            border: 2px solid #ddd;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+        .cx_method-btn.active {
+            border-color: #1e4b3b;
+            background: #1e4b3b;
+            color: #fff;
+        }
+
+        .cx_send {
+            width: 100%;
+            padding: 12px 0;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 14px;
+            transition: background 0.15s;
+        }
+        .cx_send:hover { background: #c0392b; }
+        .cx_send:disabled { background: #aaa; cursor: wait; }
+
+        .cx_status {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .cx_status.ok { background: #e6f7ed; color: #1e7a3c; }
+        .cx_status.err { background: #fdecea; color: #c0392b; }
+        .cx_status.info { background: #e8f4fd; color: #1a5276; }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 14px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 0;
+            max-height: 400px;
+        }
+
+        .cx_quick {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .cx_quick button {
+            padding: 5px 10px;
+            font-size: 11px;
+            background: #eef5f2;
+            border: 1px solid #d4e5dc;
+            color: #1e4b3b;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .cx_quick button:hover { background: #d9ebe2; }
+    </style>
+</head>
+<body>
+    <h1>API 测试工具</h1>
+    <p class="cx_author">姓名：陈曦 · 17-4 · 支持 GET / POST / PUT / DELETE</p>
+
+    <div class="cx_container">
+        <div class="cx_card">
+            <h2>① 发送请求</h2>
+            <div class="cx_methods">
+                <button class="cx_method-btn active" data-method="GET">GET</button>
+                <button class="cx_method-btn" data-method="POST">POST</button>
+                <button class="cx_method-btn" data-method="PUT">PUT</button>
+                <button class="cx_method-btn" data-method="DELETE">DELETE</button>
+            </div>
+
+            <label>URL</label>
+            <input id="cx_url" type="text" value="https://jsonplaceholder.typicode.com/posts/1" placeholder="https://...">
+            <div class="cx_quick">
+                <button onclick="cx_setUrl('https://jsonplaceholder.typicode.com/posts')">Posts 列表</button>
+                <button onclick="cx_setUrl('https://jsonplaceholder.typicode.com/users')">Users</button>
+                <button onclick="cx_setUrl('https://jsonplaceholder.typicode.com/posts/1')">Post 详情</button>
+                <button onclick="cx_setUrl('https://dummyjson.com/products/1')">Dummy 商品</button>
+            </div>
+
+            <label>请求体 (JSON，POST/PUT 时使用)</label>
+            <textarea id="cx_body" placeholder='{"title": "测试", "body": "内容"}'></textarea>
+
+            <button id="cx_send" class="cx_send">发送请求</button>
+            <div id="cx_status" class="cx_status info">💡 选择方法 + 输入 URL + 点发送</div>
+        </div>
+
+        <div class="cx_card">
+            <h2>② 响应结果</h2>
+            <pre id="cx_response">等待发送请求 ...</pre>
+        </div>
+    </div>
+
+    <script>
+        var CX_METHOD = 'GET';
+
+        function cx_setUrl(url) {
+            document.getElementById('cx_url').value = url;
+        }
+
+        document.querySelectorAll('.cx_method-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.cx_method-btn').forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                CX_METHOD = btn.getAttribute('data-method');
+
+                if (CX_METHOD === 'POST' && !document.getElementById('cx_body').value) {
+                    document.getElementById('cx_body').value = '{\n  "title": "陈曦的测试",\n  "body": "这是一条用 fetch 发送的数据",\n  "userId": 1\n}';
+                }
+            });
+        });
+
+        document.getElementById('cx_send').addEventListener('click', async function () {
+            var url = document.getElementById('cx_url').value.trim();
+            var statusBox = document.getElementById('cx_status');
+            var respBox = document.getElementById('cx_response');
+
+            if (!url) {
+                statusBox.className = 'cx_status err';
+                statusBox.textContent = '✗ 请先输入 URL';
+                return;
+            }
+
+            var opts = { method: CX_METHOD };
+
+            if (CX_METHOD !== 'GET' && CX_METHOD !== 'DELETE') {
+                var raw = document.getElementById('cx_body').value.trim();
+                if (raw) {
+                    try {
+                        JSON.parse(raw);
+                    } catch (e) {
+                        statusBox.className = 'cx_status err';
+                        statusBox.textContent = '✗ 请求体 JSON 格式错误：' + e.message;
+                        return;
+                    }
+                    opts.headers = { 'Content-Type': 'application/json' };
+                    opts.body = raw;
+                }
+            }
+
+            var btn = document.getElementById('cx_send');
+            btn.disabled = true;
+            statusBox.className = 'cx_status info';
+            statusBox.textContent = '⏳ ' + CX_METHOD + ' ' + url + ' ...';
+            respBox.textContent = '';
+
+            var t0 = performance.now();
+            try {
+                var res = await fetch(url, opts);
+                var t1 = Math.round(performance.now() - t0);
+                var text = await res.text();
+
+                var respJson = null;
+                try { respJson = JSON.parse(text); } catch (e) { /* not json */ }
+
+                var colorClass = res.ok ? 'ok' : 'err';
+                statusBox.className = 'cx_status ' + colorClass;
+                statusBox.textContent = (res.ok ? '✓ ' : '✗ ') + CX_METHOD + ' ' + url + '  →  HTTP ' + res.status + ' ' + res.statusText + '  (耗时 ' + t1 + 'ms)';
+
+                respBox.textContent = respJson ? JSON.stringify(respJson, null, 2) : text;
+            } catch (err) {
+                statusBox.className = 'cx_status err';
+                statusBox.textContent = '✗ 请求失败：' + err.message;
+                respBox.textContent = '';
+            }
+            btn.disabled = false;
+        });
+    </script>
+</body>
+</html>

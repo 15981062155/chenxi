@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-04，功能：fetch 获取商品列表 + 点击跳转详情页 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-3 商品列表 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        h1 { text-align: center; color: #1e4b3b; margin: 0 0 6px; }
+        .cx_author { text-align: center; color: #888; margin: 0 0 20px; font-size: 14px; }
+
+        .cx_grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .cx_card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        .cx_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .cx_thumb {
+            width: 100%;
+            height: 180px;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .cx_thumb img {
+            max-width: 90%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .cx_info { padding: 14px 16px; }
+        .cx_info h3 {
+            margin: 0 0 6px;
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cx_info p {
+            margin: 0 0 8px;
+            font-size: 12px;
+            color: #888;
+            height: 32px;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        .cx_meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cx_price { font-size: 18px; font-weight: bold; color: #e74c3c; }
+        .cx_price::before { content: "$"; font-size: 13px; }
+        .cx_rating { font-size: 12px; color: #f39c12; }
+        .cx_cat {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 2px 8px;
+            font-size: 11px;
+            color: #1e4b3b;
+            background: #eef5f2;
+            border-radius: 4px;
+        }
+
+        .cx_loading, .cx_err {
+            max-width: 600px;
+            margin: 60px auto;
+            text-align: center;
+            color: #888;
+            font-size: 15px;
+        }
+        .cx_err { color: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>商品列表</h1>
+    <p class="cx_author">姓名：陈曦 · 17-3 · 点击卡片查看详情</p>
+
+    <div id="cx_content" class="cx_grid">
+        <div class="cx_loading">⏳ 加载中…</div>
+    </div>
+
+    <script>
+        var CX_LIST_API = 'https://dummyjson.com/products?limit=8';
+
+        async function cx_loadList() {
+            var box = document.getElementById('cx_content');
+            try {
+                var res = await fetch(CX_LIST_API);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var data = await res.json();
+                cx_render(data.products || []);
+            } catch (e) {
+                box.innerHTML = '<div class="cx_err">✗ 加载失败：' + e.message + '</div>';
+            }
+        }
+
+        function cx_render(list) {
+            var html = '';
+            list.forEach(function (p) {
+                var thumb = (p.images && p.images[0]) || p.thumbnail || '';
+                html += '<a class="cx_card" href="17-3-detail.html?id=' + p.id + '">'
+                    + '<div class="cx_thumb"><img src="' + thumb + '" alt="" onerror="this.style.display=\'none\'"></div>'
+                    + '<div class="cx_info">'
+                    + '<h3>' + p.title + '</h3>'
+                    + '<p>' + p.description + '</p>'
+                    + '<div class="cx_meta">'
+                    + '<span class="cx_price">' + p.price + '</span>'
+                    + '<span class="cx_rating">★ ' + (p.rating || '0.0') + '</span>'
+                    + '</div>'
+                    + '<span class="cx_cat">' + (p.category || 'unknown') + '</span>'
+                    + '</div></a>';
+            });
+            document.getElementById('cx_content').innerHTML = html;
+        }
+
+        cx_loadList();
+    </script>
+</body>
+</html>

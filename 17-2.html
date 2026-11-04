@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-04，功能：fetch 获取远程用户数据并展示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-2 fetch 用户数据 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        h1 { text-align: center; color: #1e4b3b; margin: 0 0 6px; }
+        .cx_author { text-align: center; color: #888; margin: 0 0 20px; font-size: 14px; }
+
+        .cx_bar {
+            max-width: 1100px;
+            margin: 0 auto 18px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .cx_bar label { font-size: 13px; color: #666; font-weight: 600; }
+        .cx_bar input {
+            flex: 1;
+            min-width: 280px;
+            padding: 9px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+        .cx_bar input:focus { outline: none; border-color: #1e4b3b; }
+
+        .cx_btn {
+            padding: 9px 22px;
+            background: #1e4b3b;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .cx_btn:hover { background: #276a52; }
+        .cx_btn:disabled { background: #aaa; cursor: wait; }
+
+        .cx_grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .cx_user {
+            background: #fff;
+            border-radius: 10px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border-top: 4px solid #1e4b3b;
+        }
+
+        .cx_user .cx_head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .cx_avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #1e4b3b;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .cx_head h3 { margin: 0; font-size: 16px; color: #222; }
+        .cx_head .cx_uname { font-size: 12px; color: #888; margin-top: 2px; }
+
+        .cx_user p { margin: 6px 0; font-size: 13px; color: #555; line-height: 1.6; }
+        .cx_user p b { color: #333; }
+        .cx_user a { color: #1e4b3b; text-decoration: none; }
+        .cx_user a:hover { text-decoration: underline; }
+
+        .cx_user .cx_company {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .cx_loading, .cx_err {
+            max-width: 1100px;
+            margin: 40px auto;
+            text-align: center;
+            color: #888;
+        }
+        .cx_err { color: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>fetch 远程获取用户数据</h1>
+    <p class="cx_author">姓名：陈曦 · 17-2</p>
+
+    <div class="cx_bar">
+        <label>接口</label>
+        <input id="cx_url" value="http://jsonplaceholder.typicode.com/users">
+        <button id="cx_load" class="cx_btn">获取数据</button>
+    </div>
+
+    <div id="cx_content" class="cx_grid">
+        <div class="cx_loading">点击"获取数据"开始加载 …</div>
+    </div>
+
+    <script>
+        var CX_API = document.getElementById('cx_url').value;
+
+        async function cx_fetchUsers(url) {
+            var content = document.getElementById('cx_content');
+            content.innerHTML = '<div class="cx_loading">⏳ 加载中…</div>';
+            try {
+                var res = await fetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var data = await res.json();
+                cx_render(data);
+            } catch (err) {
+                content.innerHTML = '<div class="cx_err">✗ 请求失败：' + err.message + '</div>';
+            }
+        }
+
+        function cx_render(list) {
+            var html = '';
+            list.forEach(function (u) {
+                var initial = u.name.charAt(0).toUpperCase();
+                html += '<div class="cx_user">'
+                    + '<div class="cx_head">'
+                    + '<div class="cx_avatar">' + initial + '</div>'
+                    + '<div><h3>' + u.name + '</h3><div class="cx_uname">@' + u.username + '</div></div>'
+                    + '</div>'
+                    + '<p>📧 ' + u.email + '</p>'
+                    + '<p>📱 ' + u.phone + '</p>'
+                    + '<p>🌐 <a href="http://' + u.website + '" target="_blank">' + u.website + '</a></p>'
+                    + '<p>📍 ' + u.address.street + ', ' + u.address.city + ' (' + u.address.zipcode + ')</p>'
+                    + '<p class="cx_company">🏢 ' + u.company.name + ' — ' + u.company.catchPhrase + '</p>'
+                    + '</div>';
+            });
+            document.getElementById('cx_content').innerHTML = html;
+        }
+
+        document.getElementById('cx_load').addEventListener('click', function () {
+            var url = document.getElementById('cx_url').value.trim();
+            if (url) cx_fetchUsers(url);
+        });
+
+        cx_fetchUsers(CX_API);
+    </script>
+</body>
+</html>
