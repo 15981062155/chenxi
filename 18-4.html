@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-05，功能：ECharts 旭日图 + 3D Graph 关系图 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-4 ECharts 可视化 - 陈曦</title>
+    <script src="cdn/echarts/echarts.min.js"></script>
+    <script src="cdn/echarts/echarts-gl.min.js"></script>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 28px 16px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            text-align: center;
+            color: #eee;
+        }
+
+        h1 { color: #e94560; margin: 0 0 4px; font-size: 24px; letter-spacing: 2px; }
+        .cx_subtitle { color: #aaa; font-size: 13px; margin: 0 0 22px; }
+
+        .cx_chart-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 18px;
+            margin: 0 auto 24px;
+            max-width: 1200px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+
+        .cx_chart-title {
+            color: #e94560;
+            margin: 0 0 12px;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cx_chart-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(#e94560, #f39c12);
+            border-radius: 2px;
+        }
+        .cx_chart-title em {
+            color: #888;
+            font-style: normal;
+            font-size: 12px;
+            font-weight: normal;
+            margin-left: auto;
+        }
+
+        .cx_canvas {
+            width: 100%;
+            height: 520px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>ECharts 可视化专题</h1>
+    <p class="cx_subtitle">旭日图 Sunburst · 3D 关系图 GraphGL · 姓名：陈曦 · 18-4</p>
+
+    <div class="cx_chart-card">
+        <div class="cx_chart-title">
+            📚 图书分类旭日图（Sunburst）
+            <em>官方示例 sunburst-book</em>
+        </div>
+        <div id="cx_sunburst" class="cx_canvas"></div>
+    </div>
+
+    <div class="cx_chart-card">
+        <div class="cx_chart-title">
+            🌐 NPM 依赖 3D 关系图（GraphGL）
+            <em>官方示例 graphgl-npm-dep</em>
+        </div>
+        <div id="cx_graph3d" class="cx_canvas"></div>
+    </div>
+
+    <script>
+        (function () {
+            var CX_COLORS = {
+                star5: '#FFAE57',
+                star4: '#FF7853',
+                star3: '#EA5151',
+                star2: '#CC3F57',
+                star1: '#9A2555',
+                bg: '#2E2733'
+            };
+
+            var CX_SUNBURST_DATA = [
+                {
+                    name: '虚构文学',
+                    itemStyle: { color: CX_COLORS.star5 },
+                    children: [
+                        {
+                            name: '小说',
+                            children: [
+                                { name: '5★', children: [{ name: '百年孤独' }, { name: '追风筝的人' }, { name: '三体' }] },
+                                { name: '4★', children: [{ name: '活着' }, { name: '平凡的世界' }, { name: '白夜行' }] },
+                                { name: '3★', children: [{ name: '挪威的森林' }, { name: '围城' }, { name: '边城' }] },
+                                { name: '2★', children: [{ name: '嫌疑人X的献身' }, { name: '解忧杂货店' }] }
+                            ]
+                        },
+                        {
+                            name: '科幻',
+                            children: [
+                                { name: '5★', children: [{ name: '三体全集' }, { name: '沙丘' }] },
+                                { name: '4★', children: [{ name: '流浪地球' }, { name: '银河系漫游指南' }] },
+                                { name: '3★', children: [{ name: '1984' }, { name: '动物农场' }] },
+                                { name: '2★', children: [{ name: '基地' }] }
+                            ]
+                        },
+                        {
+                            name: '悬疑推理',
+                            children: [
+                                { name: '5★', children: [{ name: '无人生还' }, { name: '东方快车谋杀案' }] },
+                                { name: '4★', children: [{ name: '白夜行' }, { name: '沉默的羔羊' }] },
+                                { name: '3★', children: [{ name: '恶意' }, { name: '放学后' }] },
+                                { name: '2★', children: [{ name: '嫌疑人X的献身' }] }
+                            ]
+                        },
+                        {
+                            name: '历史',
+                            children: [
+                                { name: '5★', children: [{ name: '万历十五年' }, { name: '人类简史' }] },
+                                { name: '4★', children: [{ name: '明朝那些事儿' }, { name: '全球通史' }] },
+                                { name: '3★', children: [{ name: '史记' }, { name: '资治通鉴' }] },
+                                { name: '2★', children: [{ name: '大国崛起' }] }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: '非虚构',
+                    itemStyle: { color: CX_COLORS.star2 },
+                    children: [
+                        {
+                            name: '传记',
+                            children: [
+                                { name: '5★', children: [{ name: '苏东坡传' }, { name: '富兰克林自传' }] },
+                                { name: '4★', children: [{ name: '乔布斯传' }, { name: '霍金传' }] },
+                                { name: '3★', children: [{ name: '拿破仑传' }, { name: '贝多芬传' }] },
+                                { name: '2★', children: [{ name: '居里夫人传' }] }
+                            ]
+                        },
+                        {
+                            name: '心理学',
+                            children: [
+                                { name: '5★', children: [{ name: '乌合之众' }, { name: '自卑与超越' }] },
+                                { name: '4★', children: [{ name: '思考，快与慢' }, { name: '梦的解析' }] },
+                                { name: '3★', children: [{ name: '社会心理学' }, { name: '影响力' }] },
+                                { name: '2★', children: [{ name: '心流' }] }
+                            ]
+                        },
+                        {
+                            name: '经济学',
+                            children: [
+                                { name: '5★', children: [{ name: '国富论' }, { name: '经济学原理' }] },
+                                { name: '4★', children: [{ name: '薛兆丰经济学讲义' }, { name: '牛奶可乐经济学' }] },
+                                { name: '3★', children: [{ name: '魔鬼经济学' }, { name: '小岛经济学' }] },
+                                { name: '2★', children: [{ name: '穷查理宝典' }] }
+                            ]
+                        },
+                        {
+                            name: '科技',
+                            children: [
+                                { name: '5★', children: [{ name: '浪潮之巅' }, { name: '代码大全' }] },
+                                { name: '4★', children: [{ name: '深入理解计算机系统' }, { name: '设计模式' }] },
+                                { name: '3★', children: [{ name: '重构' }, { name: '人月神话' }] },
+                                { name: '2★', children: [{ name: '黑客与画家' }] }
+                            ]
+                        }
+                    ]
+                }
+            ];
+
+            var cx_sunburstChart = echarts.init(document.getElementById('cx_sunburst'));
+            cx_sunburstChart.setOption({
+                backgroundColor: CX_COLORS.bg,
+                title: { show: false },
+                series: [{
+                    type: 'sunburst',
+                    data: CX_SUNBURST_DATA,
+                    radius: ['10%', '92%'],
+                    center: ['50%', '52%'],
+                    sort: null,
+                    emphasis: {
+                        focus: 'ancestor',
+                        itemStyle: { borderWidth: 3, borderColor: '#fff' }
+                    },
+                    levels: [
+                        {},
+                        {
+                            itemStyle: { borderWidth: 2 },
+                            r0: '12%', r: '28%',
+                            label: {
+                                rotate: 'tangential',
+                                fontSize: 14,
+                                color: '#fff',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        {
+                            r0: '28%', r: '52%',
+                            label: { align: 'right', fontSize: 12, color: 'rgba(255,255,255,0.9)' }
+                        },
+                        {
+                            r0: '52%', r: '68%',
+                            label: { align: 'right', fontSize: 11, color: 'rgba(255,255,255,0.8)' }
+                        },
+                        {
+                            r0: '68%', r: '90%',
+                            label: { rotate: 'radial', fontSize: 10, color: 'rgba(255,255,255,0.7)' }
+                        }
+                    ]
+                }],
+                tooltip: {
+                    formatter: function (p) { return p.name + '<br/>层级：' + p.treePathInfo.length; }
+                }
+            });
+
+            var cx_graph3dChart = echarts.init(document.getElementById('cx_graph3d'));
+
+            fetch('cdn/echarts/npmdep.json')
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var nodes = data.nodes.map(function (name, idx) {
+                        return {
+                            name: name,
+                            value: data.dependentsCount[idx]
+                        };
+                    });
+                    var edges = [];
+                    for (var i = 0; i < data.edges.length; i += 2) {
+                        edges.push({
+                            source: data.edges[i],
+                            target: data.edges[i + 1]
+                        });
+                    }
+
+                    nodes.forEach(function (node) {
+                        node.emphasis = { label: { show: true, color: '#fff' } };
+                        if (node.value > 5000) {
+                            node.label = { show: true, color: '#ffd700', fontSize: 11 };
+                        }
+                    });
+
+                    cx_graph3dChart.setOption({
+                        backgroundColor: '#000',
+                        tooltip: {},
+                        visualMap: {
+                            show: true,
+                            left: 'left',
+                            bottom: 20,
+                            min: 0,
+                            max: 25000,
+                            text: ['高频引用', '低频'],
+                            textStyle: { color: '#fff' },
+                            inRange: {
+                                color: ['#1e88e5', '#43a047', '#fdd835', '#e53935']
+                            }
+                        },
+                        series: [{
+                            type: 'graph3D',
+                            name: 'NPM 依赖关系',
+                            data: nodes,
+                            links: edges,
+                            force: {
+                                repulsion: 20,
+                                gravity: 0.1,
+                                edgeLength: [10, 40]
+                            },
+                            viewControl: {
+                                autoRotate: true,
+                                distance: 200
+                            },
+                            lineStyle: {
+                                color: 'source',
+                                width: 1,
+                                opacity: 0.3
+                            },
+                            itemStyle: {
+                                color: 'rgba(255,255,255,0.1)',
+                                borderColor: '#fff',
+                                borderWidth: 1
+                            },
+                            label: {
+                                show: false,
+                                position: 'right',
+                                formatter: '{b}'
+                            },
+                            emphasis: {
+                                lineStyle: { opacity: 0.8 },
+                                itemStyle: { color: '#ffd700', borderWidth: 2 }
+                            }
+                        }]
+                    });
+                })
+                .catch(function (err) {
+                    document.getElementById('cx_graph3d').innerHTML =
+                        '<div style="color:#e94560;padding:40px;text-align:center;font-size:14px;">⚠️ 数据加载失败：' + err.message + '<br/><small>请通过本地 HTTP 服务访问（file:// 协议下 fetch 受限）</small></div>';
+                });
+
+            window.addEventListener('resize', function () {
+                cx_sunburstChart.resize();
+                cx_graph3dChart.resize();
+            });
+        })();
+    </script>
+</body>
+</html>
