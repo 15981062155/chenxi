@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-05，功能：Canvas 绘制电商系统架构图 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-2 Canvas 系统架构图 - 陈曦</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 24px 16px;
+            background: #f0f2f5;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        h1 { color: #1e4b3b; margin: 0 0 6px; font-size: 22px; }
+        .cx_author { color: #888; margin: 0 0 18px; font-size: 14px; }
+
+        .cx_wrap {
+            display: inline-block;
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        canvas { display: block; max-width: 100%; height: auto; }
+
+        .cx_legend {
+            margin-top: 14px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #555;
+        }
+        .cx_legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .cx_dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>电商系统架构图</h1>
+    <p class="cx_author">姓名：陈曦 · 18-2 · Canvas 2D 绘制</p>
+
+    <div class="cx_wrap">
+        <canvas id="cx_canvas" width="960" height="760"></canvas>
+        <div class="cx_legend">
+            <span><i class="cx_dot" style="background:#5b9bd5"></i> 前端接入层</span>
+            <span><i class="cx_dot" style="background:#70ad47"></i> 网关服务层</span>
+            <span><i class="cx_dot" style="background:#ed7d31"></i> 业务服务层</span>
+            <span><i class="cx_dot" style="background:#ffc000"></i> 中间件层</span>
+            <span><i class="cx_dot" style="background:#a5a5a5"></i> 数据存储层</span>
+        </div>
+    </div>
+
+    <script>
+        var cx = document.getElementById('cx_canvas');
+        var ctx = cx.getContext('2d');
+
+        var CX_COLORS = {
+            front: '#5b9bd5', gateway: '#70ad47', biz: '#ed7d31',
+            middleware: '#ffc000', data: '#a5a5a5',
+            bg: '#f8f9fb', line: '#555', text: '#333', white: '#fff'
+        };
+
+        function cx_roundRect(x, y, w, h, r) {
+            r = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
+
+        function cx_drawBox(x, y, w, h, color, title, sub) {
+            ctx.save();
+            cx_roundRect(x, y, w, h, 8);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = CX_COLORS.white;
+            ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(title, x + w / 2, y + h / 2 - (sub ? 7 : 0));
+
+            if (sub) {
+                ctx.font = '11px "PingFang SC",sans-serif';
+                ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                ctx.fillText(sub, x + w / 2, y + h / 2 + 10);
+            }
+            ctx.restore();
+        }
+
+        function cx_drawArrow(x1, y1, x2, y2, label, dashed) {
+            ctx.save();
+            ctx.strokeStyle = CX_COLORS.line;
+            ctx.lineWidth = 1.4;
+            if (dashed) ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+
+            var ang = Math.atan2(y2 - y1, x2 - x1);
+            var ah = 7;
+            ctx.beginPath();
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x2 - ah * Math.cos(ang - 0.4), y2 - ah * Math.sin(ang - 0.4));
+            ctx.lineTo(x2 - ah * Math.cos(ang + 0.4), y2 - ah * Math.sin(ang + 0.4));
+            ctx.closePath();
+            ctx.fillStyle = CX_COLORS.line;
+            ctx.fill();
+
+            if (label) {
+                var mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+                ctx.font = '11px "PingFang SC",sans-serif';
+                ctx.fillStyle = '#666';
+                ctx.textAlign = 'center';
+                ctx.fillText(label, mx, my - 6);
+            }
+            ctx.restore();
+        }
+
+        function cx_drawGroup(x, y, w, h, title) {
+            ctx.save();
+            cx_roundRect(x, y, w, h, 10);
+            ctx.fillStyle = 'rgba(30,75,59,0.05)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(30,75,59,0.3)';
+            ctx.lineWidth = 1.2;
+            ctx.setLineDash([4, 3]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            if (title) {
+                ctx.font = 'bold 13px "PingFang SC",sans-serif';
+                ctx.fillStyle = '#1e4b3b';
+                ctx.textAlign = 'left';
+                ctx.fillText(title, x + 10, y + 16);
+            }
+            ctx.restore();
+        }
+
+        function cx_draw() {
+            ctx.fillStyle = CX_COLORS.bg;
+            ctx.fillRect(0, 0, cx.width, cx.height);
+
+            // ====== 层分组 ======
+            cx_drawGroup(20, 30, 920, 90, '① 客户端接入层');
+            cx_drawGroup(20, 150, 920, 80, '② CDN + 负载均衡');
+            cx_drawGroup(20, 260, 920, 100, '③ 网关服务');
+            cx_drawGroup(20, 390, 920, 170, '④ 业务微服务集群');
+            cx_drawGroup(20, 590, 920, 70, '⑤ 中间件');
+            cx_drawGroup(20, 680, 920, 60, '⑥ 数据存储');
+
+            // ====== 第 1 层：客户端 ======
+            cx_drawBox(50, 55, 140, 44, CX_COLORS.front, 'Web 浏览器', 'React / Vue');
+            cx_drawBox(220, 55, 140, 44, CX_COLORS.front, 'iOS App', 'Swift / ObjC');
+            cx_drawBox(390, 55, 140, 44, CX_COLORS.front, 'Android App', 'Kotlin');
+            cx_drawBox(560, 55, 140, 44, CX_COLORS.front, '小程序', 'WeChat');
+            cx_drawBox(730, 55, 140, 44, CX_COLORS.front, '第三方 API', '开放平台');
+
+            // ====== 第 2 层：CDN + LB ======
+            cx_drawBox(80, 170, 180, 38, CX_COLORS.gateway, 'CDN 静态资源加速', '图片 / JS / CSS');
+            cx_drawBox(320, 170, 180, 38, CX_COLORS.gateway, 'DNS 智能解析', '多线路分流');
+            cx_drawBox(560, 170, 180, 38, CX_COLORS.gateway, 'Nginx 负载均衡', '轮询 / 加权');
+            cx_drawBox(790, 170, 130, 38, CX_COLORS.gateway, 'WAF 防火墙', '防攻击');
+
+            // ====== 第 3 层：网关 ======
+            cx_drawBox(80, 285, 180, 44, CX_COLORS.biz, 'API Gateway', '路由 / 限流 / 鉴权');
+            cx_drawBox(320, 285, 180, 44, CX_COLORS.biz, 'OAuth2 认证中心', 'JWT / SSO');
+            cx_drawBox(560, 285, 180, 44, CX_COLORS.biz, '日志 & 监控', 'ELK / Prometheus');
+            cx_drawBox(790, 285, 130, 44, CX_COLORS.biz, '灰度发布', 'AB 测试');
+
+            // ====== 第 4 层：业务微服务 ======
+            var bizY = 415, bizH = 50, gap = 14;
+            var bizBoxes = [
+                { x: 40,  t: '用户服务',   s: '注册/登录/会员' },
+                { x: 170, t: '商品服务',   s: 'SKU/库存/搜索' },
+                { x: 300, t: '购物车服务', s: '加购/删除/统计' },
+                { x: 430, t: '订单服务',   s: '下单/支付/取消' },
+                { x: 560, t: '支付服务',   s: '微信/支付宝' },
+                { x: 690, t: '物流服务',   s: '发货/追踪' },
+                { x: 820, t: '评论服务',   s: '评价/晒单' }
+            ];
+            bizBoxes.forEach(function (b) {
+                cx_drawBox(b.x, bizY, 110, bizH, CX_COLORS.biz, b.t, b.s);
+            });
+
+            var biz2Y = 485;
+            var biz2Boxes = [
+                { x: 80,  t: '营销服务', s: '优惠券/秒杀' },
+                { x: 220, t: '推荐服务', s: '个性化推荐' },
+                { x: 360, t: '消息服务', s: '短信/推送' },
+                { x: 500, t: '搜索服务', s: 'Elasticsearch' },
+                { x: 640, t: '风控服务', s: '反作弊' },
+                { x: 780, t: '报表服务', s: 'BI 数据' }
+            ];
+            biz2Boxes.forEach(function (b) {
+                cx_drawBox(b.x, biz2Y, 110, bizH, CX_COLORS.biz, b.t, b.s);
+            });
+
+            // ====== 第 5 层：中间件 ======
+            cx_drawBox(80, 608, 140, 40, CX_COLORS.middleware, 'Redis 缓存', '热点数据');
+            cx_drawBox(250, 608, 140, 40, CX_COLORS.middleware, 'RabbitMQ', '异步消息队列');
+            cx_drawBox(420, 608, 140, 40, CX_COLORS.middleware, 'Dubbo / gRPC', 'RPC 通信');
+            cx_drawBox(590, 608, 140, 40, CX_COLORS.middleware, 'Nacos', '服务注册发现');
+            cx_drawBox(760, 608, 140, 40, CX_COLORS.middleware, 'Sentinel', '熔断降级');
+
+            // ====== 第 6 层：数据存储 ======
+            cx_drawBox(80, 690, 150, 38, CX_COLORS.data, 'MySQL 主库', '订单/用户');
+            cx_drawBox(260, 690, 150, 38, CX_COLORS.data, 'MySQL 从库', '读写分离');
+            cx_drawBox(440, 690, 150, 38, CX_COLORS.data, 'MongoDB', '商品详情');
+            cx_drawBox(620, 690, 150, 38, CX_COLORS.data, 'Elasticsearch', '全文检索');
+            cx_drawBox(800, 690, 120, 38, CX_COLORS.data, 'OSS 对象存储', '图片文件');
+
+            // ====== 连线 ======
+            // 客户端 → CDN/LB
+            cx_drawArrow(120, 99, 170, 170, 'HTTPS');
+            cx_drawArrow(290, 99, 410, 170);
+            cx_drawArrow(460, 99, 650, 170);
+            cx_drawArrow(630, 99, 855, 170);
+
+            // CDN/LB → 网关
+            cx_drawArrow(170, 208, 170, 285);
+            cx_drawArrow(410, 208, 410, 285);
+            cx_drawArrow(650, 208, 650, 285);
+
+            // 网关 → 业务
+            cx_drawArrow(170, 329, 100, 415);
+            cx_drawArrow(170, 329, 230, 415);
+            cx_drawArrow(410, 329, 495, 415);
+            cx_drawArrow(650, 329, 625, 415);
+
+            // 业务 → 中间件
+            cx_drawArrow(150, 465, 150, 608, '', true);
+            cx_drawArrow(360, 465, 320, 608, '', true);
+            cx_drawArrow(495, 465, 490, 608, '', true);
+
+            // 中间件 → 存储
+            cx_drawArrow(150, 648, 155, 690);
+            cx_drawArrow(490, 648, 515, 690);
+            cx_drawArrow(760, 648, 860, 690);
+
+            // 标题
+            ctx.font = 'bold 20px "PingFang SC",sans-serif';
+            ctx.fillStyle = '#1e4b3b';
+            ctx.textAlign = 'center';
+            ctx.fillText('电商系统架构图', 480, 20);
+        }
+
+        cx_draw();
+
+        ctx.save();
+        ctx.font = '11px "PingFang SC",sans-serif';
+        ctx.fillStyle = '#aaa';
+        ctx.textAlign = 'right';
+        ctx.fillText('Canvas 2D · 陈曦 · 18-2', 940, 755);
+        ctx.restore();
+    </script>
+</body>
+</html>
