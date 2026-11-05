@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-05，功能：Three.js 3D 散点粒子云 + 3D 柱状图 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-7 Three.js 3D 图表 - 陈曦</title>
+    <script src="cdn/three/three.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #0a0e1a;
+            min-height: 100vh;
+            color: #eee;
+            padding: 30px 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 6px;
+            background: linear-gradient(90deg, #00d4ff, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .cx_subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+        .cx_grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+            gap: 24px;
+        }
+        .cx_card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+        .cx_card h2 {
+            font-size: 16px;
+            color: #00d4ff;
+            margin-bottom: 4px;
+        }
+        .cx_card p.cx_desc {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 12px;
+        }
+        .cx_canvas {
+            width: 100%;
+            height: 460px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: grab;
+        }
+        .cx_canvas canvas { display: block; width: 100% !important; height: 100% !important; }
+        .cx_canvas:active { cursor: grabbing; }
+        .cx_legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            padding: 10px 4px 0;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .cx_legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .cx_legend i {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Three.js 3D 可视化图表</h1>
+    <p class="cx_subtitle">Three.js 0.160 本地 CDN · 原生实现 · 姓名：陈曦 · 18-7</p>
+
+    <div class="cx_grid">
+        <div class="cx_card">
+            <h2>💫 3D 散点粒子云（N 体动态）</h2>
+            <p class="cx_desc">1200 粒子 + 近邻连线 + 鼠标拖拽旋转，模拟 NPM 依赖关系图</p>
+            <div class="cx_canvas" id="cx_canvas1"></div>
+            <div class="cx_legend">
+                <span><i style="background:#ff6b6b"></i>红色：核心节点</span>
+                <span><i style="background:#00d4ff"></i>青色：普通节点</span>
+                <span><i style="background:#a78bfa"></i>紫色：边缘节点</span>
+            </div>
+        </div>
+
+        <div class="cx_card">
+            <h2>📊 3D 柱状图（季度销售矩阵）</h2>
+            <p class="cx_desc">6 产品线 × 4 季度数据，高度映射 Y 轴，颜色按季度区分</p>
+            <div class="cx_canvas" id="cx_canvas2"></div>
+            <div class="cx_legend">
+                <span><i style="background:#ff6b6b"></i>Q1</span>
+                <span><i style="background:#ffa94d"></i>Q2</span>
+                <span><i style="background:#51cf66"></i>Q3</span>
+                <span><i style="background:#4dabf7"></i>Q4</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        function cx_makeOrbit(cx_el) {
+            var state = {
+                rotX: -0.35, rotY: 0.5, dist: 4,
+                dragging: false, lastX: 0, lastY: 0,
+                targetRotX: -0.35, targetRotY: 0.5,
+                enable: true
+            };
+            cx_el.addEventListener('mousedown', function (e) {
+                if (!state.enable) return;
+                state.dragging = true; state.lastX = e.clientX; state.lastY = e.clientY;
+            });
+            window.addEventListener('mousemove', function (e) {
+                if (!state.dragging) return;
+                var dx = e.clientX - state.lastX, dy = e.clientY - state.lastY;
+                state.targetRotY += dx * 0.005;
+                state.targetRotX += dy * 0.005;
+                state.targetRotX = Math.max(-Math.PI/2+0.2, Math.min(Math.PI/2-0.2, state.targetRotX));
+                state.lastX = e.clientX; state.lastY = e.clientY;
+            });
+            window.addEventListener('mouseup', function () { state.dragging = false; });
+            cx_el.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                state.dist *= (1 + e.deltaY * 0.001);
+                state.dist = Math.max(2, Math.min(10, state.dist));
+            }, { passive: false });
+            return state;
+        }
+        function cx_applyOrbit(state, cx_camera, cx_auto) {
+            if (!state.dragging && cx_auto) state.targetRotY += 0.003;
+            state.rotX += (state.targetRotX - state.rotX) * 0.08;
+            state.rotY += (state.targetRotY - state.rotY) * 0.08;
+            cx_camera.position.x = state.dist * Math.cos(state.rotX) * Math.sin(state.rotY);
+            cx_camera.position.y = state.dist * Math.sin(state.rotX);
+            cx_camera.position.z = state.dist * Math.cos(state.rotX) * Math.cos(state.rotY);
+            cx_camera.lookAt(0, 0, 0);
+        }
+
+        // ===== 图 1：3D 粒子云 =====
+        (function cx_particles() {
+            var cx_el = document.getElementById('cx_canvas1');
+            var cx_w = cx_el.clientWidth, cx_h = cx_el.clientHeight;
+            var cx_scene = new THREE.Scene();
+            cx_scene.background = new THREE.Color(0x0a0e1a);
+            var cx_camera = new THREE.PerspectiveCamera(50, cx_w / cx_h, 0.01, 100);
+            cx_camera.position.set(0, 0, 4);
+            var cx_renderer = new THREE.WebGLRenderer({ antialias: true });
+            cx_renderer.setPixelRatio(window.devicePixelRatio);
+            cx_renderer.setSize(cx_w, cx_h);
+            cx_el.appendChild(cx_renderer.domElement);
+
+            var CX_N = 1200;
+            var cx_positions = new Float32Array(CX_N * 3);
+            var cx_colors = new Float32Array(CX_N * 3);
+            var cx_coreSet = {};
+            for (var i = 0; i < 18; i++) cx_coreSet[i] = true;
+
+            function cx_frand(a, b) { return a + Math.random() * (b - a); }
+            for (var i = 0; i < CX_N; i++) {
+                var r = cx_frand(0.5, 2.2);
+                var theta = cx_frand(0, Math.PI * 2);
+                var phi = cx_frand(-Math.PI / 3, Math.PI / 3);
+                cx_positions[i*3]   = r * Math.cos(phi) * Math.cos(theta);
+                cx_positions[i*3+1] = r * Math.sin(phi);
+                cx_positions[i*3+2] = r * Math.cos(phi) * Math.sin(theta);
+                if (cx_coreSet[i]) {
+                    cx_colors[i*3]   = 1.0; cx_colors[i*3+1] = 0.42; cx_colors[i*3+2] = 0.42;
+                } else if (r < 1.2) {
+                    cx_colors[i*3]   = 0.0; cx_colors[i*3+1] = 0.83; cx_colors[i*3+2] = 1.0;
+                } else {
+                    cx_colors[i*3]   = 0.65; cx_colors[i*3+1] = 0.55; cx_colors[i*3+2] = 0.98;
+                }
+            }
+            var cx_pGeo = new THREE.BufferGeometry();
+            cx_pGeo.setAttribute('position', new THREE.BufferAttribute(cx_positions, 3));
+            cx_pGeo.setAttribute('color', new THREE.BufferAttribute(cx_colors, 3));
+            var cx_pMat = new THREE.PointsMaterial({
+                size: 0.04, vertexColors: true, transparent: true, opacity: 0.9,
+                depthWrite: false, blending: THREE.AdditiveBlending
+            });
+            var cx_points = new THREE.Points(cx_pGeo, cx_pMat);
+            cx_scene.add(cx_points);
+
+            var CX_MAX_LINES = 2400;
+            var cx_linePos = new Float32Array(CX_MAX_LINES * 6);
+            var cx_lineCol = new Float32Array(CX_MAX_LINES * 6);
+            var cx_lineGeo = new THREE.BufferGeometry();
+            cx_lineGeo.setAttribute('position', new THREE.BufferAttribute(cx_linePos, 3));
+            cx_lineGeo.setAttribute('color', new THREE.BufferAttribute(cx_lineCol, 3));
+            var cx_lineMat = new THREE.LineBasicMaterial({
+                vertexColors: true, transparent: true, opacity: 0.18,
+                depthWrite: false, blending: THREE.AdditiveBlending
+            });
+            var cx_lineMesh = new THREE.LineSegments(cx_lineGeo, cx_lineMat);
+            cx_scene.add(cx_lineMesh);
+
+            var cx_orb = cx_makeOrbit(cx_el);
+            function cx_drawLines() {
+                var cx_idx = 0;
+                for (var a = 0; a < CX_N && cx_idx < CX_MAX_LINES * 2; a++) {
+                    var ax = cx_positions[a*3], ay = cx_positions[a*3+1], az = cx_positions[a*3+2];
+                    for (var b = a + 1; b < CX_N && cx_idx < CX_MAX_LINES * 2; b++) {
+                        var dx = ax - cx_positions[b*3], dy = ay - cx_positions[b*3+1], dz = az - cx_positions[b*3+2];
+                        var d2 = dx*dx + dy*dy + dz*dz;
+                        if (d2 < 0.12) {
+                            cx_linePos[cx_idx*3]   = ax;
+                            cx_linePos[cx_idx*3+1] = ay;
+                            cx_linePos[cx_idx*3+2] = az;
+                            cx_linePos[cx_idx*3+3] = cx_positions[b*3];
+                            cx_linePos[cx_idx*3+4] = cx_positions[b*3+1];
+                            cx_linePos[cx_idx*3+5] = cx_positions[b*3+2];
+                            cx_lineCol[cx_idx*3]   = cx_colors[a*3];
+                            cx_lineCol[cx_idx*3+1] = cx_colors[a*3+1];
+                            cx_lineCol[cx_idx*3+2] = cx_colors[a*3+2];
+                            cx_lineCol[cx_idx*3+3] = cx_colors[b*3];
+                            cx_lineCol[cx_idx*3+4] = cx_colors[b*3+1];
+                            cx_lineCol[cx_idx*3+5] = cx_colors[b*3+2];
+                            cx_idx++;
+                        }
+                    }
+                }
+                cx_lineGeo.setDrawRange(0, cx_idx * 2);
+                cx_lineGeo.attributes.position.needsUpdate = true;
+                cx_lineGeo.attributes.color.needsUpdate = true;
+            }
+            cx_drawLines();
+
+            var cx_clock = new THREE.Clock();
+            function cx_animate1() {
+                requestAnimationFrame(cx_animate1);
+                var t = cx_clock.getElapsedTime();
+                cx_points.rotation.y = t * 0.08;
+                cx_points.rotation.x = Math.sin(t * 0.3) * 0.1;
+                cx_lineMesh.rotation.copy(cx_points.rotation);
+                cx_applyOrbit(cx_orb, cx_camera, true);
+                cx_renderer.render(cx_scene, cx_camera);
+            }
+            cx_animate1();
+            window.addEventListener('resize', function () {
+                cx_w = cx_el.clientWidth; cx_h = cx_el.clientHeight;
+                cx_camera.aspect = cx_w / cx_h; cx_camera.updateProjectionMatrix();
+                cx_renderer.setSize(cx_w, cx_h);
+            });
+        })();
+
+        // ===== 图 2：3D 柱状图 =====
+        (function cx_bars() {
+            var cx_el = document.getElementById('cx_canvas2');
+            var cx_w = cx_el.clientWidth, cx_h = cx_el.clientHeight;
+            var cx_scene = new THREE.Scene();
+            cx_scene.background = new THREE.Color(0x0a0e1a);
+            var cx_camera = new THREE.PerspectiveCamera(50, cx_w / cx_h, 0.01, 200);
+            cx_camera.position.set(8, 8, 12);
+            var cx_renderer = new THREE.WebGLRenderer({ antialias: true });
+            cx_renderer.setPixelRatio(window.devicePixelRatio);
+            cx_renderer.setSize(cx_w, cx_h);
+            cx_renderer.shadowMap.enabled = true;
+            cx_el.appendChild(cx_renderer.domElement);
+
+            cx_scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+            var cx_dir = new THREE.DirectionalLight(0xffffff, 0.9);
+            cx_dir.position.set(10, 15, 10);
+            cx_dir.castShadow = true;
+            cx_scene.add(cx_dir);
+            var cx_fill = new THREE.DirectionalLight(0x00d4ff, 0.3);
+            cx_fill.position.set(-10, 5, -5);
+            cx_scene.add(cx_fill);
+
+            var cx_floors = new THREE.Mesh(
+                new THREE.PlaneGeometry(12, 10),
+                new THREE.MeshStandardMaterial({ color: 0x1a2332, roughness: 0.8, metalness: 0.2 })
+            );
+            cx_floors.rotation.x = -Math.PI / 2;
+            cx_floors.position.y = 0;
+            cx_floors.receiveShadow = true;
+            cx_scene.add(cx_floors);
+
+            var CX_COLORS = [0xff6b6b, 0xffa94d, 0x51cf66, 0x4dabf7];
+            var CX_GRID_W = 6, CX_GRID_H = 4;
+            var CX_SPACING = 1.6;
+            var cx_group = new THREE.Group();
+            cx_scene.add(cx_group);
+
+            var cx_data = [
+                [12, 18, 22, 16, 28, 32],
+                [8, 24, 30, 20, 35, 40],
+                [15, 20, 26, 28, 33, 38],
+                [10, 22, 28, 24, 36, 42]
+            ];
+
+            for (var q = 0; q < CX_GRID_H; q++) {
+                for (var p = 0; p < CX_GRID_W; p++) {
+                    var cx_h = cx_data[q][p] / 10;
+                    var cx_geo = new THREE.BoxGeometry(0.9, cx_h, 0.9);
+                    var cx_mat = new THREE.MeshStandardMaterial({
+                        color: CX_COLORS[q], roughness: 0.4, metalness: 0.1,
+                        emissive: new THREE.Color(CX_COLORS[q]), emissiveIntensity: 0.08
+                    });
+                    var cx_mesh = new THREE.Mesh(cx_geo, cx_mat);
+                    cx_mesh.position.set(
+                        (p - (CX_GRID_W - 1) / 2) * CX_SPACING,
+                        cx_h / 2,
+                        (q - (CX_GRID_H - 1) / 2) * CX_SPACING
+                    );
+                    cx_mesh.castShadow = true;
+                    cx_mesh.receiveShadow = true;
+                    cx_group.add(cx_mesh);
+                }
+            }
+
+            var cx_axes = new THREE.Group();
+            function cx_axis(from, to, color) {
+                var g = new THREE.BufferGeometry().setFromPoints([from, to]);
+                cx_axes.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: color })));
+            }
+            cx_axis(new THREE.Vector3(-5.5, 0, -3.5), new THREE.Vector3(5.5, 0, -3.5), 0x555555);
+            cx_axis(new THREE.Vector3(-5.5, 0, -3.5), new THREE.Vector3(-5.5, 0, 3.5), 0x555555);
+            cx_axis(new THREE.Vector3(-5.5, 0, -3.5), new THREE.Vector3(-5.5, 5, -3.5), 0x333333);
+            cx_scene.add(cx_axes);
+
+            var cx_orb = cx_makeOrbit(cx_el);
+            function cx_animate2() {
+                requestAnimationFrame(cx_animate2);
+                cx_applyOrbit(cx_orb, cx_camera, true);
+                cx_renderer.render(cx_scene, cx_camera);
+            }
+            cx_animate2();
+            window.addEventListener('resize', function () {
+                cx_w = cx_el.clientWidth; cx_h = cx_el.clientHeight;
+                cx_camera.aspect = cx_w / cx_h; cx_camera.updateProjectionMatrix();
+                cx_renderer.setSize(cx_w, cx_h);
+            });
+        })();
+    })();
+    </script>
+</body>
+</html>

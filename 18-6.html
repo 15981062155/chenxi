@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 姓名：陈曦，日期：2026-11-05，功能：Mermaid 智能客服系统流程图 + ER 图 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-6 Mermaid 智能客服 - 陈曦</title>
+    <script src="cdn/mermaid/mermaid.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            color: #eee;
+            padding: 30px 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .cx_subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .cx_wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .cx_card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 24px 28px;
+            backdrop-filter: blur(8px);
+        }
+        .cx_card h2 {
+            font-size: 18px;
+            margin-bottom: 6px;
+            color: #a78bfa;
+        }
+        .cx_card p.cx_desc {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 18px;
+        }
+        .cx_card p.cx_desc em { color: #c4b5fd; font-style: normal; }
+        .cx_canvas {
+            background: rgba(0,0,0,0.25);
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .cx_canvas svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        .cx_mermaid { display: flex; justify-content: center; }
+    </style>
+</head>
+<body>
+    <h1>🧠 智能客服系统：流程图 & ER 图</h1>
+    <p class="cx_subtitle">Mermaid.js 本地 CDN · 姓名：陈曦 · 18-6</p>
+
+    <div class="cx_wrap">
+        <div class="cx_card">
+            <h2>📋 业务处理流程图</h2>
+            <p class="cx_desc">用户输入 → NLP 意图识别 → <em>知识库检索</em> / LLM 生成 → 回复合成 → 满意度闭环</p>
+            <div class="cx_canvas">
+                <pre class="mermaid cx_mermaid">
+flowchart TD
+    U([👤 用户提问]) --> I[🔧 输入预处理<br/>清洗 / 分词 / 脱敏]
+    I --> N{🧠 NLP 引擎<br/>意图 · 实体 · 情感}
+    N -- 高置信度 --> K[📚 向量知识库检索<br/>FAISS / Milvus]
+    N -- 低置信度 --> L[🤖 LLM 大模型生成]
+    K -- 命中 --> R[📝 回复合成模块<br/>模板 + 答案拼装]
+    K -- 未命中 --> F[🔁 转人工坐席]
+    L --> R
+    R --> S{📤 回复渠道<br/>Web / App / 微信}
+    S --> O([💬 用户收到回复])
+    O --> M{❓ 满意度反馈}
+    M -- 👍 正向 --> D[💾 数据沉淀<br/>入知识库]
+    M -- 👎 负向 --> F
+    F --> H([👨‍💼 人工客服])
+    H --> D
+    D --> K
+
+    classDef user fill:#667eea,stroke:#4c51bf,color:#fff
+    classDef nlp fill:#a78bfa,stroke:#7c3aed,color:#fff
+    classDef kb fill:#22c55e,stroke:#15803d,color:#fff
+    classDef llm fill:#f59e0b,stroke:#b45309,color:#fff
+    classDef db fill:#06b6d4,stroke:#0e7490,color:#fff
+    classDef endc fill:#ef4444,stroke:#991b1b,color:#fff
+
+    class U,O,H user
+    class I,N,S nlp
+    class K,R,D kb
+    class L,F llm
+    class M,F db
+                </pre>
+            </div>
+        </div>
+
+        <div class="cx_card">
+            <h2>🗄️ 数据库 ER 图</h2>
+            <p class="cx_desc">智能客服核心实体关系：<em>用户会话 · 知识库条目 · 人工坐席 · 反馈评价</em></p>
+            <div class="cx_canvas">
+                <pre class="mermaid cx_mermaid">
+erDiagram
+    USER ||--o{ SESSION : initiates
+    SESSION ||--|{ MESSAGE : contains
+    SESSION }o--|| AGENT : transfers_to
+    AGENT ||--o{ SESSION : handles
+    MESSAGE }o--|| KNOWLEDGE_MATCH : references
+    KNOWLEDGE_BASE ||--o{ KNOWLEDGE_MATCH : matches
+    KNOWLEDGE_BASE ||--o{ FEEDBACK : receives
+    SESSION ||--o| FEEDBACK : has
+
+    USER {
+        bigint user_id PK
+        varchar phone
+        varchar email
+        tinyint vip_level
+        datetime created_at
+    }
+    SESSION {
+        bigint session_id PK
+        bigint user_id FK
+        bigint agent_id FK
+        tinyint channel
+        tinyint intent
+        tinyint status
+        datetime start_time
+        datetime end_time
+    }
+    MESSAGE {
+        bigint msg_id PK
+        bigint session_id FK
+        tinyint role
+        text content
+        float confidence
+        datetime created_at
+    }
+    AGENT {
+        bigint agent_id PK
+        varchar name
+        tinyint dept
+        tinyint online
+        int total_handle
+        int rating_score
+    }
+    KNOWLEDGE_BASE {
+        bigint kb_id PK
+        varchar category
+        text question
+        text answer
+        int hit_count
+        datetime updated_at
+    }
+    KNOWLEDGE_MATCH {
+        bigint match_id PK
+        bigint msg_id FK
+        bigint kb_id FK
+        float similarity
+    }
+    FEEDBACK {
+        bigint feedback_id PK
+        bigint session_id FK
+        bigint kb_id FK
+        tinyint rating
+        text comment
+        datetime created_at
+    }
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            er: {
+                useMaxWidth: true
+            }
+        });
+    </script>
+</body>
+</html>
