@@ -2,11 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 姓名：陈曦，日期：2026-11-05，功能：ECharts 折线图 + 3D 中国地图 -->
+    <!-- 姓名：陈曦，日期：2026-11-05，功能：ECharts 折线图 + 南丁格尔玫瑰图 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>18-4 ECharts 折线图 + 3D地图 - 陈曦</title>
+    <title>18-4 ECharts 折线图 + 玫瑰图 - 陈曦</title>
     <script src="cdn/echarts/echarts.min.js"></script>
-    <script src="cdn/echarts/echarts-gl.min.js"></script>
     <style>
         body {
             font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -71,7 +70,7 @@
     </style>
 </head>
 <body>
-    <h1>ECharts 折线图 · 3D 中国地图</h1>
+    <h1>ECharts 折线图 · 南丁格尔玫瑰图</h1>
     <p class="cx_subtitle">本地 CDN · 姓名：陈曦 · 18-4</p>
 
     <div class="cx_chart-card">
@@ -84,11 +83,10 @@
 
     <div class="cx_chart-card">
         <div class="cx_chart-title">
-            🗺️ 3D 中国地图（Map3D · 飞线 + 热力柱）
-            <em>需要通过 HTTP 服务访问</em>
+            � 南丁格尔玫瑰图（Pie + RoseType）
+            <em>分类数据极坐标可视化</em>
         </div>
         <div id="cx_map3d" class="cx_canvas"></div>
-        <div class="cx_tip" id="cx_mapTip"></div>
     </div>
 
     <script>
@@ -196,170 +194,86 @@
                 ]
             });
 
-            var cx_mapChart = echarts.init(document.getElementById('cx_map3d'));
-            var cx_mapTip = document.getElementById('cx_mapTip');
+            var cx_roseChart = echarts.init(document.getElementById('cx_map3d'));
 
-            fetch('cdn/echarts/china.json')
-                .then(function (r) { return r.json(); })
-                .then(function (chinaJson) {
-                    echarts.registerMap('china', chinaJson);
+            var cx_roseData = [
+                { value: 40, name: 'React' },
+                { value: 38, name: 'Vue' },
+                { value: 28, name: 'Angular' },
+                { value: 22, name: 'Svelte' },
+                { value: 18, name: 'Solid' },
+                { value: 32, name: 'TypeScript' },
+                { value: 26, name: 'Node.js' },
+                { value: 20, name: 'Deno' },
+                { value: 15, name: 'Bun' },
+                { value: 30, name: 'Next.js' },
+                { value: 24, name: 'Nuxt' },
+                { value: 19, name: 'Remix' }
+            ];
 
-                    var cx_cities = [
-                        { name: '北京', value: [116.46, 39.92, 150] },
-                        { name: '上海', value: [121.48, 31.22, 180] },
-                        { name: '广州', value: [113.23, 23.16, 120] },
-                        { name: '深圳', value: [114.07, 22.62, 140] },
-                        { name: '杭州', value: [120.19, 30.26, 100] },
-                        { name: '成都', value: [104.06, 30.67, 90] },
-                        { name: '武汉', value: [114.31, 30.52, 85] },
-                        { name: '西安', value: [108.95, 34.27, 70] },
-                        { name: '重庆', value: [106.54, 29.59, 75] },
-                        { name: '南京', value: [118.78, 32.04, 80] },
-                        { name: '天津', value: [117.2, 39.13, 88] },
-                        { name: '苏州', value: [120.62, 31.32, 95] },
-                        { name: '长沙', value: [112.94, 28.23, 60] },
-                        { name: '青岛', value: [120.33, 36.07, 65] },
-                        { name: '厦门', value: [118.1, 24.46, 55] }
-                    ];
-
-                    var cx_flightLines = [
-                        { coords: [[116.46, 39.92], [121.48, 31.22]] },
-                        { coords: [[116.46, 39.92], [113.23, 23.16]] },
-                        { coords: [[116.46, 39.92], [104.06, 30.67]] },
-                        { coords: [[121.48, 31.22], [114.07, 22.62]] },
-                        { coords: [[121.48, 31.22], [120.19, 30.26]] },
-                        { coords: [[113.23, 23.16], [114.07, 22.62]] },
-                        { coords: [[104.06, 30.67], [106.54, 29.59]] },
-                        { coords: [[108.95, 34.27], [116.46, 39.92]] },
-                        { coords: [[114.31, 30.52], [121.48, 31.22]] },
-                        { coords: [[118.78, 32.04], [120.62, 31.32]] }
-                    ];
-
-                    cx_mapChart.setOption({
-                        backgroundColor: 'transparent',
-                        title: {
-                            text: '中国经济中心 3D 可视化',
-                            subtext: '飞线：商务往来 · 热力柱：城市热度',
-                            textStyle: { color: '#eee', fontSize: 16 },
-                            subtextStyle: { color: '#888' },
-                            left: 'center',
-                            top: 8
+            cx_roseChart.setOption({
+                backgroundColor: 'transparent',
+                title: {
+                    text: '前端技术栈热度排行',
+                    subtext: '南丁格尔玫瑰图 · 2026 调研数据',
+                    textStyle: { color: '#eee', fontSize: 18 },
+                    subtextStyle: { color: '#888' },
+                    left: 'center',
+                    top: 10
+                },
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(15,32,39,0.9)',
+                    borderColor: '#00d4ff',
+                    textStyle: { color: '#fff' },
+                    formatter: '{b}<br/>热度指数：<b>{c}</b> ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 10,
+                    top: 60,
+                    textStyle: { color: '#ccc' },
+                    itemGap: 12
+                },
+                series: [
+                    {
+                        name: '技术热度',
+                        type: 'pie',
+                        radius: ['20%', '70%'],
+                        center: ['58%', '58%'],
+                        roseType: 'area',
+                        avoidLabelOverlap: true,
+                        itemStyle: {
+                            borderRadius: 6,
+                            borderColor: 'rgba(255,255,255,0.08)',
+                            borderWidth: 1
                         },
-                        tooltip: {
-                            backgroundColor: 'rgba(15,32,39,0.9)',
-                            borderColor: '#00d4ff',
-                            textStyle: { color: '#fff' }
-                        },
-                        visualMap: {
+                        label: {
                             show: true,
-                            left: 20,
-                            bottom: 20,
-                            min: 0,
-                            max: 200,
-                            text: ['高', '低'],
-                            textStyle: { color: '#fff' },
-                            inRange: {
-                                color: ['#00d4ff', '#00b4d8', '#90e0ef', '#caf0f8']
-                            }
+                            color: '#ddd',
+                            fontSize: 12,
+                            formatter: '{b}\n{c}'
                         },
-                        geo3D: {
-                            map: 'china',
-                            boxWidth: 100,
-                            boxDepth: 100,
-                            boxHeight: 5,
-                            regionHeight: 3,
-                            shading: 'realistic',
-                            realisticMaterial: {
-                                roughness: 0.6,
-                                metalness: 0.1
-                            },
-                            postEffect: {
-                                enable: true,
-                                SSAO: { enable: true, quality: 'medium', radius: 2 }
-                            },
-                            light: {
-                                main: { intensity: 1.2, shadow: true },
-                                ambient: { intensity: 0.3 }
-                            },
-                            viewControl: {
-                                distance: 150,
-                                autoRotate: true,
-                                panMouseButton: 'left',
-                                rotateMouseButton: 'right'
-                            },
-                            itemStyle: {
-                                color: '#1b3a4b',
-                                borderWidth: 1,
-                                borderColor: '#00d4ff'
-                            },
-                            emphasis: {
-                                itemStyle: { color: '#00d4ff' },
-                                label: { color: '#fff' }
-                            }
+                        labelLine: {
+                            length: 15,
+                            length2: 10,
+                            lineStyle: { color: '#888' }
                         },
-                        series: [
-                            {
-                                name: '城市热度',
-                                type: 'bar3D',
-                                coordinateSystem: 'geo3D',
-                                barSize: 1.5,
-                                data: cx_cities,
-                                itemStyle: {
-                                    color: function (p) {
-                                        return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                            { offset: 0, color: '#ff6b6b' },
-                                            { offset: 1, color: '#ffd43b' }
-                                        ]);
-                                    }
-                                },
-                                label: {
-                                    show: true,
-                                    position: 'top',
-                                    formatter: '{b}',
-                                    color: '#fff',
-                                    fontSize: 10
-                                }
-                            },
-                            {
-                                name: '商务飞线',
-                                type: 'lines3D',
-                                coordinateSystem: 'geo3D',
-                                effect: {
-                                    show: true,
-                                    trailLength: 0.2,
-                                    symbolSize: 4,
-                                    color: '#fff'
-                                },
-                                blendMode: 'lighter',
-                                lineStyle: {
-                                    width: 1,
-                                    opacity: 0.6,
-                                    color: '#00d4ff',
-                                    curveness: 0.3
-                                },
-                                data: cx_flightLines
-                            },
-                            {
-                                name: '城市散点',
-                                type: 'scatter3D',
-                                coordinateSystem: 'geo3D',
-                                symbolSize: 6,
-                                itemStyle: { color: '#ffd43b' },
-                                data: cx_cities
-                            }
-                        ]
-                    });
-
-                    cx_mapTip.textContent = '';
-                })
-                .catch(function (err) {
-                    cx_mapTip.innerHTML = '⚠️ 地图数据加载失败：' + err.message +
-                        '<br/><small>请通过本地 HTTP 服务访问（如 python -m http.server 8080），不要用 file:// 协议打开</small>';
-                });
+                        emphasis: {
+                            label: { color: '#fff', fontSize: 14 },
+                            itemStyle: { shadowBlur: 20, shadowColor: 'rgba(0,212,255,0.5)' }
+                        },
+                        color: ['#ff6b6b', '#ffa94d', '#ffd43b', '#69db7c', '#38d9a9',
+                                '#22b8cf', '#4dabf7', '#748ffc', '#9775fa', '#da77f2',
+                                '#f783ac', '#e64980'],
+                        data: cx_roseData
+                    }
+                ]
+            });
 
             window.addEventListener('resize', function () {
                 cx_lineChart.resize();
-                cx_mapChart.resize();
+                cx_roseChart.resize();
             });
         })();
     </script>
